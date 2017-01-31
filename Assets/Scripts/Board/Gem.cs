@@ -35,6 +35,8 @@
         [SerializeField]
         private readonly OnPositionChange m_OnPositionChange = new OnPositionChange();
 
+        public Grid grid { get; set; }
+
         public GemType gemType
         {
             get { return m_GemType; }
