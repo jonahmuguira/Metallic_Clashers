@@ -21,12 +21,8 @@
         // Use this for initialization
         private void Awake()
         {
-            m_Gem.onPositionChange.AddListener(OnPositionChange);
-            m_Gem.onTypeChange.AddListener(OnTypeChange);
-        }
 
-        public GemMono()
-        { }
+        }
 
         private void OnTypeChange(TypeChangeInformation typeChangeInfo)
         {
@@ -40,11 +36,19 @@
 
         private void OnMatch(MatchInformation matchInfo)
         {
-
+            //TODO: Check if this gem matched and play an animation if so. Delete afterwards
         }
         private void OnGridChange(GridChangeInformation gridChangeInfo)
         {
+            //TODO: Check to see if this gem was changed in the grid
+        }
 
+        public static GemMono Create(GemType gemType, Vector2 position)
+        {
+            var newGemMono = new GameObject().AddComponent<GemMono>();
+            newGemMono.gem = new Gem { gemType = gemType, position = position };
+
+            return newGemMono;
         }
     }
 }

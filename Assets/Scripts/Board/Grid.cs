@@ -23,6 +23,11 @@
         private Vector2 m_Size;
 
         [SerializeField]
+        private List<Column> m_Columns = new List<Column>();
+        [SerializeField]
+        private List<Row> m_Rows = new List<Row>();
+
+        [SerializeField]
         private OnMatch m_OnMatch = new OnMatch();
         [SerializeField]
         private OnGridChange m_OnGridChange = new OnGridChange();
@@ -31,9 +36,15 @@
 
         public Vector2 size { get { return m_Size; } private set { m_Size = value; } }
 
+        private Grid() { }
+        public Grid(Vector2 newSize)
+        {
+            //TODO: Create grid of specified size
+        }
+
         private void CheckMatch()
         {
-
+            //TODO: Check for matches in the entire grid
         }
 
         private bool Add()
@@ -42,12 +53,12 @@
             return false;
         }
 
-        public bool RemoveAt(Vector2 position)
+        public bool Remove(Gem gem)
         {
             //TODO: Return if successful
             return false;
         }
-        public bool Remove(Gem gem)
+        public bool RemoveAt(Vector2 position)
         {
             //TODO: Return if successful
             return false;
@@ -58,7 +69,15 @@
             //TODO: Return if successful
             return false;
         }
+        public bool SwapAt(Vector2 position1, Vector2 position2)
+        {
+            //TODO: Return if successful
+            return false;
+        }
 
-
+        private void OnGemTypeChange(TypeChangeInformation typeChangeInfo)
+        {
+            //TODO: Check for matches on gems in the same row and column
+        }
     }
 }
