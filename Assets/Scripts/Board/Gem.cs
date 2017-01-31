@@ -47,8 +47,7 @@
 
                 m_GemType = value;
 
-                //TODO: Fill out class info when available
-                m_OnTypeChange.Invoke(new TypeChangeInformation());
+                m_OnTypeChange.Invoke(new TypeChangeInformation { gem = this, newType = value });
             }
         }
 
@@ -62,8 +61,7 @@
 
                 m_Position = value;
 
-                //TODO: Fill out class info when available
-                m_OnPositionChange.Invoke(new PositionChangeInformation());
+                m_OnPositionChange.Invoke(new PositionChangeInformation { gem = this, newPosition = value });
             }
         }
 
