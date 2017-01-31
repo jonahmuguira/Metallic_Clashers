@@ -13,13 +13,12 @@
     {
         public float slideDistance;
         public float slideDuration;
-
         public float holdDuration;
 
-        public OnPress onPress;
-        public OnRelease onRelease;
-        public OnHold onHold;
-        public OnSlide onSlide;
+        private readonly OnPress m_OnPress = new OnPress();
+        private readonly OnRelease m_OnRelease = new OnRelease();
+        private readonly OnHold m_OnHold = new OnHold();
+        private readonly OnSlide m_OnSlide = new OnSlide();
 
         private void Awake()
         {
@@ -30,5 +29,11 @@
         {
             
         }
+
+        public OnPress onPress { get { return m_OnPress;} }
+        public OnRelease onRelease { get { return m_OnRelease;} }
+        public OnHold onHold { get { return m_OnHold;} }
+        public OnSlide onSlide { get { return m_OnSlide;} }
+
     }
 }
