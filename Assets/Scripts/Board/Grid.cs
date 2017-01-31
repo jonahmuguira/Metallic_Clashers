@@ -78,6 +78,23 @@
             return false;
         }
 
+        public bool SlideRowAt(int index, SlideDirection direction)
+        {
+            if (index >= m_Rows.Count || index < 0)
+                return false;
+
+            m_Rows[index].Slide(direction);
+            return true;
+        }
+        public bool SlideColumnAt(int index, SlideDirection direction)
+        {
+            if (index >= m_Columns.Count || index < 0)
+                return false;
+
+            m_Columns[index].Slide(direction);
+            return true;
+        }
+
         private void OnGemTypeChange(TypeChangeInformation typeChangeInfo)
         {
             //TODO: Check for matches on gems in the same row and column
