@@ -12,13 +12,12 @@ public class GameManager : MonoBehaviour
         StagePreparation,
     }
 
-    private string savePath;
-
     public GameState gameState;
+    private string savePath;
 
     private void Awake()
     {
-        
+
     }
 
     private void Save()
