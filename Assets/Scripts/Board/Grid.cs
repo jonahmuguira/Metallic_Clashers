@@ -92,11 +92,12 @@
         }
         public bool RemoveAt(Vector2 position)
         {
-            var x = (int)position.x;
             var y = (int)position.y;
 
             if (y >= m_GemList.Count || y < 0)
                 return false;
+
+            var x = (int)position.x;
 
             if (x >= m_GemList[y].Count || x < 0)
                 return false;
@@ -113,13 +114,46 @@
 
         public bool Swap(Gem oldGem, Gem newGem)
         {
-            //TODO: Return if successful
-            return false;
+            var foundY = m_GemList.FindIndex(gems => gems.Contains(oldGem));
+
+            // If a match was not found
+            if (foundY == -1)
+                return false;
+
+            var foundX = m_GemList[foundY].FindIndex(gem => gem == oldGem);
+
+            m_GemList[foundY][foundX] = newGem;
+
+            onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { oldGem, newGem } });
+            return true;
         }
         public bool SwapAt(Vector2 position1, Vector2 position2)
         {
-            //TODO: Return if successful
-            return false;
+            var y1 = (int)position1.y;
+            var y2 = (int)position2.y;
+
+            if (y1 >= m_GemList.Count || y1 < 0 ||
+                y2 >= m_GemList.Count || y2 < 0)
+                return false;
+
+            var x1 = (int)position1.x;
+            var x2 = (int)position2.x;
+
+            if (x1 >= m_GemList[y1].Count || x1 < 0 ||
+                x2 >= m_GemList[y2].Count || x2 < 0)
+                return false;
+
+            // Store a reference to the gems about to be swapped
+            var gem1 = m_GemList[y1][x1];
+            var gem2 = m_GemList[y2][x2];
+
+            // Swap them
+            m_GemList[y1][x1] = gem2;
+            m_GemList[y2][x2] = gem1;
+
+            // Use the references of each gem that was changed when invoking the onGridChange event
+            onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { gem1, gem2 } });
+            return true;
         }
 
         public bool SlideRowAt(int index, SlideDirection direction)
