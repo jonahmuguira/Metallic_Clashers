@@ -20,11 +20,6 @@
             get { return m_Gem; }
             private set { m_Gem = value; }
         }
-        // Use this for initialization
-        private void Awake()
-        {
-
-        }
 
         private void OnTypeChange(TypeChangeInformation typeChangeInfo)
         {
