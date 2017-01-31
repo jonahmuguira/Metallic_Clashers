@@ -36,6 +36,9 @@
 
         public Vector2 size { get { return m_Size; } private set { m_Size = value; } }
 
+        public OnMatch onMatch { get { return m_OnMatch; } }
+        public OnGridChange onGridChange { get { return m_OnGridChange; } }
+
         private Grid() { }
         public Grid(Vector2 newSize)
         {
