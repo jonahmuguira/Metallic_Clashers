@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     }
 
     public GameState gameState;
+
+    public PlayerData playerData;
     private string savePath;
 
     private void Awake()
