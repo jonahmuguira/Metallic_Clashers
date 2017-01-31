@@ -2,11 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using UnityEngine;
     using UnityEngine.Events;
 
     using Information;
+
+    using Random = UnityEngine.Random;
 
     [Serializable]
     public class OnGridChange : UnityEvent<GridChangeInformation> { }
@@ -40,9 +43,26 @@
         public OnGridChange onGridChange { get { return m_OnGridChange; } }
 
         private Grid() { }
-        public Grid(Vector2 newSize)
+        public Grid(Vector2 newSize) : this()
         {
-            //TODO: Create grid of specified size
+            var timeSpan = new TimeSpan(DateTime.Now.Ticks);
+            Random.InitState((int)timeSpan.TotalMilliseconds);
+
+            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
+
+            for (var y = 0; y < newSize.y; ++y)
+            {
+                var newRow = new List<Gem>();
+                for (var x = 0; x < newSize.x; ++x)
+                {
+                    var gemType = (GemType)Random.Range(0, numGemTypes);
+
+                    newRow.Add(
+                        GemMono.Create(
+                            this, gemType, new Vector2(x, y)).gem);
+                }
+                m_GemList.Add(newRow);
+            }
         }
 
         private void CheckMatch()
@@ -58,13 +78,37 @@
 
         public bool Remove(Gem gem)
         {
-            //TODO: Return if successful
-            return false;
+            var foundIndex = m_GemList.FindIndex(gems => gems.Contains(gem));
+
+            // If a match was not found
+            if (foundIndex == -1)
+                return false;
+
+            // Removed the gem from the list which contains it
+            m_GemList[foundIndex].Remove(gem);
+
+            onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { gem } });
+            return true;
         }
         public bool RemoveAt(Vector2 position)
         {
-            //TODO: Return if successful
-            return false;
+            var x = (int)position.x;
+            var y = (int)position.y;
+
+            if (y >= m_GemList.Count || y < 0)
+                return false;
+
+            if (x >= m_GemList[y].Count || x < 0)
+                return false;
+
+            // Store reference to removed gem
+            var gem = m_GemList[y][x];
+
+            m_GemList[y].RemoveAt(x);
+
+            // Use that reference when you invoke the onGridChange event
+            onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { gem } });
+            return true;
         }
 
         public bool Swap(Gem oldGem, Gem newGem)
