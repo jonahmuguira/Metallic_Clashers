@@ -9,10 +9,12 @@
 
 namespace Board.Information
 {
+    using System.Collections.Generic;
+
     using UnityEngine;
 
     public class GridChangeInformation
     {
-    
+        public List<Gem> gems;
     }    
 }
