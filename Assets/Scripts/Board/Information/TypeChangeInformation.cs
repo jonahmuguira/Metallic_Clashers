@@ -13,6 +13,8 @@ namespace Board.Information
 
     public class TypeChangeInformation
     {
-    
+        public Gem gem;
+
+        public GemType newType;
     }    
 }

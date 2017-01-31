@@ -13,6 +13,8 @@ namespace Board.Information
 
     public class PositionChangeInformation
     {
-    
+        public Gem gem;
+
+        public Vector2 newPosition;
     }    
 }
