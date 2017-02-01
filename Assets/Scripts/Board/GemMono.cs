@@ -1,7 +1,5 @@
 ﻿namespace Board
 {
-    using System;
-
     using UnityEngine;
 
     using Information;
@@ -27,31 +25,13 @@
             if (typeChangeInfo.gem != gem)
                 return;
 
-            //TODO: Update sprite based on new type
-            switch (typeChangeInfo.newType)
-            {
-            case GemType.Red:
-                break;
+            var spriteIndex = (int)typeChangeInfo.newType;
 
-            case GemType.Blue:
-                break;
-
-            case GemType.Green:
-                break;
-
-            case GemType.Yellow:
-                break;
-
-            case GemType.Purple:
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException();
-            }
+            m_SpriteRenderer.sprite = CombatManager.self.gemSprites[spriteIndex];
         }
         private void OnPositionChange(PositionChangeInformation positionChangeInfo)
         {
-            //TODO: Animate to new position
+            transform.localPosition = Vector3.Lerp(transform.localPosition, m_Gem.position, 0.5f);
         }
 
         private void OnMatch(MatchInformation matchInfo)
@@ -70,10 +50,18 @@
             grid.onMatch.AddListener(newGemMono.OnMatch);
             grid.onGridChange.AddListener(newGemMono.OnGridChange);
 
-            newGemMono.gem = new Gem { gemType = gemType, position = position };
+            newGemMono.m_SpriteRenderer = newGemMono.GetComponent<SpriteRenderer>();
 
+            newGemMono.gem = new Gem();
+
+            // Subscribe to the relevant events before setting the values
             newGemMono.gem.onTypeChange.AddListener(newGemMono.OnTypeChange);
             newGemMono.gem.onPositionChange.AddListener(newGemMono.OnPositionChange);
+
+            newGemMono.gem.grid = grid;
+
+            newGemMono.gem.gemType = gemType;
+            newGemMono.gem.position = position;
 
             return newGemMono;
         }
