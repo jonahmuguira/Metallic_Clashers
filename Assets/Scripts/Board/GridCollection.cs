@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
 
+    using Information;
+
     using UnityEngine;
 
     public enum SlideDirection
@@ -40,6 +42,8 @@
         public override void Slide(SlideDirection direction)
         {
             // TODO: Slide the column in the specified direction
+
+            grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
         }
     }
 
@@ -58,6 +62,8 @@
         public override void Slide(SlideDirection direction)
         {
             // TODO: Slide the row in the specified direction
+
+            grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
         }
     }
 }
