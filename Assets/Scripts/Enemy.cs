@@ -15,8 +15,9 @@ public class Enemy
     public Attribute attack { get { return m_attack; } }
     public Attribute defense { get { return m_defense; } }
 
-    //TODO: Set a way for the enemy to listen for the Events that are declared in the CombatManager
-
+    //TODO: Set a way for the enemy to listen for the Events that are declared 
+        //TODO: in the CombatManager
+    //TODO: Set the values for the enemy.
     private void OnCombatBegin()
     {
         
