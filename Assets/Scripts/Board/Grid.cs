@@ -17,6 +17,9 @@
     public class OnMatch : UnityEvent<MatchInformation> { }
 
     [Serializable]
+    public class OnSlide : UnityEvent<SlideInformation> { }
+
+    [Serializable]
     public class Grid
     {
         [SerializeField]
@@ -35,12 +38,17 @@
         [SerializeField]
         private OnGridChange m_OnGridChange = new OnGridChange();
 
+        [SerializeField]
+        private OnSlide m_OnSlide = new OnSlide();
+
         public List<List<Gem>> gemList { get { return m_GemList; } }
 
         public Vector2 size { get { return m_Size; } private set { m_Size = value; } }
 
         public OnMatch onMatch { get { return m_OnMatch; } }
         public OnGridChange onGridChange { get { return m_OnGridChange; } }
+
+        public OnSlide onSlide { get { return m_OnSlide; } }
 
         private Grid() { }
         public Grid(Vector2 newSize) : this()
@@ -50,10 +58,12 @@
 
             var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
 
-            for (var y = 0; y < newSize.y; ++y)
+            m_Size = newSize;
+
+            for (var y = 0; y < m_Size.y; ++y)
             {
                 var newRow = new List<Gem>();
-                for (var x = 0; x < newSize.x; ++x)
+                for (var x = 0; x < m_Size.x; ++x)
                 {
                     var gemType = (GemType)Random.Range(0, numGemTypes);
 

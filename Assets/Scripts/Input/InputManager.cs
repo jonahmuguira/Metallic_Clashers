@@ -7,7 +7,7 @@
     public class OnPress : UnityEvent<TouchInformation> { }
     public class OnRelease : UnityEvent<TouchInformation> { }
     public class OnHold : UnityEvent<TouchInformation> { }
-    public class OnDrag : UnityEvent<SlideInformation> { }
+    public class OnDrag : UnityEvent<DragInformation> { }
 
     public class InputManager : MonoBehaviour
     {
