@@ -23,7 +23,7 @@
     public class Grid
     {
         [SerializeField]
-        private readonly List<List<Gem>> m_GemList = new List<List<Gem>>();
+        private List<List<Gem>> m_GemList = new List<List<Gem>>();
 
         [SerializeField]
         private Vector2 m_Size;
@@ -43,7 +43,7 @@
 
         public List<List<Gem>> gemList { get { return m_GemList; } }
 
-        public Vector2 size { get { return m_Size; } private set { m_Size = value; } }
+        public Vector2 size { get { return m_Size; } }
 
         public OnMatch onMatch { get { return m_OnMatch; } }
         public OnGridChange onGridChange { get { return m_OnGridChange; } }
