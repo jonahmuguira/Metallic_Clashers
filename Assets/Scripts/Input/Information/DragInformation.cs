@@ -5,10 +5,10 @@
     using UnityEngine;
 
     [Serializable]
-    public class TouchInformation
+    public class DragInformation
     {
-        public Vector2 position;
-
+        public Vector2 origin;
+        public Vector2 end;
         public float duration;
     }
 }

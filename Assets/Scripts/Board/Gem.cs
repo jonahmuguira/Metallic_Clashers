@@ -35,6 +35,8 @@
         [SerializeField]
         private readonly OnPositionChange m_OnPositionChange = new OnPositionChange();
 
+        public Grid grid { get; set; }
+
         public GemType gemType
         {
             get { return m_GemType; }
@@ -45,8 +47,7 @@
 
                 m_GemType = value;
 
-                //TODO: Fill out class info when available
-                m_OnTypeChange.Invoke(new TypeChangeInformation());
+                m_OnTypeChange.Invoke(new TypeChangeInformation { gem = this, newType = value });
             }
         }
 
@@ -60,8 +61,7 @@
 
                 m_Position = value;
 
-                //TODO: Fill out class info when available
-                m_OnPositionChange.Invoke(new PositionChangeInformation());
+                m_OnPositionChange.Invoke(new PositionChangeInformation { gem = this, newPosition = value });
             }
         }
 
