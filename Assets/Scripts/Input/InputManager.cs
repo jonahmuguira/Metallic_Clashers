@@ -7,11 +7,8 @@
     public class OnPress : UnityEvent<TouchInformation> { }
     public class OnRelease : UnityEvent<TouchInformation> { }
     public class OnHold : UnityEvent<TouchInformation> { }
-<<<<<<< HEAD
     public class OnSlide : UnityEvent<DragInformation> { }
-=======
-    public class OnDrag : UnityEvent<SlideInformation> { }
->>>>>>> 8ff3f4ee2891b9eb04c75a7d87f04720f95efdad
+    public class OnDrag : UnityEvent<DragInformation> { }
 
     public class InputManager : MonoBehaviour
     {
