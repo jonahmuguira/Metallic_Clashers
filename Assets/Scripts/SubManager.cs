@@ -1,7 +1,9 @@
 ﻿using Input;
 using Input.Information;
 
-public abstract class SubManager
+using UnityEngine;
+
+public abstract class SubManager : MonoBehaviour
 {
     protected virtual void OnPress(TouchInformation touchInfo)
     {
