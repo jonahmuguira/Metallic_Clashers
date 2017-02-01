@@ -25,7 +25,39 @@
 
         public abstract IEnumerable<Gem> gems { get; }
 
-        public abstract void Slide(SlideDirection direction);
+        protected abstract bool CopyAt(int fromIndex, int toIndex);
+
+        public bool Slide(SlideDirection direction)
+        {
+            var listCount = gems.Count();
+            for (var i = 0; i < listCount; i++)
+            {
+                int nextIndex;
+                switch (direction)
+                {
+                case SlideDirection.Forward:
+                    nextIndex = i - 1;
+                    if (nextIndex < 0)
+                        nextIndex = listCount - 1;
+                    break;
+                case SlideDirection.Backward:
+                    nextIndex = i + 1;
+                    if (nextIndex > listCount - 1)
+                        nextIndex = 0;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException("direction", direction, null);
+                }
+
+                var result = CopyAt(i, nextIndex);
+                if (!result)
+                    return false;
+            }
+
+            grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
+            return true;
+        }
     }
 
     [Serializable]
@@ -36,11 +68,19 @@
             get { return grid.gemLists.Select(gemList => gemList[index]); }
         }
 
-        public override void Slide(SlideDirection direction)
+        protected override bool CopyAt(int fromIndex, int toIndex)
         {
-            // TODO: Slide the column in the specified direction
+            var listCount = grid.gemLists[0].Count;
+            if (fromIndex >= listCount || fromIndex < 0 ||
+                toIndex >= listCount || toIndex < 0)
+                return false;
 
-            grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
+            var oldPosition = grid.gemLists[toIndex][index].position;
+
+            grid.gemLists[toIndex][index] = grid.gemLists[fromIndex][index];
+
+            grid.gemLists[toIndex][index].position = oldPosition;
+            return true;
         }
     }
 
@@ -52,11 +92,19 @@
             get { return grid.gemLists[index]; }
         }
 
-        public override void Slide(SlideDirection direction)
+        protected override bool CopyAt(int fromIndex, int toIndex)
         {
-            // TODO: Slide the row in the specified direction
+            var listCount = grid.gemLists.Count;
+            if (fromIndex >= listCount || fromIndex < 0 ||
+                toIndex >= listCount || toIndex < 0)
+                return false;
 
-            grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
+            var oldPosition = grid.gemLists[index][toIndex].position;
+
+            grid.gemLists[index][toIndex] = grid.gemLists[index][fromIndex];
+
+            grid.gemLists[index][toIndex].position = oldPosition;
+            return true;
         }
     }
 }

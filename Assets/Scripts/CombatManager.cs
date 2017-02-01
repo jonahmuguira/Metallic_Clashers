@@ -8,6 +8,8 @@ using Board.Information;
 using UnityEngine;
 using UnityEngine.Events;
 
+using Input = UnityEngine.Input;
+
 [Serializable]
 public class OnCombatBegin : UnityEvent { }
 [Serializable]
@@ -41,11 +43,18 @@ public class CombatManager : SubManager<CombatManager>
 
     public OnPlayerTurn onPlayerTurn { get { return m_OnPlayerTurn; } }
 
+    private Grid grid;
     protected override void Init()
     {
         //TODO: Initialize Combat
 
-        var grid = new Grid(new Vector2(5f, 5f));
+        grid = new Grid(new Vector2(5f, 5f));
+    }
+
+    private void Update()
+    {
+        if (UnityEngine.Input.GetKeyDown(KeyCode.RightArrow))
+            grid.rows[0].Slide(SlideDirection.Forward);
     }
 
     private void OnSlide(SlideInformation slideInfo)
