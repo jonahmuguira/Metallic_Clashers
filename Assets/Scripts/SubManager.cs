@@ -1,12 +1,8 @@
-﻿using Input.Information;
+﻿using Input;
+using Input.Information;
 
 public abstract class SubManager
 {
-    private void Awake()
-    {
-        ////TODO: This is where the listeners for the Different events will be.
-    }
-
     protected virtual void OnPress(TouchInformation touchInfo)
     {
         ////TODO: This will be the function that is called when a OnPress Event is called
@@ -22,8 +18,16 @@ public abstract class SubManager
         ////TODO: This will be the function that is called when a OnHold Event is called
     }
 
-    protected virtual void OnSlide(DragInformation slideInfo)
+    protected virtual void OnDrag(DragInformation slideInfo)
     {
         ////TODO: This will be the function that is called when a OnSlide Event is called
+    }
+
+    private void Awake()
+    {
+        InputManager.self.onPress.AddListener(OnPress);
+        InputManager.self.onRelease.AddListener(OnRelease);
+        InputManager.self.onHold.AddListener(OnHold);
+        InputManager.self.onDrag.AddListener(OnDrag);
     }
 }
