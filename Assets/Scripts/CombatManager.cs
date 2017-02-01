@@ -40,6 +40,11 @@ public class CombatManager : SubManager
 
     public OnPlayerTurn onPlayerTurn { get { return m_OnPlayerTurn; } }
 
+    protected override void Init()
+    {
+        //TODO: Initialize Combat
+    }
+
     private void OnSlide(SlideInformation slideInfo)
     {
         onPlayerTurn.Invoke();
