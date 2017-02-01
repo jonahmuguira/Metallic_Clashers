@@ -23,7 +23,7 @@
     public class Grid
     {
         [SerializeField]
-        private List<List<Gem>> m_GemList = new List<List<Gem>>();
+        private List<List<Gem>> m_GemLists = new List<List<Gem>>();
 
         [SerializeField]
         private Vector2 m_Size;
@@ -41,7 +41,7 @@
         [SerializeField]
         private OnSlide m_OnSlide = new OnSlide();
 
-        public List<List<Gem>> gemList { get { return m_GemList; } }
+        public List<List<Gem>> gemLists { get { return m_GemLists; } }
 
         public Vector2 size { get { return m_Size; } }
 
@@ -70,7 +70,7 @@
                         GemMono.Create(
                             this, gemType, new Vector2(x, y)).gem);
                 }
-                m_GemList.Add(newRow);
+                m_GemLists.Add(newRow);
             }
         }
 
@@ -87,14 +87,14 @@
 
         public bool Remove(Gem gem)
         {
-            var foundIndex = m_GemList.FindIndex(gems => gems.Contains(gem));
+            var foundIndex = m_GemLists.FindIndex(gems => gems.Contains(gem));
 
             // If a match was not found
             if (foundIndex == -1)
                 return false;
 
             // Removed the gem from the list which contains it
-            m_GemList[foundIndex].Remove(gem);
+            m_GemLists[foundIndex].Remove(gem);
 
             onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { gem } });
             return true;
@@ -103,18 +103,18 @@
         {
             var y = (int)position.y;
 
-            if (y >= m_GemList.Count || y < 0)
+            if (y >= m_GemLists.Count || y < 0)
                 return false;
 
             var x = (int)position.x;
 
-            if (x >= m_GemList[y].Count || x < 0)
+            if (x >= m_GemLists[y].Count || x < 0)
                 return false;
 
             // Store reference to removed gem
-            var gem = m_GemList[y][x];
+            var gem = m_GemLists[y][x];
 
-            m_GemList[y].RemoveAt(x);
+            m_GemLists[y].RemoveAt(x);
 
             // Use that reference when you invoke the onGridChange event
             onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { gem } });
@@ -123,15 +123,15 @@
 
         public bool Swap(Gem oldGem, Gem newGem)
         {
-            var foundY = m_GemList.FindIndex(gems => gems.Contains(oldGem));
+            var foundY = m_GemLists.FindIndex(gems => gems.Contains(oldGem));
 
             // If a match was not found
             if (foundY == -1)
                 return false;
 
-            var foundX = m_GemList[foundY].FindIndex(gem => gem == oldGem);
+            var foundX = m_GemLists[foundY].FindIndex(gem => gem == oldGem);
 
-            m_GemList[foundY][foundX] = newGem;
+            m_GemLists[foundY][foundX] = newGem;
 
             onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { oldGem, newGem } });
             return true;
@@ -141,24 +141,24 @@
             var y1 = (int)position1.y;
             var y2 = (int)position2.y;
 
-            if (y1 >= m_GemList.Count || y1 < 0 ||
-                y2 >= m_GemList.Count || y2 < 0)
+            if (y1 >= m_GemLists.Count || y1 < 0 ||
+                y2 >= m_GemLists.Count || y2 < 0)
                 return false;
 
             var x1 = (int)position1.x;
             var x2 = (int)position2.x;
 
-            if (x1 >= m_GemList[y1].Count || x1 < 0 ||
-                x2 >= m_GemList[y2].Count || x2 < 0)
+            if (x1 >= m_GemLists[y1].Count || x1 < 0 ||
+                x2 >= m_GemLists[y2].Count || x2 < 0)
                 return false;
 
             // Store a reference to the gems about to be swapped
-            var gem1 = m_GemList[y1][x1];
-            var gem2 = m_GemList[y2][x2];
+            var gem1 = m_GemLists[y1][x1];
+            var gem2 = m_GemLists[y2][x2];
 
             // Swap them
-            m_GemList[y1][x1] = gem2;
-            m_GemList[y2][x2] = gem1;
+            m_GemLists[y1][x1] = gem2;
+            m_GemLists[y2][x2] = gem1;
 
             // Use the references of each gem that was changed when invoking the onGridChange event
             onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { gem1, gem2 } });

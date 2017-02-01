@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Information;
 
@@ -22,7 +23,7 @@
         public Grid grid { get; set; }
         public int index { get { return m_Index; } set { m_Index = value; } }
 
-        public abstract List<Gem> gemList { get; }
+        public abstract IEnumerable<Gem> gems { get; }
 
         public abstract void Slide(SlideDirection direction);
     }
@@ -30,13 +31,9 @@
     [Serializable]
     public class Column : GridCollection
     {
-        public override List<Gem> gemList
+        public override IEnumerable<Gem> gems
         {
-            get
-            {
-                //TODO: Return list of gems in this column
-                return new List<Gem>();
-            }
+            get { return grid.gemLists.Select(gemList => gemList[index]); }
         }
 
         public override void Slide(SlideDirection direction)
@@ -50,13 +47,9 @@
     [Serializable]
     public class Row : GridCollection
     {
-        public override List<Gem> gemList
+        public override IEnumerable<Gem> gems
         {
-            get
-            {
-                //TODO: Return list of gems in this row
-                return new List<Gem>();
-            }
+            get { return grid.gemLists[index]; }
         }
 
         public override void Slide(SlideDirection direction)
