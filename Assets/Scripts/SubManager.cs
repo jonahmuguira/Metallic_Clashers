@@ -22,7 +22,7 @@ public abstract class SubManager
         ////TODO: This will be the function that is called when a OnHold Event is called
     }
 
-    protected virtual void OnSlide(SlideInformation slideInfo)
+    protected virtual void OnSlide(DragInformation slideInfo)
     {
         ////TODO: This will be the function that is called when a OnSlide Event is called
     }

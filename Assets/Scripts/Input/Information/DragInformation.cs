@@ -2,7 +2,7 @@
 {
     using UnityEngine;
 
-    public class SlideInformation
+    public class DragInformation
     {
         public Vector2 origin;
         public Vector2 end;
