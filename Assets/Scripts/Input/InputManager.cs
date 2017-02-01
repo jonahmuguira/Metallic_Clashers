@@ -7,18 +7,18 @@
     public class OnPress : UnityEvent<TouchInformation> { }
     public class OnRelease : UnityEvent<TouchInformation> { }
     public class OnHold : UnityEvent<TouchInformation> { }
-    public class OnSlide : UnityEvent<SlideInformation> { }
+    public class OnDrag : UnityEvent<SlideInformation> { }
 
     public class InputManager : MonoBehaviour
     {
-        public float slideDistance;
-        public float slideDuration;
+        public float dragDistance;
+        public float dragDuration;
         public float holdDuration;
 
         private readonly OnPress m_OnPress = new OnPress();
         private readonly OnRelease m_OnRelease = new OnRelease();
         private readonly OnHold m_OnHold = new OnHold();
-        private readonly OnSlide m_OnSlide = new OnSlide();
+        private readonly OnDrag m_OnDrag = new OnDrag();
 
         private void Awake()
         {
@@ -33,7 +33,7 @@
         public OnPress onPress { get { return m_OnPress;} }
         public OnRelease onRelease { get { return m_OnRelease;} }
         public OnHold onHold { get { return m_OnHold;} }
-        public OnSlide onSlide { get { return m_OnSlide;} }
+        public OnDrag onDrag { get { return m_OnDrag;} }
 
     }
 }
