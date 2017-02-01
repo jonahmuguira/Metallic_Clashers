@@ -53,8 +53,7 @@
         private Grid() { }
         public Grid(Vector2 newSize) : this()
         {
-            var timeSpan = new TimeSpan(DateTime.Now.Ticks);
-            Random.InitState((int)timeSpan.TotalMilliseconds);
+            Random.InitState((int)DateTime.Now.Ticks);
 
             var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
 

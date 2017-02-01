@@ -2,7 +2,9 @@
 using Input.Information;
 using Library;
 
-public abstract class SubManager : MonoSingleton<SubManager>
+using UnityEngine;
+
+public abstract class SubManager<T> : MonoSingleton<T> where T : MonoBehaviour
 {
     protected override void Awake()
     {
