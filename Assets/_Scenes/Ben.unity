@@ -389,12 +389,11 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: OnPlayerTurn, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   m_GemSprites:
+  - {fileID: 21300000, guid: e57f79abee13a0440897147034156eec, type: 3}
   - {fileID: 21300000, guid: 16d56509b24b96d4c965cc62f23e81ea, type: 3}
   - {fileID: 21300000, guid: 205fed01f0dec8649a8c7fd717d2d572, type: 3}
-  - {fileID: 21300000, guid: 5098dcbf28aad214b9d91ffad338fc49, type: 3}
-  - {fileID: 21300000, guid: 931eaea3528340b4f97ceee7dfcd177e, type: 3}
-  - {fileID: 21300000, guid: e57f79abee13a0440897147034156eec, type: 3}
   - {fileID: 21300000, guid: 3dfe42ff08ad5ff4a85c2fdf4596a5fb, type: 3}
+  - {fileID: 21300000, guid: 931eaea3528340b4f97ceee7dfcd177e, type: 3}
 --- !u!4 &1796546808
 Transform:
   m_ObjectHideFlags: 0
