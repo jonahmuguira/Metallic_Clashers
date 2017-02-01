@@ -1,4 +1,6 @@
-﻿namespace Board
+﻿using System.Collections;
+
+namespace Board
 {
     using UnityEngine;
 
@@ -12,6 +14,9 @@
 
         [SerializeField]
         private Gem m_Gem;
+        
+        private float m_MoveToPositionTime = 1f;
+        private Coroutine m_MoveToPositionCoroutine;
 
         public Gem gem
         {
@@ -31,7 +36,10 @@
         }
         private void OnPositionChange(PositionChangeInformation positionChangeInfo)
         {
-            transform.localPosition = Vector3.Lerp(transform.localPosition, m_Gem.position, 0.5f);
+            if (m_MoveToPositionCoroutine != null)
+                StopCoroutine(m_MoveToPositionCoroutine);
+
+            m_MoveToPositionCoroutine = StartCoroutine(MoveToPosition(positionChangeInfo.newPosition));
         }
 
         private void OnMatch(MatchInformation matchInfo)
@@ -41,6 +49,22 @@
         private void OnGridChange(GridChangeInformation gridChangeInfo)
         {
             //TODO: Check to see if this gem was changed in the grid
+        }
+
+        private IEnumerator MoveToPosition(Vector3 newPosition)
+        {
+            var deltaTime = 0f;
+            while (deltaTime < m_MoveToPositionTime)
+            {
+                transform.localPosition = 
+                    Vector3.Lerp(transform.localPosition, m_Gem.position, deltaTime / m_MoveToPositionTime);
+
+                deltaTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            m_MoveToPositionCoroutine = null;
         }
 
         public static GemMono Create(Grid grid, GemType gemType, Vector2 position)
