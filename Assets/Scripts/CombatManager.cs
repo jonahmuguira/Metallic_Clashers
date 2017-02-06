@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Board;
 using Board.Information;
 
+using Input.Information;
+
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -50,6 +52,8 @@ public class CombatManager : SubManager<CombatManager>
         //TODO: Initialize Combat
 
         m_Grid = new Grid(new Vector2(5f, 5f));
+
+        m_Grid.onSlide.AddListener(OnSlide);
     }
 
     private void Update()
@@ -60,5 +64,38 @@ public class CombatManager : SubManager<CombatManager>
     private void OnSlide(SlideInformation slideInfo)
     {
         onPlayerTurn.Invoke();
+    }
+
+    protected override void OnDrag(DragInformation dragInfo)
+    {
+        var ray = Camera.main.ScreenPointToRay(dragInfo.origin);
+        //ray.origin = Camera.main.ScreenToWorldPoint(dragInfo.origin);
+
+        Debug.DrawRay(ray.origin, ray.direction * 25f, Color.white, 2f);
+
+        var hit = Physics2D.GetRayIntersection(ray);
+        if (hit.collider)
+        {
+            var gemMono = hit.collider.GetComponent<GemMono>();
+            if (gemMono)
+            {
+                if (Mathf.Abs(dragInfo.end.x - dragInfo.origin.x) > Mathf.Abs(dragInfo.end.y - dragInfo.origin.y))
+                {
+                    var slideDirection =
+                        dragInfo.end.x - dragInfo.origin.x > 0 ?
+                        SlideDirection.Backward : SlideDirection.Forward;
+
+                    gemMono.gem.grid.SlideRowAt((int)gemMono.gem.position.y, slideDirection);
+                }
+                else
+                {
+                    var slideDirection =
+                        dragInfo.end.y - dragInfo.origin.y > 0 ?
+                        SlideDirection.Backward : SlideDirection.Forward;
+
+                    gemMono.gem.grid.SlideColumnAt((int)gemMono.gem.position.x, slideDirection);
+                }
+            }
+        }
     }
 }

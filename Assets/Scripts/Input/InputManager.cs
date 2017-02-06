@@ -62,8 +62,6 @@
                 m_OnPress.Invoke(
                     new TouchInformation { duration = 0f, position = Input.mousePosition });
 
-                Debug.Log("Press");
-
                 m_PreviousPosition = Input.mousePosition;
                 m_CurrentHoldDuration = 0f;
                 m_MouseWasDown = true;

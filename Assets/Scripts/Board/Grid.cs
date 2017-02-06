@@ -70,7 +70,7 @@
                 for (var x = 0; x < m_Size.x; ++x)
                 {
                     if (x == 0)
-                        m_Columns.Add(new Column { grid = this, index = x });
+                        m_Columns.Add(new Column { grid = this, index = y });
 
                     var gemType = (GemType)Random.Range(0, numGemTypes);
 
