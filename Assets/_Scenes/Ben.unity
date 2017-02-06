@@ -130,6 +130,16 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 114245420580760474, guid: 6c86cf7b4241d5445bbc9591032f5e9a,
+        type: 2}
+      propertyPath: m_DragDistance
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114245420580760474, guid: 6c86cf7b4241d5445bbc9591032f5e9a,
+        type: 2}
+      propertyPath: m_DragDuration
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c86cf7b4241d5445bbc9591032f5e9a, type: 2}
   m_IsPrefabParent: 0
