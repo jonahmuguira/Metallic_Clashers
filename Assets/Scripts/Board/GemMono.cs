@@ -70,7 +70,7 @@ namespace Board
         public static GemMono Create(Grid grid, GemType gemType, Vector2 position)
         {
             var newGemMono = new GameObject().AddComponent<GemMono>();
-
+            newGemMono.name = position.ToString();
             grid.onMatch.AddListener(newGemMono.OnMatch);
             grid.onGridChange.AddListener(newGemMono.OnGridChange);
 
@@ -86,6 +86,9 @@ namespace Board
 
             newGemMono.gem.gemType = gemType;
             newGemMono.gem.position = position;
+
+            var newBoxCollider = newGemMono.gameObject.AddComponent<BoxCollider2D>();
+            newBoxCollider.isTrigger = true;
 
             return newGemMono;
         }
