@@ -4,7 +4,7 @@
 
     using UnityEngine;
     using UnityEngine.Events;
-    
+
     using Library;
     using Information;
 
@@ -26,7 +26,7 @@
         [SerializeField]
         private float m_HoldDuration;
 
-        [SerializeField]
+        [SerializeField, Space]
         private OnPress m_OnPress = new OnPress();
         [SerializeField]
         private OnRelease m_OnRelease = new OnRelease();
@@ -34,6 +34,10 @@
         private OnHold m_OnHold = new OnHold();
         [SerializeField]
         private OnDrag m_OnDrag = new OnDrag();
+
+        private bool m_MouseWasDown;
+        private float m_CurrentHoldDuration;
+        private Vector3 m_PreviousPosition;
 
         public float dragDistance { get { return m_DragDistance; } }
         public float dragDuration { get { return m_DragDuration; } }
@@ -53,7 +57,55 @@
 
         private void Update()
         {
+            if (Input.GetMouseButtonDown(0))
+            {
+                m_OnPress.Invoke(
+                    new TouchInformation { duration = 0f, position = Input.mousePosition });
 
+                m_PreviousPosition = Input.mousePosition;
+                m_CurrentHoldDuration = 0f;
+                m_MouseWasDown = true;
+            }
+
+            if (Input.GetMouseButton(0) && m_MouseWasDown)
+            {
+                m_OnHold.Invoke(
+                    new TouchInformation
+                    {
+                        duration = m_CurrentHoldDuration,
+                        position = Input.mousePosition
+                    });
+
+                m_CurrentHoldDuration += Time.deltaTime;
+                m_MouseWasDown = false;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                if (m_CurrentHoldDuration < m_DragDuration &&
+                    Vector3.Distance(m_PreviousPosition, Input.mousePosition) < m_DragDistance)
+                {
+                    m_OnRelease.Invoke(
+                        new TouchInformation
+                        {
+                            duration = m_CurrentHoldDuration,
+                            position = m_PreviousPosition
+                        });
+                }
+                else if (Vector3.Distance(m_PreviousPosition, Input.mousePosition) >= m_DragDistance)
+                {
+                    m_OnDrag.Invoke(
+                        new DragInformation
+                        {
+                            origin = m_PreviousPosition,
+                            end = Input.mousePosition,
+                            duration = m_CurrentHoldDuration
+                        });
+                }
+
+                m_CurrentHoldDuration = 0f;
+                m_MouseWasDown = false;
+            }
         }
     }
 }
