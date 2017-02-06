@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Board;
 using Board.Information;
@@ -32,6 +31,9 @@ public class CombatManager : SubManager<CombatManager>
     [SerializeField]
     private List<Sprite> m_GemSprites = new List<Sprite>();
 
+    [SerializeField]
+    private Grid m_Grid;
+
     //TODO: public List<Enemy> enemies = new List<>;
     public List<Sprite> gemSprites { get { return m_GemSprites; } }
 
@@ -41,11 +43,18 @@ public class CombatManager : SubManager<CombatManager>
 
     public OnPlayerTurn onPlayerTurn { get { return m_OnPlayerTurn; } }
 
+    public Grid grid { get { return m_Grid; } }
+
     protected override void Init()
     {
         //TODO: Initialize Combat
 
-        var grid = new Grid(new Vector2(5f, 5f));
+        m_Grid = new Grid(new Vector2(5f, 5f));
+    }
+
+    private void Update()
+    {
+
     }
 
     private void OnSlide(SlideInformation slideInfo)

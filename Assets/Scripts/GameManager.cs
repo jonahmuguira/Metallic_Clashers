@@ -19,7 +19,12 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
+    }
 
+    private void OnCombatEnd()
+    {
+        
     }
 
     private void Save()

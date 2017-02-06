@@ -45,6 +45,9 @@
 
         public Vector2 size { get { return m_Size; } }
 
+        public List<Column> columns { get { return m_Columns; } }
+        public List<Row> rows { get { return m_Rows; } }
+
         public OnMatch onMatch { get { return m_OnMatch; } }
         public OnGridChange onGridChange { get { return m_OnGridChange; } }
 
@@ -61,16 +64,21 @@
 
             for (var y = 0; y < m_Size.y; ++y)
             {
-                var newRow = new List<Gem>();
+                m_Rows.Add(new Row { grid = this, index = y });
+
+                var newList = new List<Gem>();
                 for (var x = 0; x < m_Size.x; ++x)
                 {
+                    if (x == 0)
+                        m_Columns.Add(new Column { grid = this, index = x });
+
                     var gemType = (GemType)Random.Range(0, numGemTypes);
 
-                    newRow.Add(
+                    newList.Add(
                         GemMono.Create(
                             this, gemType, new Vector2(x, y)).gem);
                 }
-                m_GemLists.Add(newRow);
+                m_GemLists.Add(newList);
             }
         }
 
@@ -170,16 +178,14 @@
             if (index >= m_Rows.Count || index < 0)
                 return false;
 
-            m_Rows[index].Slide(direction);
-            return true;
+            return m_Rows[index].Slide(direction);
         }
         public bool SlideColumnAt(int index, SlideDirection direction)
         {
             if (index >= m_Columns.Count || index < 0)
                 return false;
 
-            m_Columns[index].Slide(direction);
-            return true;
+            return m_Columns[index].Slide(direction);
         }
 
         private void OnGemTypeChange(TypeChangeInformation typeChangeInfo)
