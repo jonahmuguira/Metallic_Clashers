@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Board;
 using Board.Information;
 
 using UnityEngine;
@@ -16,7 +17,7 @@ public class OnCombatUpdate : UnityEvent { }
 [Serializable]
 public class OnPlayerTurn : UnityEvent { }
 
-public class CombatManager : SubManager
+public class CombatManager : SubManager<CombatManager>
 {
     [SerializeField]
     private OnCombatBegin m_OnCombatBegin = new OnCombatBegin();
@@ -43,6 +44,8 @@ public class CombatManager : SubManager
     protected override void Init()
     {
         //TODO: Initialize Combat
+
+        var grid = new Grid(new Vector2(5f, 5f));
     }
 
     private void OnSlide(SlideInformation slideInfo)

@@ -31,9 +31,9 @@
         private Vector2 m_Position;
 
         [SerializeField]
-        private readonly OnTypeChange m_OnTypeChange = new OnTypeChange();
+        private OnTypeChange m_OnTypeChange = new OnTypeChange();
         [SerializeField]
-        private readonly OnPositionChange m_OnPositionChange = new OnPositionChange();
+        private OnPositionChange m_OnPositionChange = new OnPositionChange();
 
         public Grid grid { get; set; }
 
@@ -42,9 +42,6 @@
             get { return m_GemType; }
             set
             {
-                if (m_GemType == value)
-                    return;
-
                 m_GemType = value;
 
                 m_OnTypeChange.Invoke(new TypeChangeInformation { gem = this, newType = value });
@@ -56,9 +53,6 @@
             get { return m_Position; }
             set
             {
-                if (m_Position == value)
-                    return;
-
                 m_Position = value;
 
                 m_OnPositionChange.Invoke(new PositionChangeInformation { gem = this, newPosition = value });

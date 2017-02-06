@@ -1,7 +1,7 @@
-﻿namespace Board
-{
-    using System;
+﻿using System.Collections;
 
+namespace Board
+{
     using UnityEngine;
 
     using Information;
@@ -14,6 +14,9 @@
 
         [SerializeField]
         private Gem m_Gem;
+        
+        private float m_MoveToPositionTime = 1f;
+        private Coroutine m_MoveToPositionCoroutine;
 
         public Gem gem
         {
@@ -27,31 +30,16 @@
             if (typeChangeInfo.gem != gem)
                 return;
 
-            //TODO: Update sprite based on new type
-            switch (typeChangeInfo.newType)
-            {
-            case GemType.Red:
-                break;
+            var spriteIndex = (int)typeChangeInfo.newType;
 
-            case GemType.Blue:
-                break;
-
-            case GemType.Green:
-                break;
-
-            case GemType.Yellow:
-                break;
-
-            case GemType.Purple:
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException();
-            }
+            m_SpriteRenderer.sprite = CombatManager.self.gemSprites[spriteIndex];
         }
         private void OnPositionChange(PositionChangeInformation positionChangeInfo)
         {
-            //TODO: Animate to new position
+            if (m_MoveToPositionCoroutine != null)
+                StopCoroutine(m_MoveToPositionCoroutine);
+
+            m_MoveToPositionCoroutine = StartCoroutine(MoveToPosition(positionChangeInfo.newPosition));
         }
 
         private void OnMatch(MatchInformation matchInfo)
@@ -63,6 +51,22 @@
             //TODO: Check to see if this gem was changed in the grid
         }
 
+        private IEnumerator MoveToPosition(Vector3 newPosition)
+        {
+            var deltaTime = 0f;
+            while (deltaTime < m_MoveToPositionTime)
+            {
+                transform.localPosition = 
+                    Vector3.Lerp(transform.localPosition, m_Gem.position, deltaTime / m_MoveToPositionTime);
+
+                deltaTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            m_MoveToPositionCoroutine = null;
+        }
+
         public static GemMono Create(Grid grid, GemType gemType, Vector2 position)
         {
             var newGemMono = new GameObject().AddComponent<GemMono>();
@@ -70,10 +74,18 @@
             grid.onMatch.AddListener(newGemMono.OnMatch);
             grid.onGridChange.AddListener(newGemMono.OnGridChange);
 
-            newGemMono.gem = new Gem { gemType = gemType, position = position };
+            newGemMono.m_SpriteRenderer = newGemMono.GetComponent<SpriteRenderer>();
 
+            newGemMono.gem = new Gem();
+
+            // Subscribe to the relevant events before setting the values
             newGemMono.gem.onTypeChange.AddListener(newGemMono.OnTypeChange);
             newGemMono.gem.onPositionChange.AddListener(newGemMono.OnPositionChange);
+
+            newGemMono.gem.grid = grid;
+
+            newGemMono.gem.gemType = gemType;
+            newGemMono.gem.position = position;
 
             return newGemMono;
         }
