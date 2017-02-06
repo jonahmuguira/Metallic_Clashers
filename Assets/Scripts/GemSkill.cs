@@ -1,5 +1,8 @@
-﻿using Board;
+﻿using System;
 
+using Board;
+
+[Serializable]
 public class GemSkill
 {
     public GemType gemType;
