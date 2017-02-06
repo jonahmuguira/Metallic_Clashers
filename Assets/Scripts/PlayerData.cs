@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
+[Serializable]
 public class PlayerData
 {
     public Attribute health;
@@ -8,5 +10,5 @@ public class PlayerData
 
     public Attribute defense;
 
-    public List<GemSkill> gemSkills;
+    public List<GemSkill> gemSkills = new List<GemSkill>();
 }

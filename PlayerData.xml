@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<PlayerData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <health>
+    <value>10</value>
+    <modifier>0</modifier>
+    <coefficient>0</coefficient>
+  </health>
+  <attack>
+    <value>10</value>
+    <modifier>0</modifier>
+    <coefficient>0</coefficient>
+  </attack>
+  <defense>
+    <value>10</value>
+    <modifier>0</modifier>
+    <coefficient>0</coefficient>
+  </defense>
+  <gemSkills>
+    <GemSkill>
+      <gemType>Blue</gemType>
+      <skillLevel>0</skillLevel>
+    </GemSkill>
+  </gemSkills>
+</PlayerData>
