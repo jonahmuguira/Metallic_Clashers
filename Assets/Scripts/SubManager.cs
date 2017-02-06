@@ -35,7 +35,7 @@ public abstract class SubManager<T> : MonoSingleton<T> where T : MonoBehaviour
         ////TODO: This will be the function that is called when a OnHold Event is called
     }
 
-    protected virtual void OnDrag(DragInformation slideInfo)
+    protected virtual void OnDrag(DragInformation dragInfo)
     {
         ////TODO: This will be the function that is called when a OnSlide Event is called
     }
