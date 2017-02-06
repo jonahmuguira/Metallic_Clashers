@@ -25,10 +25,12 @@
 
         public abstract IEnumerable<Gem> gems { get; }
 
-        protected abstract bool CopyAt(int fromIndex, int toIndex);
+        protected abstract bool CopyAt(List<List<Gem>> tempList, int fromIndex, int toIndex);
 
         public bool Slide(SlideDirection direction)
         {
+            var tempList = grid.gemLists.Select(gemList => gemList.ToList()).ToList();
+
             var listCount = gems.Count();
             for (var i = 0; i < listCount; i++)
             {
@@ -50,7 +52,7 @@
                     throw new ArgumentOutOfRangeException("direction", direction, null);
                 }
 
-                var result = CopyAt(i, nextIndex);
+                var result = CopyAt(tempList, i, nextIndex);
                 if (!result)
                     return false;
             }
@@ -68,18 +70,16 @@
             get { return grid.gemLists.Select(gemList => gemList[index]); }
         }
 
-        protected override bool CopyAt(int fromIndex, int toIndex)
+        protected override bool CopyAt(List<List<Gem>> tempList, int fromIndex, int toIndex)
         {
             var listCount = grid.gemLists[0].Count;
             if (fromIndex >= listCount || fromIndex < 0 ||
                 toIndex >= listCount || toIndex < 0)
                 return false;
 
-            var oldPosition = grid.gemLists[toIndex][index].position;
+            grid.gemLists[toIndex][index] = tempList[fromIndex][index];
 
-            grid.gemLists[toIndex][index] = grid.gemLists[fromIndex][index];
-
-            grid.gemLists[toIndex][index].position = oldPosition;
+            grid.gemLists[toIndex][index].position = new Vector2(index, toIndex);
             return true;
         }
     }
@@ -92,18 +92,16 @@
             get { return grid.gemLists[index]; }
         }
 
-        protected override bool CopyAt(int fromIndex, int toIndex)
+        protected override bool CopyAt(List<List<Gem>> tempList, int fromIndex, int toIndex)
         {
             var listCount = grid.gemLists.Count;
             if (fromIndex >= listCount || fromIndex < 0 ||
                 toIndex >= listCount || toIndex < 0)
                 return false;
 
-            var oldPosition = grid.gemLists[index][toIndex].position;
+            grid.gemLists[index][toIndex] = tempList[index][fromIndex];
 
-            grid.gemLists[index][toIndex] = grid.gemLists[index][fromIndex];
-
-            grid.gemLists[index][toIndex].position = oldPosition;
+            grid.gemLists[index][toIndex].position = new Vector2(toIndex, index);
             return true;
         }
     }
