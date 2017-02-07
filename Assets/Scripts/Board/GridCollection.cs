@@ -20,7 +20,10 @@
         [SerializeField]
         protected int m_Index;
 
-        public Grid grid { get; set; }
+        [NonSerialized]
+        protected Grid m_Grid;
+
+        public Grid grid { get { return m_Grid; } set { m_Grid = value; } }
         public int index { get { return m_Index; } set { m_Index = value; } }
 
         public abstract IEnumerable<Gem> gems { get; }
@@ -29,7 +32,7 @@
 
         public bool Slide(SlideDirection direction)
         {
-            var tempList = grid.gemLists.Select(gemList => gemList.ToList()).ToList();
+            var tempList = m_Grid.gemLists.Select(gemList => gemList.gems.ToList()).ToList();
 
             var listCount = gems.Count();
             for (var i = 0; i < listCount; i++)
@@ -57,7 +60,7 @@
                     return false;
             }
 
-            grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
+            m_Grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
             return true;
         }
     }
@@ -67,19 +70,19 @@
     {
         public override IEnumerable<Gem> gems
         {
-            get { return grid.gemLists.Select(gemList => gemList[index]); }
+            get { return m_Grid.gemLists.Select(gemList => gemList[index]); }
         }
 
         protected override bool CopyAt(List<List<Gem>> tempList, int fromIndex, int toIndex)
         {
-            var listCount = grid.gemLists[0].Count;
+            var listCount = m_Grid.gemLists[0].gems.Count;
             if (fromIndex >= listCount || fromIndex < 0 ||
                 toIndex >= listCount || toIndex < 0)
                 return false;
 
-            grid.gemLists[toIndex][index] = tempList[fromIndex][index];
+            m_Grid.gemLists[toIndex][index] = tempList[fromIndex][index];
 
-            grid.gemLists[toIndex][index].position = new Vector2(index, toIndex);
+            m_Grid.gemLists[toIndex][index].position = new Vector2(index, toIndex);
             return true;
         }
     }
@@ -89,19 +92,19 @@
     {
         public override IEnumerable<Gem> gems
         {
-            get { return grid.gemLists[index]; }
+            get { return m_Grid.gemLists[index].gems; }
         }
 
         protected override bool CopyAt(List<List<Gem>> tempList, int fromIndex, int toIndex)
         {
-            var listCount = grid.gemLists.Count;
+            var listCount = m_Grid.gemLists.Count;
             if (fromIndex >= listCount || fromIndex < 0 ||
                 toIndex >= listCount || toIndex < 0)
                 return false;
 
-            grid.gemLists[index][toIndex] = tempList[index][fromIndex];
+            m_Grid.gemLists[index][toIndex] = tempList[index][fromIndex];
 
-            grid.gemLists[index][toIndex].position = new Vector2(toIndex, index);
+            m_Grid.gemLists[index][toIndex].position = new Vector2(toIndex, index);
             return true;
         }
     }
