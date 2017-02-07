@@ -4,44 +4,39 @@ using UnityEngine;
 
 public class CameraChange : MonoBehaviour
 {
-    public Camera primaryCamera; //main camera
-    //public Camera secondaryCamera;
+    public Transform mainCamera;
 
-    public float countDownValue = 5;
-    public float countDown;
+    public Transform gameObjectOne;
+    public Transform gameObjectTwo;
 
     public void Start()
     {
-        primaryCamera.enabled = true;
-        //secondaryCamera.enabled = false;
+        mainCamera.position = new Vector3(0, 0, -10);
 
-        countDown = countDownValue;
-        //StartCoroutine(StartCountDown());
+        gameObjectOne.position = new Vector3(-10, 0, 0);
+        gameObjectTwo.position = new Vector3(10, 0, 0);
     }
 
-    //public IEnumerator StartCountDown()
-    //{
-    //    while (countDown >= 0)
-    //    {
-    //        Debug.Log(countDown);
-    //        yield return null;
-    //        countDown -= Time.deltaTime;
-    //    }
+    public void Update()
+    {
+        if (UnityEngine.Input.GetKeyDown("x"))
+        {
+            mainCamera.position = new Vector3(0, 0, -10);
 
-    //    if (countDown < 0)
-    //    {
-    //        primaryCamera.enabled = !primaryCamera.enabled;
-    //        secondaryCamera.enabled = !secondaryCamera.enabled;
-    //        countDown = 5;
-    //    }
-    //}
+            mainCamera.position = gameObjectOne.position;
+        }
 
-    //public void Update()
-    //{
-    //    if (UnityEngine.Input.GetKeyDown("x"))
-    //    {
-    //        primaryCamera.enabled = !primaryCamera.enabled;
-    //        secondaryCamera.enabled = !secondaryCamera.enabled;
-    //    }
-    //}
+        if (UnityEngine.Input.GetKeyDown("c"))
+        {
+            mainCamera.position = new Vector3(0, 0, -10);
+
+            mainCamera.position = gameObjectTwo.position;
+        }
+
+        if (UnityEngine.Input.GetKeyDown("v"))
+        {
+            mainCamera.position = new Vector3(0, 0, -10);
+            mainCamera.position = mainCamera.position;
+        }
+    }
 }
