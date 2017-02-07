@@ -9,10 +9,13 @@
         public List<Node> nodes = new List<Node>();
     }
 
-    public class StageSelectionManager : SubManager<StageSelectionManager>
+    public class StageSelectionManager : MonoBehaviour
     {
+        public GameObject nodePrefab;
         public List<Tree> worlds = new List<Tree>();
-        protected override void Init()  //Awake for the Manager
+        public float spacingMagnitude;
+        [ContextMenu("Awake")]
+        protected void Awake()  //Awake for the Manager
         {
             worlds = 
                 new List<Tree>
@@ -21,9 +24,9 @@
                     {
                         nodes = new List<Node>
                         {
-                            new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0)},
-                            new Node{stageNumber = "2", normalizedPosition = new Vector2(0, 1)},
-                            new Node{stageNumber = "3", normalizedPosition = new Vector2(0, 2)},
+                            new Node{isComplete = true, stageNumber = "1", normalizedPosition = new Vector2(0, 0)},
+                            new Node{isComplete = false, stageNumber = "2", normalizedPosition = new Vector2(0, 1)},
+                            new Node{isComplete = false, stageNumber = "3", normalizedPosition = new Vector2(0, 2)},
                         }
                     }
                 };
@@ -41,7 +44,14 @@
             {
                 foreach (var n in tree.nodes)
                 {
-                    
+                    var nodeObject = 
+                        Instantiate(nodePrefab, 
+                        new Vector3(
+                            n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude
+                            ), new Quaternion());
+
+                    var monoNode = nodeObject.AddComponent<MonoNode>();
+                    monoNode.node = n;
                 }
             }
         }
