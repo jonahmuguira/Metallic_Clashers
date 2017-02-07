@@ -10,13 +10,19 @@
     [Serializable]
     public class Node
     {
+        [XmlIgnore]
         public List<Node> prevNodes = new List<Node>();
+        [XmlIgnore]
         public List<Node> nextNodes = new List<Node>();
 
+        [XmlIgnore]
         public Vector2 normalizedPosition;
         public bool isComplete = false;
+        [XmlIgnore]
         public string stageName {get { return worldIndex + "-" + stageNumber; } }
+        [XmlIgnore]
         public string stageNumber;
+        [XmlIgnore]
         public int worldIndex;
     }
 
@@ -27,8 +33,9 @@
         private void Start()
         {
             var mat = GetComponent<Renderer>().material;
-
-            if (node.isComplete)    // If the node is done and playable
+            
+            // If the node is done and playable
+            if (node.isComplete)    
             {
                 mat.color = Color.green;
                 return;
