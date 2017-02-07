@@ -24,7 +24,7 @@
     {
         public Node node;
 
-        private void Awake()
+        private void Start()
         {
             var mat = GetComponent<Renderer>().material;
 
