@@ -19,6 +19,8 @@ namespace Board
         [SerializeField]
         private Gem m_Gem;
 
+        //private Vector2 m_
+
         private float m_MoveToPositionTime = 1f;
         private Coroutine m_MoveToPositionCoroutine;
 
@@ -61,8 +63,11 @@ namespace Board
             var deltaTime = 0f;
             while (deltaTime < m_MoveToPositionTime)
             {
-                transform.localPosition =
-                    Vector3.Lerp(transform.localPosition, newPosition, deltaTime / m_MoveToPositionTime);
+                m_RectTransform.anchoredPosition =
+                    Vector3.Lerp(
+                        m_RectTransform.anchoredPosition,
+                        newPosition,
+                        deltaTime / m_MoveToPositionTime);
 
                 deltaTime += Time.deltaTime;
 
