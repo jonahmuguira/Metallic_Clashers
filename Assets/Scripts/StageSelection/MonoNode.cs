@@ -10,9 +10,12 @@
     [Serializable]
     public class Node
     {
+        public List<Node> prevNodes = new List<Node>();
+        public List<Node> nextNodes = new List<Node>();
+
         public Vector2 normalizedPosition;
         public bool isComplete = false;
-        public string stageName;
+        public string stageName {get { return worldIndex + "-" + stageNumber; } }
         public string stageNumber;
         public int worldIndex;
     }
@@ -20,9 +23,6 @@
     public class MonoNode : MonoBehaviour
     {
         public Node node;
-
-        public List<MonoNode> prevNodes = new List<MonoNode>();
-        public List<MonoNode> nextNodes = new List<MonoNode>();
 
         private void Awake()
         {
@@ -35,7 +35,7 @@
             }
 
             // If the node is playable
-            if (prevNodes.Any(n => n.node.isComplete))
+            if (node.prevNodes.Any(n => n.isComplete))
             {
                 mat.color = Color.blue;
                 return;
