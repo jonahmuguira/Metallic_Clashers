@@ -19,6 +19,8 @@ namespace Board
         [SerializeField]
         private Gem m_Gem;
 
+        //private Vector2 m_
+
         private float m_MoveToPositionTime = 1f;
         private Coroutine m_MoveToPositionCoroutine;
 
