@@ -1,6 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using System.Xml.Serialization;
+
+using Board;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,20 +20,36 @@ public class GameManager : MonoBehaviour
     public GameState gameState;
 
     public PlayerData playerData;
-    private string savePath;
 
     private void Awake()
     {
-
+        CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
     }
 
+    private void OnCombatEnd()
+    {
+        
+    }
+
+    [ContextMenu("Save Player")]
     private void Save()
     {
-        ////TODO: This is where the player's data will be Saved out
+        //Saving PlayerData
+        var playerPath = Environment.CurrentDirectory + "/PlayerData.xml";
+        var playerStream = File.Create(playerPath);
+
+        var serializer = new XmlSerializer(typeof(PlayerData));
+        serializer.Serialize(playerStream, playerData);
+        playerStream.Close();
     }
 
+    [ContextMenu("Load Player")]
     private void Load()
     {
-        ////TODO: This is where the player's data will be Loaded in
+        var reader = new XmlSerializer(typeof(PlayerData));
+        var file = new StreamReader(Environment.CurrentDirectory + "/PlayerData.xml");
+
+        playerData = (PlayerData) reader.Deserialize(file);
+        file.Close();
     }
 }
