@@ -140,6 +140,11 @@ Prefab:
       propertyPath: m_DragDuration
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 114245420580760474, guid: 6c86cf7b4241d5445bbc9591032f5e9a,
+        type: 2}
+      propertyPath: m_DragDeadzone
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c86cf7b4241d5445bbc9591032f5e9a, type: 2}
   m_IsPrefabParent: 0
@@ -155,7 +160,6 @@ GameObject:
   - component: {fileID: 1138016862}
   - component: {fileID: 1138016861}
   - component: {fileID: 1138016860}
-  - component: {fileID: 1138016865}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -231,20 +235,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1138016865
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1138016859}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -1690312454, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_EventMask:
-    serializedVersion: 2
-    m_Bits: 32
 --- !u!1001 &1153635025
 Prefab:
   m_ObjectHideFlags: 0

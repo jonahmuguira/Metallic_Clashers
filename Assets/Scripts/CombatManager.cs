@@ -10,7 +10,6 @@ using Input.Information;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 [Serializable]
 public class OnCombatBegin : UnityEvent { }
@@ -69,7 +68,7 @@ public class CombatManager : SubManager<CombatManager>
         onPlayerTurn.Invoke();
     }
 
-    protected override void OnDrag(DragInformation dragInfo)
+    protected override void OnEndDrag(DragInformation dragInfo)
     {
         var pointerEventData =
             new PointerEventData(EventSystem.current) { position = dragInfo.origin };
