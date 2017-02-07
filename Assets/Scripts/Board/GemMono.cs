@@ -61,8 +61,11 @@ namespace Board
             var deltaTime = 0f;
             while (deltaTime < m_MoveToPositionTime)
             {
-                transform.localPosition =
-                    Vector3.Lerp(transform.localPosition, newPosition, deltaTime / m_MoveToPositionTime);
+                m_RectTransform.anchoredPosition =
+                    Vector3.Lerp(
+                        m_RectTransform.anchoredPosition,
+                        newPosition,
+                        deltaTime / m_MoveToPositionTime);
 
                 deltaTime += Time.deltaTime;
 

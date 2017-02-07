@@ -13,7 +13,10 @@ public abstract class SubManager<T> : MonoSingleton<T> where T : MonoBehaviour
         InputManager.self.onPress.AddListener(OnPress);
         InputManager.self.onRelease.AddListener(OnRelease);
         InputManager.self.onHold.AddListener(OnHold);
+
+        InputManager.self.onBeginDrag.AddListener(OnBeginDrag);
         InputManager.self.onDrag.AddListener(OnDrag);
+        InputManager.self.onEndDrag.AddListener(OnEndDrag);
 
         Init();
     }
