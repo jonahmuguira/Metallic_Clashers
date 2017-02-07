@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
         StagePreparation,
     }
 
+    private const string savePath = "/PlayerData.xml";
+
     public GameState gameState;
 
     public PlayerData playerData;
@@ -35,7 +37,7 @@ public class GameManager : MonoBehaviour
     private void Save()
     {
         //Saving PlayerData
-        var playerPath = Environment.CurrentDirectory + "/PlayerData.xml";
+        var playerPath = Environment.CurrentDirectory + savePath;
         var playerStream = File.Create(playerPath);
 
         var serializer = new XmlSerializer(typeof(PlayerData));
@@ -47,7 +49,7 @@ public class GameManager : MonoBehaviour
     private void Load()
     {
         var reader = new XmlSerializer(typeof(PlayerData));
-        var file = new StreamReader(Environment.CurrentDirectory + "/PlayerData.xml");
+        var file = new StreamReader(Environment.CurrentDirectory + savePath);
 
         playerData = (PlayerData) reader.Deserialize(file);
         file.Close();

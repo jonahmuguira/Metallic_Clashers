@@ -9,7 +9,10 @@
         public List<Tree> worlds = new List<Tree>();
         protected override void Init()  //Awake for the Manager
         {
-            
+            foreach (var t in FindObjectsOfType<Tree>())
+            {
+                worlds.Add(t);
+            }
         }
     }
 }
