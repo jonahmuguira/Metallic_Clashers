@@ -2,6 +2,8 @@
 
 namespace Board
 {
+    using System;
+
     using UnityEngine;
 
     using Information;
@@ -19,15 +21,36 @@ namespace Board
         [SerializeField]
         private Gem m_Gem;
 
-        //private Vector2 m_
+        private Vector3 m_PositionOffset;
+        private float m_ReducePositionOffsetTime = 1f;
+        private Coroutine m_ReducePositionOffsetCoroutine;
 
+        private Vector3 m_CurrentPosition;
         private float m_MoveToPositionTime = 1f;
         private Coroutine m_MoveToPositionCoroutine;
+
+        private Coroutine m_UpdatePositionCoroutine;
 
         public Gem gem
         {
             get { return m_Gem; }
             private set { m_Gem = value; }
+        }
+
+        public Vector3 positionOffset
+        {
+            get { return m_PositionOffset; }
+            set
+            {
+                m_PositionOffset = value;
+
+                if (m_ReducePositionOffsetCoroutine != null)
+                    StopCoroutine(m_ReducePositionOffsetCoroutine);
+                if (m_UpdatePositionCoroutine == null)
+                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
+
+                m_ReducePositionOffsetCoroutine = StartCoroutine(ReducePositionOffset());
+            }
         }
 
         private void OnTypeChange(TypeChangeInformation typeChangeInfo)
@@ -46,7 +69,11 @@ namespace Board
                 StopCoroutine(m_MoveToPositionCoroutine);
 
             m_MoveToPositionCoroutine =
-                StartCoroutine(MoveToPosition(positionChangeInfo.newPosition * 50f));
+                StartCoroutine(
+                    MoveToPosition(
+                        new Vector2(
+                            positionChangeInfo.newPosition.x * CombatManager.self.gemOffset.x,
+                            positionChangeInfo.newPosition.y * CombatManager.self.gemOffset.y)));
         }
 
         private void OnMatch(MatchInformation matchInfo)
@@ -58,23 +85,59 @@ namespace Board
             //TODO: Check to see if this gem was changed in the grid
         }
 
-        private IEnumerator MoveToPosition(Vector3 newPosition)
+        private IEnumerator MoveToPosition(Vector2 newPosition)
         {
             var deltaTime = 0f;
             while (deltaTime < m_MoveToPositionTime)
             {
-                m_RectTransform.anchoredPosition =
-                    Vector3.Lerp(
-                        m_RectTransform.anchoredPosition,
+                m_CurrentPosition =
+                    Vector2.Lerp(
+                        m_CurrentPosition,
                         newPosition,
                         deltaTime / m_MoveToPositionTime);
 
                 deltaTime += Time.deltaTime;
 
+                if (m_UpdatePositionCoroutine == null)
+                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
+
                 yield return null;
             }
 
+            if (m_UpdatePositionCoroutine == null)
+                m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
+
             m_MoveToPositionCoroutine = null;
+        }
+
+        private IEnumerator ReducePositionOffset()
+        {
+            yield return null;
+
+            while (m_PositionOffset != Vector3.zero)
+            {
+                m_PositionOffset =
+                    Vector2.MoveTowards(m_PositionOffset, Vector2.zero, 100f * Time.deltaTime);
+
+                if (m_UpdatePositionCoroutine == null)
+                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
+
+                yield return null;
+            }
+
+            if (m_UpdatePositionCoroutine == null)
+                m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
+
+            m_ReducePositionOffsetCoroutine = null;
+        }
+
+        private IEnumerator UpdatePosition()
+        {
+            yield return new WaitForEndOfFrame();
+
+            m_RectTransform.anchoredPosition = m_CurrentPosition + m_PositionOffset;
+
+            m_UpdatePositionCoroutine = null;
         }
 
         public static GemMono Create(Grid grid, GemType gemType, Vector2 position)
@@ -90,6 +153,11 @@ namespace Board
 
             newGemMono.m_Image = newGameObject.GetComponent<Image>();
             newGemMono.m_RectTransform = newGameObject.GetComponent<RectTransform>();
+
+            newGemMono.m_RectTransform.anchoredPosition =
+                new Vector2(
+                    position.x * CombatManager.self.gemOffset.x,
+                    grid.size.y * CombatManager.self.gemOffset.y);
 
             newGemMono.gem = new Gem();
 
