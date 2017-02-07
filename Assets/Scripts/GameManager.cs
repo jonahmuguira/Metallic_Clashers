@@ -7,7 +7,9 @@ using System.Xml.Serialization;
 
 using Board;
 
-public class GameManager : MonoBehaviour
+using Library;
+
+public class GameManager : MonoSingleton<GameManager>
 {
     public enum GameState
     {
@@ -23,8 +25,9 @@ public class GameManager : MonoBehaviour
 
     public PlayerData playerData;
 
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
     }
 
