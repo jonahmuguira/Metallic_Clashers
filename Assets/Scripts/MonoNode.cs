@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class MonoNode : MonoBehaviour
 {
+    public string sceneName;
     public int levelUnlockedAt;
     public Node node;
+
+    private bool canProgress = false;
+
 	private void Awake()
 	{
 	    node = new Node {nodeState = Node.NodeState.Locked, unlockedAtLevel = levelUnlockedAt};
@@ -18,10 +22,12 @@ public class MonoNode : MonoBehaviour
 	    {
 	        case Node.NodeState.Completed:
                 m.color = Color.green;
-	            break;
+	            canProgress = true;
+                break;
 
             case Node.NodeState.Unlocked:
                 m.color = Color.blue;
+                canProgress = true;
                 break;
 
             case Node.NodeState.Locked:
