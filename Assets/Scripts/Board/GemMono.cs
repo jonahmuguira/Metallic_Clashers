@@ -6,11 +6,15 @@ namespace Board
 
     using Information;
 
-    [RequireComponent(typeof(SpriteRenderer))]
+    using UnityEngine.UI;
+
+    [RequireComponent(typeof(Image))]
     public class GemMono : MonoBehaviour
     {
         [SerializeField]
-        private SpriteRenderer m_SpriteRenderer;
+        private Image m_Image;
+        [SerializeField]
+        private RectTransform m_RectTransform;
 
         [SerializeField]
         private Gem m_Gem;
@@ -32,14 +36,15 @@ namespace Board
 
             var spriteIndex = (int)typeChangeInfo.newType;
 
-            m_SpriteRenderer.sprite = CombatManager.self.gemSprites[spriteIndex];
+            m_Image.sprite = CombatManager.self.gemSprites[spriteIndex];
         }
         private void OnPositionChange(PositionChangeInformation positionChangeInfo)
         {
             if (m_MoveToPositionCoroutine != null)
                 StopCoroutine(m_MoveToPositionCoroutine);
 
-            m_MoveToPositionCoroutine = StartCoroutine(MoveToPosition(positionChangeInfo.newPosition));
+            m_MoveToPositionCoroutine =
+                StartCoroutine(MoveToPosition(positionChangeInfo.newPosition * 50f));
         }
 
         private void OnMatch(MatchInformation matchInfo)
@@ -57,7 +62,7 @@ namespace Board
             while (deltaTime < m_MoveToPositionTime)
             {
                 transform.localPosition =
-                    Vector3.Lerp(transform.localPosition, m_Gem.position, deltaTime / m_MoveToPositionTime);
+                    Vector3.Lerp(transform.localPosition, newPosition, deltaTime / m_MoveToPositionTime);
 
                 deltaTime += Time.deltaTime;
 
@@ -69,12 +74,17 @@ namespace Board
 
         public static GemMono Create(Grid grid, GemType gemType, Vector2 position)
         {
-            var newGemMono = new GameObject().AddComponent<GemMono>();
+            var newGameObject = new GameObject();
+            newGameObject.transform.SetParent(FindObjectOfType<Canvas>().transform);
+
+            var newGemMono = newGameObject.AddComponent<GemMono>();
             newGemMono.name = position.ToString();
+
             grid.onMatch.AddListener(newGemMono.OnMatch);
             grid.onGridChange.AddListener(newGemMono.OnGridChange);
 
-            newGemMono.m_SpriteRenderer = newGemMono.GetComponent<SpriteRenderer>();
+            newGemMono.m_Image = newGameObject.GetComponent<Image>();
+            newGemMono.m_RectTransform = newGameObject.GetComponent<RectTransform>();
 
             newGemMono.gem = new Gem();
 
@@ -87,8 +97,10 @@ namespace Board
             newGemMono.gem.gemType = gemType;
             newGemMono.gem.position = position;
 
-            var newBoxCollider = newGemMono.gameObject.AddComponent<BoxCollider2D>();
+            var newBoxCollider = newGameObject.AddComponent<BoxCollider2D>();
             newBoxCollider.isTrigger = true;
+
+            newGemMono.m_Image.SetNativeSize();
 
             return newGemMono;
         }
