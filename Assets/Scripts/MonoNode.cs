@@ -1,48 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class MonoNode : MonoBehaviour
 {
-    public enum NodeState
-    {
-        Locked,
-        Unlocked,
-        Completed
-    }
+    public int levelUnlockedAt;
+    public Node node;
+	private void Awake()
+	{
+	    node = new Node {nodeState = Node.NodeState.Locked, unlockedAtLevel = levelUnlockedAt};
+	}
 
-    public NodeState nodeState;
+	private void Start()
+	{
+	    var m = GetComponent<Renderer>().material;
+	    switch (node.nodeState)
+	    {
+	        case Node.NodeState.Completed:
+                m.color = Color.green;
+	            break;
 
-    public MonoNode nextNode;
-    public NodeCondition unlockCondition;
-    public UnityEvent nodeEvent;
-    private Material m_Material;
-
-    public void Awake()
-    {
-        m_Material = gameObject.GetComponent<Renderer>().material;
-    }
-
-	public void Update()
-    {
-        switch (nodeState)
-        {
-            case NodeState.Completed:
-                m_Material.color = Color.green;
+            case Node.NodeState.Unlocked:
+                m.color = Color.blue;
                 break;
 
-            case NodeState.Unlocked:
-                m_Material.color = Color.blue;
-                break;
-
-            case NodeState.Locked:
-                m_Material.color = Color.gray;
+            case Node.NodeState.Locked:
+                m.color = Color.red;
                 break;
 
             default:
-                m_Material.color = Color.black;
+                m.color = Color.black;
                 break;
-        }
+	    }
 	}
 }
