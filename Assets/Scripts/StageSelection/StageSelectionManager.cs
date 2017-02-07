@@ -1,9 +1,11 @@
 ﻿namespace StageSelection
 {
+    using System;
     using System.Collections.Generic;
 
     using UnityEngine;
 
+    [Serializable]
     public class Tree
     {
         public List<Node> nodes = new List<Node>();
@@ -24,9 +26,9 @@
                     {
                         nodes = new List<Node>
                         {
-                            new Node{isComplete = true, stageNumber = "1", normalizedPosition = new Vector2(0, 0)},
-                            new Node{isComplete = false, stageNumber = "2", normalizedPosition = new Vector2(0, 1)},
-                            new Node{isComplete = false, stageNumber = "3", normalizedPosition = new Vector2(0, 2)},
+                            new Node{stageNumber = "1", normalizedPosition = new Vector2(0, 0)},
+                            new Node{stageNumber = "2", normalizedPosition = new Vector2(0, 1)},
+                            new Node{stageNumber = "3", normalizedPosition = new Vector2(0, 2)},
                         }
                     }
                 };
@@ -52,6 +54,15 @@
 
                     var monoNode = nodeObject.AddComponent<MonoNode>();
                     monoNode.node = n;
+                }
+            }
+
+            var savedData = GameManager.self.playerData.worldData;
+            for (var i = 0; i < savedData.Count; i++)
+            {
+                for (var j = 0; j < worlds[i].nodes.Count; j++)
+                {
+                    worlds[i].nodes[j].isComplete = savedData[i].nodes[j].isComplete;
                 }
             }
         }
