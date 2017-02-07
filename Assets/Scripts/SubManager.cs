@@ -22,21 +22,27 @@ public abstract class SubManager<T> : MonoSingleton<T> where T : MonoBehaviour
 
     protected virtual void OnPress(TouchInformation touchInfo)
     {
-        ////TODO: This will be the function that is called when a OnPress Event is called
+        //TODO: This will be the function that is called when a OnPress Event is called
     }
-
     protected virtual void OnRelease(TouchInformation touchInfo)
     {
-        ////TODO: This will be the function that is called when a OnRelease Event is called
+        //TODO: This will be the function that is called when a OnRelease Event is called
     }
-
     protected virtual void OnHold(TouchInformation touchInfo)
     {
-        ////TODO: This will be the function that is called when a OnHold Event is called
+        //TODO: This will be the function that is called when a OnHold Event is called
     }
 
+    protected virtual void OnBeginDrag(DragInformation dragInfo)
+    {
+        //TODO: This will be the function that is called when a OnSlide Event is called
+    }
     protected virtual void OnDrag(DragInformation dragInfo)
     {
-        ////TODO: This will be the function that is called when a OnSlide Event is called
+        //TODO: This will be the function that is called when a OnSlide Event is called
+    }
+    protected virtual void OnEndDrag(DragInformation dragInfo)
+    {
+        //TODO: This will be the function that is called when a OnSlide Event is called
     }
 }
