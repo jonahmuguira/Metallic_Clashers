@@ -33,8 +33,11 @@
         [SerializeField]
         private DragEvent m_OnEndDrag = new DragEvent();
 
-        private float m_CurrentHoldDuration;
         private Vector2 m_PreviousPosition;
+
+        private float m_CurrentHoldDuration;
+        private float m_CurrentTotalDragDistance;
+        private Vector2 m_PressPosition;
 
         private bool m_Dragging;
 
@@ -61,40 +64,56 @@
             {
                 //Debug.Log("Press");
 
-                m_OnPress.Invoke(
-                    new TouchInformation { duration = 0f, position = Input.mousePosition });
+                m_PressPosition = Input.mousePosition;
 
-                m_PreviousPosition = Input.mousePosition;
+                m_OnPress.Invoke(
+                    new TouchInformation { duration = 0f, position = m_PressPosition });
+
                 m_CurrentHoldDuration = 0f;
             }
             else if (Input.GetMouseButton(0))
             {
                 if (!m_Dragging &&
-                    Vector2.Distance(m_PreviousPosition, Input.mousePosition) >= m_DragDeadzone)
+                    Vector2.Distance(m_PressPosition, Input.mousePosition) >= m_DragDeadzone)
                 {
                     //Debug.Log("Begin Drag");
+
+                    m_CurrentTotalDragDistance = Vector2.Distance(m_PressPosition, Input.mousePosition);
 
                     m_OnBeginDrag.Invoke(
                         new DragInformation
                         {
-                            origin = m_PreviousPosition,
+                            origin = m_PressPosition,
                             end = Input.mousePosition,
+
                             duration = 0f,
+
+                            delta = (Vector2)Input.mousePosition - m_PressPosition,
+
+                            totalDelta = (Vector2)Input.mousePosition - m_PressPosition,
+                            totalDistance = Vector2.Distance(m_PressPosition, Input.mousePosition),
                         });
 
                     m_Dragging = true;
                 }
-                else if (m_Dragging &&
-                         Vector2.Distance(m_PreviousPosition, Input.mousePosition) >= m_DragDeadzone)
+                else if (m_Dragging)
                 {
                     //Debug.Log("Drag");
+
+                    m_CurrentTotalDragDistance += Vector2.Distance(m_PreviousPosition, Input.mousePosition);
 
                     m_OnDrag.Invoke(
                         new DragInformation
                         {
-                            origin = m_PreviousPosition,
+                            origin = m_PressPosition,
                             end = Input.mousePosition,
-                            duration = m_CurrentHoldDuration
+
+                            duration = m_CurrentHoldDuration,
+
+                            delta = (Vector2)Input.mousePosition - m_PreviousPosition,
+
+                            totalDelta = (Vector2)Input.mousePosition - m_PressPosition,
+                            totalDistance = m_CurrentTotalDragDistance
                         });
                 }
                 else
@@ -121,7 +140,7 @@
                         new TouchInformation
                         {
                             duration = m_CurrentHoldDuration,
-                            position = m_PreviousPosition
+                            position = m_PressPosition
                         });
                 }
                 else
@@ -131,15 +150,24 @@
                     m_OnEndDrag.Invoke(
                         new DragInformation
                         {
-                            origin = m_PreviousPosition,
+                            origin = m_PressPosition,
                             end = Input.mousePosition,
-                            duration = m_CurrentHoldDuration
+
+                            duration = m_CurrentHoldDuration,
+
+                            delta = (Vector2)Input.mousePosition - m_PreviousPosition,
+
+                            totalDelta = (Vector2)Input.mousePosition - m_PressPosition,
+                            totalDistance = m_CurrentTotalDragDistance
                         });
                 }
 
+                m_CurrentTotalDragDistance = 0f;
                 m_CurrentHoldDuration = 0f;
                 m_Dragging = false;
             }
+
+            m_PreviousPosition = Input.mousePosition;
         }
     }
 }
