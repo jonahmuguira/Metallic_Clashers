@@ -51,24 +51,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b3b19e5d3336c841ab15d3e0fc68db1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DragDistance: 0
-  m_DragDuration: 0
-  m_HoldDuration: 0
+  m_DragDeadzone: 5
   m_OnPress:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Input.OnPress, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: Input.TouchEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   m_OnRelease:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Input.OnRelease, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: Input.TouchEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   m_OnHold:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Input.OnHold, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_TypeName: Input.TouchEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  m_OnBeginDrag:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Input.DragEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
   m_OnDrag:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Input.OnDrag, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_TypeName: Input.DragEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  m_OnEndDrag:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Input.DragEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
