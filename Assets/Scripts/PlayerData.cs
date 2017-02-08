@@ -1,7 +1,6 @@
-﻿using System;
+﻿using StageSelection;
+using System;
 using System.Collections.Generic;
-
-using StageSelection;
 
 [Serializable]
 public class PlayerData
@@ -14,5 +13,5 @@ public class PlayerData
 
     public List<GemSkill> gemSkills = new List<GemSkill>();
 
-    public List<StageSelection.Tree> worldData = new List<Tree>();
+    public List<Tree> worldData = new List<Tree>();
 }

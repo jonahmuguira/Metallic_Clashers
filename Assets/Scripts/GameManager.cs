@@ -29,6 +29,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         base.Awake();
         CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
+        DontDestroyOnLoad(gameObject);
     }
 
     private void OnCombatEnd()
