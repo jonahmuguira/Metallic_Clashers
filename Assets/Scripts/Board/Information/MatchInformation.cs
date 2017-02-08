@@ -17,8 +17,8 @@ namespace Board.Information
     {
         public GemType type;
 
-        public List<Gem> gems;
+        public List<GemMono> gemMonos;
 
         public List<GridCollection> gridCollections;
-    }    
+    }
 }
