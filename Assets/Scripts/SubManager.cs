@@ -6,7 +6,7 @@ using UnityEngine;
 
 public abstract class SubManager<T> : MonoSingleton<T> where T : MonoBehaviour
 {
-    protected override void Awake()
+    protected sealed override void Awake()
     {
         base.Awake();
 
