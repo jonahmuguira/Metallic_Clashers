@@ -15,10 +15,20 @@
     <modifier>0</modifier>
     <coefficient>0</coefficient>
   </defense>
-  <gemSkills>
-    <GemSkill>
-      <gemType>Blue</gemType>
-      <skillLevel>0</skillLevel>
-    </GemSkill>
-  </gemSkills>
+  <gemSkills />
+  <worldData>
+    <Tree>
+      <nodes>
+        <Node>
+          <isComplete>true</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+      </nodes>
+    </Tree>
+  </worldData>
 </PlayerData>
