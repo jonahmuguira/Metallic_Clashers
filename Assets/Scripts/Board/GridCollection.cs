@@ -20,10 +20,7 @@
         [SerializeField]
         protected int m_Index;
 
-        [NonSerialized]
-        protected Grid m_Grid;
-
-        public Grid grid { get { return m_Grid; } set { m_Grid = value; } }
+        public GridMono gridMono { get; set; }
         public int index { get { return m_Index; } set { m_Index = value; } }
 
         public abstract IEnumerable<GemMono> gemMonos { get; }
@@ -32,7 +29,8 @@
 
         public bool Slide(SlideDirection direction)
         {
-            var tempList = m_Grid.gemMonoLists.Select(gemMonoList => gemMonoList.gemMonos.ToList()).ToList();
+            var tempList =
+                gridMono.grid.gemMonoLists.Select(gemMonoList => gemMonoList.gemMonos.ToList()).ToList();
 
             var listCount = gemMonos.Count();
             for (var i = 0; i < listCount; i++)
@@ -60,7 +58,7 @@
                     return false;
             }
 
-            m_Grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
+            gridMono.grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
             return true;
         }
     }
@@ -70,19 +68,19 @@
     {
         public override IEnumerable<GemMono> gemMonos
         {
-            get { return m_Grid.gemMonoLists.Select(gemMonoList => gemMonoList[index]); }
+            get { return gridMono.grid.gemMonoLists.Select(gemMonoList => gemMonoList[index]); }
         }
 
         protected override bool CopyAt(List<List<GemMono>> tempList, int fromIndex, int toIndex)
         {
-            var listCount = m_Grid.gemMonoLists[0].gemMonos.Count;
+            var listCount = gridMono.grid.gemMonoLists[0].gemMonos.Count;
             if (fromIndex >= listCount || fromIndex < 0 ||
                 toIndex >= listCount || toIndex < 0)
                 return false;
 
-            m_Grid.gemMonoLists[toIndex][index] = tempList[fromIndex][index];
+            gridMono.grid.gemMonoLists[toIndex][index] = tempList[fromIndex][index];
 
-            m_Grid.gemMonoLists[toIndex][index].gem.position = new Vector2(index, toIndex);
+            gridMono.grid.gemMonoLists[toIndex][index].gem.position = new Vector2(index, toIndex);
             return true;
         }
     }
@@ -92,19 +90,19 @@
     {
         public override IEnumerable<GemMono> gemMonos
         {
-            get { return m_Grid.gemMonoLists[index].gemMonos; }
+            get { return gridMono.grid.gemMonoLists[index].gemMonos; }
         }
 
         protected override bool CopyAt(List<List<GemMono>> tempList, int fromIndex, int toIndex)
         {
-            var listCount = m_Grid.gemMonoLists.Count;
+            var listCount = gridMono.grid.gemMonoLists.Count;
             if (fromIndex >= listCount || fromIndex < 0 ||
                 toIndex >= listCount || toIndex < 0)
                 return false;
 
-            m_Grid.gemMonoLists[index][toIndex] = tempList[index][fromIndex];
+            gridMono.grid.gemMonoLists[index][toIndex] = tempList[index][fromIndex];
 
-            m_Grid.gemMonoLists[index][toIndex].gem.position = new Vector2(toIndex, index);
+            gridMono.grid.gemMonoLists[index][toIndex].gem.position = new Vector2(toIndex, index);
             return true;
         }
     }

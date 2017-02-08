@@ -34,8 +34,8 @@
         private OnTypeChange m_OnTypeChange = new OnTypeChange();
         [SerializeField]
         private OnPositionChange m_OnPositionChange = new OnPositionChange();
-
-        public Grid grid { get; set; }
+        
+        public GridMono gridMono { get; set; }
 
         public GemType gemType
         {

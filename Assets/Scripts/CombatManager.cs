@@ -25,10 +25,9 @@ public class OnPlayerTurn : UnityEvent { }
 public class CombatManager : SubManager<CombatManager>
 {
     [SerializeField]
-    private List<Sprite> m_GemSprites = new List<Sprite>();
-
+    private RectTransform m_GridParentRectTransform;
     [SerializeField]
-    private Vector2 m_GemOffset;
+    private List<Sprite> m_GemSprites = new List<Sprite>();
 
     [Space, SerializeField]
     private OnCombatBegin m_OnCombatBegin = new OnCombatBegin();
@@ -41,14 +40,12 @@ public class CombatManager : SubManager<CombatManager>
     private OnPlayerTurn m_OnPlayerTurn = new OnPlayerTurn();
 
     [SerializeField]
-    private Grid m_Grid;
+    private GridMono m_GridMono;
 
     private GemMono m_LockedGemMono;
 
     //TODO: public List<Enemy> enemies = new List<>;
     public List<Sprite> gemSprites { get { return m_GemSprites; } }
-
-    public Vector3 gemOffset { get { return m_GemOffset; } set { m_GemOffset = value; } }
 
     public OnCombatBegin onCombatBegin { get { return m_OnCombatBegin; } }
     public OnCombatUpdate onCombatUpdate { get { return m_OnCombatUpdate; } }
@@ -56,15 +53,17 @@ public class CombatManager : SubManager<CombatManager>
 
     public OnPlayerTurn onPlayerTurn { get { return m_OnPlayerTurn; } }
 
-    public Grid grid { get { return m_Grid; } }
+    public GridMono gridMono { get { return m_GridMono; } }
 
     protected override void Init()
     {
         //TODO: Initialize Combat
+        if (m_GridParentRectTransform == null)
+            m_GridParentRectTransform = FindObjectOfType<Canvas>().GetComponent<RectTransform>();
 
-        m_Grid = new Grid(new Vector2(5f, 5f));
+        m_GridMono = GridMono.Create(m_GridParentRectTransform, new Vector2(5f, 5f));
 
-        m_Grid.onSlide.AddListener(OnSlide);
+        m_GridMono.grid.onSlide.AddListener(OnSlide);
     }
 
     private void Update()
@@ -93,7 +92,7 @@ public class CombatManager : SubManager<CombatManager>
         if (m_LockedGemMono == null)
             return;
 
-        m_LockedGemMono.positionOffset += (Vector3)dragInfo.delta;
+        m_LockedGemMono.positionOffset += (Vector3)dragInfo.delta * FindObjectOfType<Canvas>().scaleFactor;
     }
 
     protected override void OnEndDrag(DragInformation dragInfo)
@@ -113,7 +112,7 @@ public class CombatManager : SubManager<CombatManager>
                     ? SlideDirection.Backward
                     : SlideDirection.Forward;
 
-            gem.grid.SlideRowAt((int)gem.position.y, slideDirection);
+            gem.gridMono.grid.SlideRowAt((int)gem.position.y, slideDirection);
         }
         else
         {
@@ -122,7 +121,7 @@ public class CombatManager : SubManager<CombatManager>
                     ? SlideDirection.Backward
                     : SlideDirection.Forward;
 
-            gem.grid.SlideColumnAt((int)gem.position.x, slideDirection);
+            gem.gridMono.grid.SlideColumnAt((int)gem.position.x, slideDirection);
         }
     }
 

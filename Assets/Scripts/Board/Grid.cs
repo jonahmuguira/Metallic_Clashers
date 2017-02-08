@@ -22,7 +22,7 @@
     [Serializable]
     public class GemMonoList
     {
-        public List<GemMono> gemMonos;
+        public List<GemMono> gemMonos = new List<GemMono>();
 
         public GemMono this[int index]
         {
@@ -44,15 +44,18 @@
     public class Grid
     {
         [SerializeField]
+        private GridMono m_GridMono;
+
+        [SerializeField]
         private List<GemMonoList> m_GemMonoLists = new List<GemMonoList>();
 
         [SerializeField]
         private Vector2 m_Size;
 
         [SerializeField]
-        private List<Column> m_Columns = new List<Column>();
+        private List<GridCollectionMono> m_Columns = new List<GridCollectionMono>();
         [SerializeField]
-        private List<Row> m_Rows = new List<Row>();
+        private List<GridCollectionMono> m_Rows = new List<GridCollectionMono>();
 
         [SerializeField]
         private OnMatch m_OnMatch = new OnMatch();
@@ -62,12 +65,14 @@
         [SerializeField]
         private OnSlide m_OnSlide = new OnSlide();
 
+        public GridMono gridMono { get { return m_GridMono; } }
+
         public List<GemMonoList> gemMonoLists { get { return m_GemMonoLists; } }
 
         public Vector2 size { get { return m_Size; } }
 
-        public List<Column> columns { get { return m_Columns; } }
-        public List<Row> rows { get { return m_Rows; } }
+        public List<GridCollectionMono> columns { get { return m_Columns; } }
+        public List<GridCollectionMono> rows { get { return m_Rows; } }
 
         public OnMatch onMatch { get { return m_OnMatch; } }
         public OnGridChange onGridChange { get { return m_OnGridChange; } }
@@ -75,29 +80,34 @@
         public OnSlide onSlide { get { return m_OnSlide; } }
 
         private Grid() { }
-        public Grid(Vector2 newSize) : this()
+        public Grid(GridMono parentGridMono, Vector2 newSize) : this()
         {
             Random.InitState((int)DateTime.Now.Ticks);
 
-            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
-
             m_Size = newSize;
+
+            m_GridMono = parentGridMono;
+        }
+
+        public void InitializeGrid()
+        {
+            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
 
             for (var y = 0; y < m_Size.y; ++y)
             {
-                m_Rows.Add(new Row { grid = this, index = y });
+                m_Rows.Add(GridCollectionMono.Create<Row>(m_GridMono, y));
 
                 var newList = new List<GemMono>();
                 for (var x = 0; x < m_Size.x; ++x)
                 {
                     if (x == 0)
-                        m_Columns.Add(new Column { grid = this, index = y });
+                        m_Columns.Add(GridCollectionMono.Create<Column>(m_GridMono, y));
 
                     var gemType = (GemType)Random.Range(0, numGemTypes);
 
                     newList.Add(
                         GemMono.Create(
-                            this, gemType, new Vector2(x, y)));
+                            m_GridMono, gemType, new Vector2(x, y)));
                 }
                 m_GemMonoLists.Add(newList);
             }
@@ -201,14 +211,14 @@
             if (index >= m_Rows.Count || index < 0)
                 return false;
 
-            return m_Rows[index].Slide(direction);
+            return m_Rows[index].gridCollection.Slide(direction);
         }
         public bool SlideColumnAt(int index, SlideDirection direction)
         {
             if (index >= m_Columns.Count || index < 0)
                 return false;
 
-            return m_Columns[index].Slide(direction);
+            return m_Columns[index].gridCollection.Slide(direction);
         }
 
         private void OnGemTypeChange(TypeChangeInformation typeChangeInfo)
