@@ -38,7 +38,6 @@ namespace Board
             if (currentRectSize == m_PreviousRectSize)
                 return;
 
-            Debug.Log("Changed size of Grid");
             m_OnGridResize.Invoke(new GridResizeInformation { newRect = m_RectTransform.rect });
 
             m_PreviousRectSize = currentRectSize;

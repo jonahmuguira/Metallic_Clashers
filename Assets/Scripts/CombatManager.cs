@@ -84,6 +84,9 @@ public class CombatManager : SubManager<CombatManager>
             return;
 
         m_LockedGemMono = gemMono;
+        m_LockedGemMono.positionOffset += new Vector3(
+                dragInfo.totalDelta.x / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.x,
+                dragInfo.totalDelta.y / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.y);
     }
 
     protected override void OnDrag(DragInformation dragInfo)
@@ -92,7 +95,17 @@ public class CombatManager : SubManager<CombatManager>
         if (m_LockedGemMono == null)
             return;
 
-        m_LockedGemMono.positionOffset += (Vector3)dragInfo.delta * FindObjectOfType<Canvas>().scaleFactor;
+        foreach (var gemMono in m_GridMono.grid.columns[(int)m_LockedGemMono.gem.position.x].gridCollection.gemMonos)
+        {
+            gemMono.positionOffset += new Vector3(
+                dragInfo.delta.x / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.x,
+                dragInfo.delta.y / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.y);
+        }
+
+        //m_LockedGemMono.positionOffset +=
+        //    new Vector3(
+        //        dragInfo.delta.x / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.x,
+        //        dragInfo.delta.y / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.y);
     }
 
     protected override void OnEndDrag(DragInformation dragInfo)
