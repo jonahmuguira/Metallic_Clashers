@@ -15,6 +15,6 @@ namespace Board.Information
 
     public class GridChangeInformation
     {
-        public List<GemMono> gemMonos;
+        public List<Gem> gems;
     }    
 }

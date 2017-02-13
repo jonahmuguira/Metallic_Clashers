@@ -12,31 +12,34 @@
     using Random = UnityEngine.Random;
 
     [Serializable]
-    public class OnGridChange : UnityEvent<GridChangeInformation> { }
+    public class GridChange : UnityEvent<GridChangeInformation> { }
     [Serializable]
-    public class OnMatch : UnityEvent<MatchInformation> { }
+    public class MatchEvent : UnityEvent<MatchInformation> { }
 
     [Serializable]
-    public class OnSlide : UnityEvent<SlideInformation> { }
+    public class SlideEvent : UnityEvent<SlideInformation> { }
+
+    [SerializeField]
+    public class CreateGridEvent : UnityEvent<Grid> { }
 
     [Serializable]
-    public class GemMonoList
+    public class GemList
     {
-        public List<GemMono> gemMonos;
+        public List<Gem> gems = new List<Gem>();
 
-        public GemMono this[int index]
+        public Gem this[int index]
         {
-            get { return gemMonos[index]; }
-            set { gemMonos[index] = value; }
+            get { return gems[index]; }
+            set { gems[index] = value; }
         }
 
-        public static implicit operator List<GemMono>(GemMonoList gemMonoList)
+        public static implicit operator List<Gem>(GemList gemList)
         {
-            return gemMonoList.gemMonos.ToList();
+            return gemList.gems.ToList();
         }
-        public static implicit operator GemMonoList(List<GemMono> gemMonoList)
+        public static implicit operator GemList(List<Gem> gemMonoList)
         {
-            return new GemMonoList { gemMonos = gemMonoList.ToList() };
+            return new GemList { gems = gemMonoList.ToList() };
         }
     }
 
@@ -44,7 +47,7 @@
     public class Grid
     {
         [SerializeField]
-        private List<GemMonoList> m_GemMonoLists = new List<GemMonoList>();
+        private List<GemList> m_GemLists = new List<GemList>();
 
         [SerializeField]
         private Vector2 m_Size;
@@ -55,51 +58,61 @@
         private List<Row> m_Rows = new List<Row>();
 
         [SerializeField]
-        private OnMatch m_OnMatch = new OnMatch();
+        private MatchEvent m_OnMatch = new MatchEvent();
         [SerializeField]
-        private OnGridChange m_OnGridChange = new OnGridChange();
+        private GridChange m_OnGridChange = new GridChange();
 
         [SerializeField]
-        private OnSlide m_OnSlide = new OnSlide();
+        private SlideEvent m_OnSlide = new SlideEvent();
 
-        public List<GemMonoList> gemMonoLists { get { return m_GemMonoLists; } }
+        private readonly List<IComponent> m_Components = new List<IComponent>();
+
+        public static readonly CreateGridEvent onCreate = new CreateGridEvent();
+
+        public List<GemList> gemLists { get { return m_GemLists; } }
 
         public Vector2 size { get { return m_Size; } }
 
         public List<Column> columns { get { return m_Columns; } }
         public List<Row> rows { get { return m_Rows; } }
 
-        public OnMatch onMatch { get { return m_OnMatch; } }
-        public OnGridChange onGridChange { get { return m_OnGridChange; } }
+        public MatchEvent onMatch { get { return m_OnMatch; } }
+        public GridChange onGridChange { get { return m_OnGridChange; } }
 
-        public OnSlide onSlide { get { return m_OnSlide; } }
+        public SlideEvent onSlide { get { return m_OnSlide; } }
+
+        public List<IComponent> components { get { return m_Components; } }
+
+        public GemList this[int index] { get { return m_GemLists[index]; } }
 
         private Grid() { }
         public Grid(Vector2 newSize) : this()
         {
             Random.InitState((int)DateTime.Now.Ticks);
 
-            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
-
             m_Size = newSize;
+
+            onCreate.Invoke(this);
+
+            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
 
             for (var y = 0; y < m_Size.y; ++y)
             {
-                m_Rows.Add(new Row { grid = this, index = y });
+                m_Rows.Add(new Row(this, y));
 
-                var newList = new List<GemMono>();
+                var newList = new List<Gem>();
                 for (var x = 0; x < m_Size.x; ++x)
                 {
                     if (x == 0)
-                        m_Columns.Add(new Column { grid = this, index = y });
+                        m_Columns.Add(new Column(this, y));
 
                     var gemType = (GemType)Random.Range(0, numGemTypes);
 
                     newList.Add(
-                        GemMono.Create(
-                            this, gemType, new Vector2(x, y)));
+                        new Gem(
+                            this, new Vector2(x, y), gemType));
                 }
-                m_GemMonoLists.Add(newList);
+                m_GemLists.Add(newList);
             }
         }
 
@@ -114,56 +127,56 @@
             return false;
         }
 
-        public bool Remove(GemMono gemMono)
+        public bool Remove(Gem gem)
         {
-            var foundIndex = m_GemMonoLists.FindIndex(gemList => gemList.gemMonos.Contains(gemMono));
+            var foundIndex = m_GemLists.FindIndex(gemList => gemList.gems.Contains(gem));
 
             // If a match was not found
             if (foundIndex == -1)
                 return false;
 
             // Removed the gem from the list which contains it
-            m_GemMonoLists[foundIndex].gemMonos.Remove(gemMono);
+            m_GemLists[foundIndex].gems.Remove(gem);
 
-            onGridChange.Invoke(new GridChangeInformation { gemMonos = new List<GemMono> { gemMono } });
+            onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { gem } });
             return true;
         }
         public bool RemoveAt(Vector2 position)
         {
             var y = (int)position.y;
 
-            if (y >= m_GemMonoLists.Count || y < 0)
+            if (y >= m_GemLists.Count || y < 0)
                 return false;
 
             var x = (int)position.x;
 
-            if (x >= m_GemMonoLists[y].gemMonos.Count || x < 0)
+            if (x >= m_GemLists[y].gems.Count || x < 0)
                 return false;
 
             // Store reference to removed gem
-            var gemMono = m_GemMonoLists[y][x];
+            var gem = m_GemLists[y][x];
 
-            m_GemMonoLists[y].gemMonos.RemoveAt(x);
+            m_GemLists[y].gems.RemoveAt(x);
 
             // Use that reference when you invoke the onGridChange event
-            onGridChange.Invoke(new GridChangeInformation { gemMonos = new List<GemMono> { gemMono } });
+            onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { gem } });
             return true;
         }
 
-        public bool Swap(GemMono oldGemMono, GemMono newGemMono)
+        public bool Swap(Gem oldGem, Gem newGem)
         {
-            var foundY = m_GemMonoLists.FindIndex(gemList => gemList.gemMonos.Contains(oldGemMono));
+            var foundY = m_GemLists.FindIndex(gemList => gemList.gems.Contains(oldGem));
 
             // If a match was not found
             if (foundY == -1)
                 return false;
 
-            var foundX = m_GemMonoLists[foundY].gemMonos.FindIndex(gem => gem == oldGemMono);
+            var foundX = m_GemLists[foundY].gems.FindIndex(gem => gem == oldGem);
 
-            m_GemMonoLists[foundY][foundX] = newGemMono;
+            m_GemLists[foundY][foundX] = newGem;
 
             onGridChange.Invoke(
-                new GridChangeInformation { gemMonos = new List<GemMono> { oldGemMono, newGemMono } });
+                new GridChangeInformation { gems = new List<Gem> { oldGem, newGem } });
             return true;
         }
         public bool SwapAt(Vector2 position1, Vector2 position2)
@@ -171,28 +184,28 @@
             var y1 = (int)position1.y;
             var y2 = (int)position2.y;
 
-            if (y1 >= m_GemMonoLists.Count || y1 < 0 ||
-                y2 >= m_GemMonoLists.Count || y2 < 0)
+            if (y1 >= m_GemLists.Count || y1 < 0 ||
+                y2 >= m_GemLists.Count || y2 < 0)
                 return false;
 
             var x1 = (int)position1.x;
             var x2 = (int)position2.x;
 
-            if (x1 >= m_GemMonoLists[y1].gemMonos.Count || x1 < 0 ||
-                x2 >= m_GemMonoLists[y2].gemMonos.Count || x2 < 0)
+            if (x1 >= m_GemLists[y1].gems.Count || x1 < 0 ||
+                x2 >= m_GemLists[y2].gems.Count || x2 < 0)
                 return false;
 
             // Store a reference to the gems about to be swapped
-            var gemMono1 = m_GemMonoLists[y1][x1];
-            var gemMono2 = m_GemMonoLists[y2][x2];
+            var gem1 = m_GemLists[y1][x1];
+            var gem2 = m_GemLists[y2][x2];
 
             // Swap them
-            m_GemMonoLists[y1][x1] = gemMono2;
-            m_GemMonoLists[y2][x2] = gemMono1;
+            m_GemLists[y1][x1] = gem2;
+            m_GemLists[y2][x2] = gem1;
 
             // Use the references of each gem that was changed when invoking the onGridChange event
             onGridChange.Invoke(
-                new GridChangeInformation { gemMonos = new List<GemMono> { gemMono1, gemMono2 } });
+                new GridChangeInformation { gems = new List<Gem> { gem1, gem2 } });
             return true;
         }
 
@@ -214,6 +227,11 @@
         private void OnGemTypeChange(TypeChangeInformation typeChangeInfo)
         {
             //TODO: Check for matches on gems in the same row and column
+        }
+
+        public T GetComponent<T>() where T : IComponent
+        {
+            return (T)components.First(component => component is T);
         }
     }
 }

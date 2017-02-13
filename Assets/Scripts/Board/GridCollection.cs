@@ -7,6 +7,7 @@
     using Information;
 
     using UnityEngine;
+    using UnityEngine.Events;
 
     public enum SlideDirection
     {
@@ -15,26 +16,43 @@
     }
 
     [Serializable]
+    public class CreateGridCollectionEvent : UnityEvent<GridCollection> { }
+
+    [Serializable]
     public abstract class GridCollection
     {
         [SerializeField]
         protected int m_Index;
 
-        [NonSerialized]
-        protected Grid m_Grid;
+        protected readonly List<IComponent> m_Components = new List<IComponent>();
 
-        public Grid grid { get { return m_Grid; } set { m_Grid = value; } }
-        public int index { get { return m_Index; } set { m_Index = value; } }
+        public static readonly CreateGridCollectionEvent onCreate = new CreateGridCollectionEvent();
 
-        public abstract IEnumerable<GemMono> gemMonos { get; }
+        public Grid grid { get; protected set; }
+        public int index { get { return m_Index; } }
 
-        protected abstract bool CopyAt(List<List<GemMono>> tempList, int fromIndex, int toIndex);
+        public List<IComponent> components { get { return m_Components; } }
+
+        public abstract IEnumerable<Gem> gems { get; }
+
+        protected GridCollection() { }
+        protected GridCollection(Grid newGrid, int newIndex) : this()
+        {
+            grid = newGrid;
+
+            m_Index = newIndex;
+
+            onCreate.Invoke(this);
+        }
+
+        protected abstract bool CopyAt(List<List<Gem>> tempList, int fromIndex, int toIndex);
 
         public bool Slide(SlideDirection direction)
         {
-            var tempList = m_Grid.gemMonoLists.Select(gemMonoList => gemMonoList.gemMonos.ToList()).ToList();
+            var tempList =
+                grid.gemLists.Select(gemList => gemList.gems.ToList()).ToList();
 
-            var listCount = gemMonos.Count();
+            var listCount = gems.Count();
             for (var i = 0; i < listCount; i++)
             {
                 int nextIndex;
@@ -60,29 +78,37 @@
                     return false;
             }
 
-            m_Grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
+            grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
             return true;
+        }
+
+        public T GetComponent<T>() where T : IComponent
+        {
+            return (T)components.First(component => component is T);
         }
     }
 
     [Serializable]
     public class Column : GridCollection
     {
-        public override IEnumerable<GemMono> gemMonos
+        private Column() { }
+        public Column(Grid newGrid, int newIndex) : base(newGrid, newIndex) { }
+
+        public override IEnumerable<Gem> gems
         {
-            get { return m_Grid.gemMonoLists.Select(gemMonoList => gemMonoList[index]); }
+            get { return grid.gemLists.Select(gemList => gemList[index]); }
         }
 
-        protected override bool CopyAt(List<List<GemMono>> tempList, int fromIndex, int toIndex)
+        protected override bool CopyAt(List<List<Gem>> tempList, int fromIndex, int toIndex)
         {
-            var listCount = m_Grid.gemMonoLists[0].gemMonos.Count;
+            var listCount = grid.gemLists[0].gems.Count;
             if (fromIndex >= listCount || fromIndex < 0 ||
                 toIndex >= listCount || toIndex < 0)
                 return false;
 
-            m_Grid.gemMonoLists[toIndex][index] = tempList[fromIndex][index];
+            grid.gemLists[toIndex][index] = tempList[fromIndex][index];
 
-            m_Grid.gemMonoLists[toIndex][index].gem.position = new Vector2(index, toIndex);
+            grid.gemLists[toIndex][index].position = new Vector2(index, toIndex);
             return true;
         }
     }
@@ -90,21 +116,24 @@
     [Serializable]
     public class Row : GridCollection
     {
-        public override IEnumerable<GemMono> gemMonos
+        private Row() { }
+        public Row(Grid newGrid, int newIndex) : base(newGrid, newIndex) { }
+
+        public override IEnumerable<Gem> gems
         {
-            get { return m_Grid.gemMonoLists[index].gemMonos; }
+            get { return grid.gemLists[index].gems; }
         }
 
-        protected override bool CopyAt(List<List<GemMono>> tempList, int fromIndex, int toIndex)
+        protected override bool CopyAt(List<List<Gem>> tempList, int fromIndex, int toIndex)
         {
-            var listCount = m_Grid.gemMonoLists.Count;
+            var listCount = grid.gemLists.Count;
             if (fromIndex >= listCount || fromIndex < 0 ||
                 toIndex >= listCount || toIndex < 0)
                 return false;
 
-            m_Grid.gemMonoLists[index][toIndex] = tempList[index][fromIndex];
+            grid.gemLists[index][toIndex] = tempList[index][fromIndex];
 
-            m_Grid.gemMonoLists[index][toIndex].gem.position = new Vector2(toIndex, index);
+            grid.gemLists[index][toIndex].position = new Vector2(toIndex, index);
             return true;
         }
     }
