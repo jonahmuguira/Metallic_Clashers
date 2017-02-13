@@ -9,7 +9,7 @@ namespace Board
     using UnityEngine.UI;
 
     [RequireComponent(typeof(Image))]
-    public class GemMono : MonoBehaviour
+    public class GemMono : MonoBehaviour, IComponent
     {
         [SerializeField]
         private Image m_Image;
@@ -51,6 +51,24 @@ namespace Board
             }
         }
 
+        public Grid grid { get { return m_Gem.grid; } }
+        public GridMono gridMono { get { return grid.GetComponent<GridMono>(); } }
+
+        public Vector2 position { get { return m_Gem.position; } set { m_Gem.position = value; } }
+        public GemType gemType { get { return m_Gem.gemType; } set { m_Gem.gemType = value; } }
+
+        public Row row { get { return m_Gem.row; } }
+        public GridCollectionMono rowMono
+        {
+            get { return m_Gem.row.GetComponent<GridCollectionMono>(); }
+        }
+
+        public Column column { get { return m_Gem.column; } }
+        public GridCollectionMono columnMono
+        {
+            get { return m_Gem.column.GetComponent<GridCollectionMono>(); }
+        }
+
         private void Start()
         {
             // Now that everything should be initialized, we can show the gem visually
@@ -59,10 +77,10 @@ namespace Board
             m_CurrentPosition =
                 new Vector2(
                     m_Gem.position.x
-                    * (m_Gem.gridMono.rectTransform.rect.width
-                    / (m_Gem.gridMono.grid.gemMonoLists[0].gemMonos.Count - 1)),
+                    * (gridMono.rectTransform.rect.width
+                    / (grid.size.x - 1)),
 
-                    m_Gem.gridMono.rectTransform.rect.height);
+                    gridMono.rectTransform.rect.height);
 
             m_RectTransform.anchoredPosition = m_CurrentPosition;
 
@@ -89,12 +107,12 @@ namespace Board
                     MoveToPosition(
                         new Vector2(
                             positionChangeInfo.newPosition.x
-                            * (m_Gem.gridMono.rectTransform.rect.width
-                            / (m_Gem.gridMono.grid.gemMonoLists[0].gemMonos.Count - 1)),
+                            * (gridMono.rectTransform.rect.width
+                            / (grid.size.x - 1)),
 
                             positionChangeInfo.newPosition.y
-                            * (m_Gem.gridMono.rectTransform.rect.height
-                            / (m_Gem.gridMono.grid.gemMonoLists.Count - 1)))));
+                            * (gridMono.rectTransform.rect.height
+                            / (grid.size.y - 1)))));
 
             name = "Gem " + positionChangeInfo.newPosition;
         }
@@ -163,15 +181,15 @@ namespace Board
             m_UpdatePositionCoroutine = null;
         }
 
-        public static GemMono Create(GridMono gridMono, GemType gemType, Vector2 position)
+        public static void Init()
+        {
+            Gem.onCreate.AddListener(OnGemCreate);
+        }
+
+        private static void OnGemCreate(Gem newGem)
         {
             var newGameObject = new GameObject();
-            newGameObject.transform.SetParent(gridMono.transform);
-
             var newGemMono = newGameObject.AddComponent<GemMono>();
-
-            gridMono.grid.onMatch.AddListener(newGemMono.OnMatch);
-            gridMono.grid.onGridChange.AddListener(newGemMono.OnGridChange);
 
             newGemMono.m_Image = newGameObject.GetComponent<Image>();
             // Hide the gem visually for now
@@ -187,20 +205,35 @@ namespace Board
 
             newGemMono.m_CurrentPosition = newGemMono.m_RectTransform.anchoredPosition;
 
-            newGemMono.gem = new Gem();
+            newGemMono.gem = newGem;
+            newGem.components.Add(newGemMono);
 
-            // Subscribe to the relevant events before setting the values
+            // Subscribe to the relevant events
             newGemMono.gem.onTypeChange.AddListener(newGemMono.OnTypeChange);
-
-            newGemMono.gem.gridMono = gridMono;
-
-            newGemMono.gem.gemType = gemType;
-            newGemMono.gem.position = position;
-
-            newGemMono.m_Image.SetNativeSize();
-
             newGemMono.gem.onPositionChange.AddListener(newGemMono.OnPositionChange);
-            newGemMono.gem.gridMono.onGridResize.AddListener(
+
+            var gridMono = newGemMono.gridMono;
+
+            gridMono.grid.onMatch.AddListener(newGemMono.OnMatch);
+            gridMono.grid.onGridChange.AddListener(newGemMono.OnGridChange);
+
+            // Parent the object before moving it
+            newGameObject.transform.SetParent(gridMono.transform);
+
+            newGemMono.OnPositionChange(
+                new PositionChangeInformation
+                {
+                    gem = newGemMono.gem,
+                    newPosition = newGemMono.gem.position,
+                });
+            newGemMono.OnTypeChange(
+                new TypeChangeInformation
+                {
+                    gem = newGemMono.gem,
+                    newType = newGemMono.gem.gemType,
+                });
+
+            gridMono.onGridResize.AddListener(
                 empty => newGemMono.OnPositionChange(
                     new PositionChangeInformation
                     {
@@ -208,7 +241,7 @@ namespace Board
                         newPosition = newGemMono.gem.position
                     }));
 
-            return newGemMono;
+            newGemMono.m_Image.SetNativeSize();
         }
     }
 }

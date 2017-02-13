@@ -44,6 +44,8 @@ public class CombatManager : SubManager<CombatManager>
 
     private GemMono m_LockedGemMono;
 
+    public RectTransform gridParentRectTransform { get { return m_GridParentRectTransform; } }
+
     //TODO: public List<Enemy> enemies = new List<>;
     public List<Sprite> gemSprites { get { return m_GemSprites; } }
 
@@ -61,7 +63,14 @@ public class CombatManager : SubManager<CombatManager>
         if (m_GridParentRectTransform == null)
             m_GridParentRectTransform = FindObjectOfType<Canvas>().GetComponent<RectTransform>();
 
-        m_GridMono = GridMono.Create(m_GridParentRectTransform, new Vector2(5f, 5f));
+        GridMono.Init();
+        GridCollectionMono.Init();
+
+        GemMono.Init();
+
+        var newGrid = new Grid(new Vector2(5f, 5f));
+
+        m_GridMono = newGrid.GetComponent<GridMono>();
 
         m_GridMono.grid.onSlide.AddListener(OnSlide);
     }
@@ -84,7 +93,8 @@ public class CombatManager : SubManager<CombatManager>
             return;
 
         m_LockedGemMono = gemMono;
-        m_LockedGemMono.positionOffset += new Vector3(
+        m_LockedGemMono.positionOffset +=
+            new Vector3(
                 dragInfo.totalDelta.x / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.x,
                 dragInfo.totalDelta.y / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.y);
     }
@@ -95,17 +105,20 @@ public class CombatManager : SubManager<CombatManager>
         if (m_LockedGemMono == null)
             return;
 
-        foreach (var gemMono in m_GridMono.grid.columns[(int)m_LockedGemMono.gem.position.x].gridCollection.gemMonos)
-        {
-            gemMono.positionOffset += new Vector3(
-                dragInfo.delta.x / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.x,
-                dragInfo.delta.y / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.y);
-        }
+        var gridCollection =
+            Mathf.Abs(dragInfo.totalDelta.x) > Mathf.Abs(dragInfo.totalDelta.y) ?
+            m_LockedGemMono.row as GridCollection :
+            m_LockedGemMono.column as GridCollection;
 
-        //m_LockedGemMono.positionOffset +=
-        //    new Vector3(
-        //        dragInfo.delta.x / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.x,
-        //        dragInfo.delta.y / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.y);
+        foreach (var gem in gridCollection.gems)
+        {
+            var gemMono = gem.GetComponent<GemMono>();
+
+            gemMono.positionOffset +=
+                new Vector3(
+                    dragInfo.delta.x / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.x,
+                    dragInfo.delta.y / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.y);
+        }
     }
 
     protected override void OnEndDrag(DragInformation dragInfo)
@@ -125,7 +138,7 @@ public class CombatManager : SubManager<CombatManager>
                     ? SlideDirection.Backward
                     : SlideDirection.Forward;
 
-            gem.gridMono.grid.SlideRowAt((int)gem.position.y, slideDirection);
+            gem.grid.SlideRowAt((int)gem.position.y, slideDirection);
         }
         else
         {
@@ -134,7 +147,7 @@ public class CombatManager : SubManager<CombatManager>
                     ? SlideDirection.Backward
                     : SlideDirection.Forward;
 
-            gem.gridMono.grid.SlideColumnAt((int)gem.position.x, slideDirection);
+            gem.grid.SlideColumnAt((int)gem.position.x, slideDirection);
         }
     }
 

@@ -11,7 +11,7 @@ namespace Board
     public class GridResizeEvent : UnityEvent<GridResizeInformation> { }
 
     [RequireComponent(typeof(RectTransform))]
-    public class GridMono : MonoBehaviour
+    public class GridMono : MonoBehaviour, IComponent
     {
         [SerializeField]
         private Grid m_Grid;
@@ -43,14 +43,20 @@ namespace Board
             m_PreviousRectSize = currentRectSize;
         }
 
-        public static GridMono Create(RectTransform parentTransform, Vector2 newSize)
+        public static void Init()
+        {
+            Grid.onCreate.AddListener(OnGridCreate);
+        }
+
+        private static void OnGridCreate(Grid newGrid)
         {
             var newGameObject = new GameObject();
-            newGameObject.transform.SetParent(parentTransform);
+            newGameObject.transform.SetParent(CombatManager.self.gridParentRectTransform);
 
             var newGridMono = newGameObject.AddComponent<GridMono>();
 
-            newGridMono.m_Grid = new Grid(newGridMono, newSize);
+            newGridMono.m_Grid = newGrid;
+            newGrid.components.Add(newGridMono);
 
             newGridMono.m_RectTransform = newGameObject.GetComponent<RectTransform>();
             newGridMono.m_ParentRectTransform =
@@ -62,9 +68,6 @@ namespace Board
             newGridMono.m_RectTransform.sizeDelta = new Vector2(-60f, -60f);
 
             newGridMono.m_RectTransform.anchoredPosition = Vector2.zero;
-            newGridMono.m_Grid.InitializeGrid();
-
-            return newGridMono;
         }
     }
 }
