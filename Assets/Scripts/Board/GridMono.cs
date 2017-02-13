@@ -29,6 +29,7 @@ namespace Board
         public Grid grid { get { return m_Grid; } }
 
         public RectTransform rectTransform { get { return m_RectTransform; } }
+        public RectTransform parentRectTransform { get { return m_ParentRectTransform; } }
 
         public GridResizeEvent onGridResize { get { return m_OnGridResize; } }
 

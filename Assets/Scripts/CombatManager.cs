@@ -13,15 +13,6 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-[Serializable]
-public class OnCombatBegin : UnityEvent { }
-[Serializable]
-public class OnCombatEnd : UnityEvent { }
-[Serializable]
-public class OnCombatUpdate : UnityEvent { }
-[Serializable]
-public class OnPlayerTurn : UnityEvent { }
-
 public class CombatManager : SubManager<CombatManager>
 {
     [SerializeField]
@@ -30,14 +21,14 @@ public class CombatManager : SubManager<CombatManager>
     private List<Sprite> m_GemSprites = new List<Sprite>();
 
     [Space, SerializeField]
-    private OnCombatBegin m_OnCombatBegin = new OnCombatBegin();
+    private UnityEvent m_OnCombatBegin = new UnityEvent();
     [SerializeField]
-    private OnCombatUpdate m_OnCombatUpdate = new OnCombatUpdate();
+    private UnityEvent m_OnCombatUpdate = new UnityEvent();
     [SerializeField]
-    private OnCombatEnd m_OnCombatEnd = new OnCombatEnd();
+    private UnityEvent m_OnCombatEnd = new UnityEvent();
 
     [SerializeField]
-    private OnPlayerTurn m_OnPlayerTurn = new OnPlayerTurn();
+    private UnityEvent m_OnPlayerTurn = new UnityEvent();
 
     [SerializeField]
     private GridMono m_GridMono;
@@ -46,14 +37,15 @@ public class CombatManager : SubManager<CombatManager>
 
     public RectTransform gridParentRectTransform { get { return m_GridParentRectTransform; } }
 
-    //TODO: public List<Enemy> enemies = new List<>;
     public List<Sprite> gemSprites { get { return m_GemSprites; } }
 
-    public OnCombatBegin onCombatBegin { get { return m_OnCombatBegin; } }
-    public OnCombatUpdate onCombatUpdate { get { return m_OnCombatUpdate; } }
-    public OnCombatEnd onCombatEnd { get { return m_OnCombatEnd; } }
+    //TODO: public List<Enemy> enemies = new List<>;
 
-    public OnPlayerTurn onPlayerTurn { get { return m_OnPlayerTurn; } }
+    public UnityEvent onCombatBegin { get { return m_OnCombatBegin; } }
+    public UnityEvent onCombatUpdate { get { return m_OnCombatUpdate; } }
+    public UnityEvent onCombatEnd { get { return m_OnCombatEnd; } }
+
+    public UnityEvent onPlayerTurn { get { return m_OnPlayerTurn; } }
 
     public GridMono gridMono { get { return m_GridMono; } }
 
@@ -77,7 +69,7 @@ public class CombatManager : SubManager<CombatManager>
 
     private void Update()
     {
-
+        onCombatUpdate.Invoke();
     }
 
     private void OnSlide(SlideInformation slideInfo)
