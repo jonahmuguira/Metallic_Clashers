@@ -5,9 +5,9 @@ using System.IO;
 using UnityEngine;
 using System.Xml.Serialization;
 
-using Board;
-
 using Library;
+
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -24,11 +24,11 @@ public class GameManager : MonoSingleton<GameManager>
     public GameState gameState;
 
     public PlayerData playerData;
+    private string currentScene;
 
     protected override void Awake()
     {
         base.Awake();
-        CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
         DontDestroyOnLoad(gameObject);
     }
 
@@ -57,5 +57,11 @@ public class GameManager : MonoSingleton<GameManager>
 
         playerData = (PlayerData) reader.Deserialize(file);
         file.Close();
+    }
+
+    private void NextScene(string nextScene)
+    {
+        SceneManager.LoadSceneAsync(nextScene);
+        currentScene = nextScene;
     }
 }
