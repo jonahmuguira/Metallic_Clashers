@@ -2,8 +2,6 @@
 
 namespace Board
 {
-    using System;
-
     using UnityEngine;
 
     using Information;
@@ -11,7 +9,7 @@ namespace Board
     using UnityEngine.UI;
 
     [RequireComponent(typeof(Image))]
-    public class GemMono : MonoBehaviour
+    public class GemMono : MonoBehaviour, IComponent
     {
         [SerializeField]
         private Image m_Image;
@@ -53,6 +51,42 @@ namespace Board
             }
         }
 
+        public Grid grid { get { return m_Gem.grid; } }
+        public GridMono gridMono { get { return grid.GetComponent<GridMono>(); } }
+
+        public Vector2 position { get { return m_Gem.position; } set { m_Gem.position = value; } }
+        public GemType gemType { get { return m_Gem.gemType; } set { m_Gem.gemType = value; } }
+
+        public Row row { get { return m_Gem.row; } }
+        public GridCollectionMono rowMono
+        {
+            get { return m_Gem.row.GetComponent<GridCollectionMono>(); }
+        }
+
+        public Column column { get { return m_Gem.column; } }
+        public GridCollectionMono columnMono
+        {
+            get { return m_Gem.column.GetComponent<GridCollectionMono>(); }
+        }
+
+        private void Start()
+        {
+            // Now that everything should be initialized, we can show the gem visually
+            m_Image.enabled = true;
+
+            m_CurrentPosition =
+                new Vector2(
+                    m_Gem.position.x
+                    * (gridMono.rectTransform.rect.width
+                    / (grid.size.x - 1)),
+
+                    gridMono.rectTransform.rect.height);
+
+            m_RectTransform.anchoredPosition = m_CurrentPosition;
+
+            OnPositionChange(new PositionChangeInformation { gem = gem, newPosition = gem.position });
+        }
+
         private void OnTypeChange(TypeChangeInformation typeChangeInfo)
         {
             // This should not happen because we only subscribe to the gem we care about but still...
@@ -72,8 +106,15 @@ namespace Board
                 StartCoroutine(
                     MoveToPosition(
                         new Vector2(
-                            positionChangeInfo.newPosition.x * CombatManager.self.gemOffset.x,
-                            positionChangeInfo.newPosition.y * CombatManager.self.gemOffset.y)));
+                            positionChangeInfo.newPosition.x
+                            * (gridMono.rectTransform.rect.width
+                            / (grid.size.x - 1)),
+
+                            positionChangeInfo.newPosition.y
+                            * (gridMono.rectTransform.rect.height
+                            / (grid.size.y - 1)))));
+
+            name = "Gem " + positionChangeInfo.newPosition;
         }
 
         private void OnMatch(MatchInformation matchInfo)
@@ -140,42 +181,67 @@ namespace Board
             m_UpdatePositionCoroutine = null;
         }
 
-        public static GemMono Create(Grid grid, GemType gemType, Vector2 position)
+        public static void Init()
+        {
+            Gem.onCreate.AddListener(OnGemCreate);
+        }
+
+        private static void OnGemCreate(Gem newGem)
         {
             var newGameObject = new GameObject();
-            newGameObject.transform.SetParent(FindObjectOfType<Canvas>().transform);
-
             var newGemMono = newGameObject.AddComponent<GemMono>();
-            newGemMono.name = position.ToString();
-
-            grid.onMatch.AddListener(newGemMono.OnMatch);
-            grid.onGridChange.AddListener(newGemMono.OnGridChange);
 
             newGemMono.m_Image = newGameObject.GetComponent<Image>();
+            // Hide the gem visually for now
+            newGemMono.m_Image.enabled = false;
+
             newGemMono.m_RectTransform = newGameObject.GetComponent<RectTransform>();
 
-            newGemMono.m_RectTransform.anchoredPosition =
-                new Vector2(
-                    position.x * CombatManager.self.gemOffset.x,
-                    grid.size.y * CombatManager.self.gemOffset.y);
+            newGemMono.m_RectTransform.anchorMin = Vector2.zero;
+            newGemMono.m_RectTransform.anchorMax = Vector2.zero;
+            newGemMono.m_RectTransform.sizeDelta = Vector2.zero;
 
-            newGemMono.gem = new Gem();
+            newGemMono.m_RectTransform.anchoredPosition = Vector2.zero;
 
-            // Subscribe to the relevant events before setting the values
+            newGemMono.m_CurrentPosition = newGemMono.m_RectTransform.anchoredPosition;
+
+            newGemMono.gem = newGem;
+            newGem.components.Add(newGemMono);
+
+            // Subscribe to the relevant events
             newGemMono.gem.onTypeChange.AddListener(newGemMono.OnTypeChange);
             newGemMono.gem.onPositionChange.AddListener(newGemMono.OnPositionChange);
 
-            newGemMono.gem.grid = grid;
+            var gridMono = newGemMono.gridMono;
 
-            newGemMono.gem.gemType = gemType;
-            newGemMono.gem.position = position;
+            gridMono.grid.onMatch.AddListener(newGemMono.OnMatch);
+            gridMono.grid.onGridChange.AddListener(newGemMono.OnGridChange);
 
-            var newBoxCollider = newGameObject.AddComponent<BoxCollider2D>();
-            newBoxCollider.isTrigger = true;
+            // Parent the object before moving it
+            newGameObject.transform.SetParent(gridMono.transform);
+
+            newGemMono.OnPositionChange(
+                new PositionChangeInformation
+                {
+                    gem = newGemMono.gem,
+                    newPosition = newGemMono.gem.position,
+                });
+            newGemMono.OnTypeChange(
+                new TypeChangeInformation
+                {
+                    gem = newGemMono.gem,
+                    newType = newGemMono.gem.gemType,
+                });
+
+            gridMono.onGridResize.AddListener(
+                empty => newGemMono.OnPositionChange(
+                    new PositionChangeInformation
+                    {
+                        gem = newGemMono.gem,
+                        newPosition = newGemMono.gem.position
+                    }));
 
             newGemMono.m_Image.SetNativeSize();
-
-            return newGemMono;
         }
     }
 }
