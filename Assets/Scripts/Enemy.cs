@@ -71,11 +71,12 @@ public class Enemy
 
     private void Attack()
     {
-        
+        playerData.TakeDamage(attack.totalValue);
     }
 
     public void TakeDamage(float damage)
     {
-        
+        var percentage = damage / defense.totalValue;
+        health.modifier -= damage * Mathf.Clamp(percentage, 0f, 1f);
     }
 }
