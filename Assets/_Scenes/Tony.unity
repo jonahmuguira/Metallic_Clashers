@@ -250,393 +250,15 @@ MonoBehaviour:
   nodePrefab: {fileID: 1938075192471666, guid: afd25102a7f6a494fa20b6614a62119b, type: 2}
   worlds:
   - nodes:
-    - prevNodes: []
-      nextNodes:
-      - prevNodes:
-        - prevNodes: []
-          nextNodes:
-          - prevNodes:
-            - prevNodes: []
-              nextNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 0}
-                  isComplete: 0
-                  stageNumber: 1
-                  worldIndex: 0
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 2}
-                  isComplete: 0
-                  stageNumber: 3
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 1}
-                isComplete: 0
-                stageNumber: 2
-                worldIndex: 0
-              normalizedPosition: {x: 0, y: 0}
-              isComplete: 0
-              stageNumber: 1
-              worldIndex: 0
-            nextNodes:
-            - prevNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 0}
-                  isComplete: 0
-                  stageNumber: 1
-                  worldIndex: 0
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 2}
-                  isComplete: 0
-                  stageNumber: 3
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 1}
-                isComplete: 0
-                stageNumber: 2
-                worldIndex: 0
-              nextNodes: []
-              normalizedPosition: {x: 0, y: 2}
-              isComplete: 0
-              stageNumber: 3
-              worldIndex: 0
-            normalizedPosition: {x: 0, y: 1}
-            isComplete: 0
-            stageNumber: 2
-            worldIndex: 0
-          normalizedPosition: {x: 0, y: 0}
-          isComplete: 0
-          stageNumber: 1
-          worldIndex: 0
-        nextNodes:
-        - prevNodes:
-          - prevNodes:
-            - prevNodes: []
-              nextNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 0}
-                  isComplete: 0
-                  stageNumber: 1
-                  worldIndex: 0
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 2}
-                  isComplete: 0
-                  stageNumber: 3
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 1}
-                isComplete: 0
-                stageNumber: 2
-                worldIndex: 0
-              normalizedPosition: {x: 0, y: 0}
-              isComplete: 0
-              stageNumber: 1
-              worldIndex: 0
-            nextNodes:
-            - prevNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 0}
-                  isComplete: 0
-                  stageNumber: 1
-                  worldIndex: 0
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 2}
-                  isComplete: 0
-                  stageNumber: 3
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 1}
-                isComplete: 0
-                stageNumber: 2
-                worldIndex: 0
-              nextNodes: []
-              normalizedPosition: {x: 0, y: 2}
-              isComplete: 0
-              stageNumber: 3
-              worldIndex: 0
-            normalizedPosition: {x: 0, y: 1}
-            isComplete: 0
-            stageNumber: 2
-            worldIndex: 0
-          nextNodes: []
-          normalizedPosition: {x: 0, y: 2}
-          isComplete: 0
-          stageNumber: 3
-          worldIndex: 0
-        normalizedPosition: {x: 0, y: 1}
-        isComplete: 0
-        stageNumber: 2
-        worldIndex: 0
-      normalizedPosition: {x: 0, y: 0}
+    - normalizedPosition: {x: 0, y: 0}
       isComplete: 0
       stageNumber: 1
       worldIndex: 0
-    - prevNodes:
-      - prevNodes: []
-        nextNodes:
-        - prevNodes:
-          - prevNodes: []
-            nextNodes:
-            - prevNodes:
-              - prevNodes: []
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 1}
-                  isComplete: 0
-                  stageNumber: 2
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 0}
-                isComplete: 0
-                stageNumber: 1
-                worldIndex: 0
-              nextNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 1}
-                  isComplete: 0
-                  stageNumber: 2
-                  worldIndex: 0
-                nextNodes: []
-                normalizedPosition: {x: 0, y: 2}
-                isComplete: 0
-                stageNumber: 3
-                worldIndex: 0
-              normalizedPosition: {x: 0, y: 1}
-              isComplete: 0
-              stageNumber: 2
-              worldIndex: 0
-            normalizedPosition: {x: 0, y: 0}
-            isComplete: 0
-            stageNumber: 1
-            worldIndex: 0
-          nextNodes:
-          - prevNodes:
-            - prevNodes:
-              - prevNodes: []
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 1}
-                  isComplete: 0
-                  stageNumber: 2
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 0}
-                isComplete: 0
-                stageNumber: 1
-                worldIndex: 0
-              nextNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 1}
-                  isComplete: 0
-                  stageNumber: 2
-                  worldIndex: 0
-                nextNodes: []
-                normalizedPosition: {x: 0, y: 2}
-                isComplete: 0
-                stageNumber: 3
-                worldIndex: 0
-              normalizedPosition: {x: 0, y: 1}
-              isComplete: 0
-              stageNumber: 2
-              worldIndex: 0
-            nextNodes: []
-            normalizedPosition: {x: 0, y: 2}
-            isComplete: 0
-            stageNumber: 3
-            worldIndex: 0
-          normalizedPosition: {x: 0, y: 1}
-          isComplete: 0
-          stageNumber: 2
-          worldIndex: 0
-        normalizedPosition: {x: 0, y: 0}
-        isComplete: 0
-        stageNumber: 1
-        worldIndex: 0
-      nextNodes:
-      - prevNodes:
-        - prevNodes:
-          - prevNodes: []
-            nextNodes:
-            - prevNodes:
-              - prevNodes: []
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 1}
-                  isComplete: 0
-                  stageNumber: 2
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 0}
-                isComplete: 0
-                stageNumber: 1
-                worldIndex: 0
-              nextNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 1}
-                  isComplete: 0
-                  stageNumber: 2
-                  worldIndex: 0
-                nextNodes: []
-                normalizedPosition: {x: 0, y: 2}
-                isComplete: 0
-                stageNumber: 3
-                worldIndex: 0
-              normalizedPosition: {x: 0, y: 1}
-              isComplete: 0
-              stageNumber: 2
-              worldIndex: 0
-            normalizedPosition: {x: 0, y: 0}
-            isComplete: 0
-            stageNumber: 1
-            worldIndex: 0
-          nextNodes:
-          - prevNodes:
-            - prevNodes:
-              - prevNodes: []
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 1}
-                  isComplete: 0
-                  stageNumber: 2
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 0}
-                isComplete: 0
-                stageNumber: 1
-                worldIndex: 0
-              nextNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 1}
-                  isComplete: 0
-                  stageNumber: 2
-                  worldIndex: 0
-                nextNodes: []
-                normalizedPosition: {x: 0, y: 2}
-                isComplete: 0
-                stageNumber: 3
-                worldIndex: 0
-              normalizedPosition: {x: 0, y: 1}
-              isComplete: 0
-              stageNumber: 2
-              worldIndex: 0
-            nextNodes: []
-            normalizedPosition: {x: 0, y: 2}
-            isComplete: 0
-            stageNumber: 3
-            worldIndex: 0
-          normalizedPosition: {x: 0, y: 1}
-          isComplete: 0
-          stageNumber: 2
-          worldIndex: 0
-        nextNodes: []
-        normalizedPosition: {x: 0, y: 2}
-        isComplete: 0
-        stageNumber: 3
-        worldIndex: 0
-      normalizedPosition: {x: 0, y: 1}
+    - normalizedPosition: {x: 0, y: 1}
       isComplete: 0
       stageNumber: 2
       worldIndex: 0
-    - prevNodes:
-      - prevNodes:
-        - prevNodes: []
-          nextNodes:
-          - prevNodes:
-            - prevNodes: []
-              nextNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 0}
-                  isComplete: 0
-                  stageNumber: 1
-                  worldIndex: 0
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 2}
-                  isComplete: 0
-                  stageNumber: 3
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 1}
-                isComplete: 0
-                stageNumber: 2
-                worldIndex: 0
-              normalizedPosition: {x: 0, y: 0}
-              isComplete: 0
-              stageNumber: 1
-              worldIndex: 0
-            nextNodes:
-            - prevNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 0}
-                  isComplete: 0
-                  stageNumber: 1
-                  worldIndex: 0
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 2}
-                  isComplete: 0
-                  stageNumber: 3
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 1}
-                isComplete: 0
-                stageNumber: 2
-                worldIndex: 0
-              nextNodes: []
-              normalizedPosition: {x: 0, y: 2}
-              isComplete: 0
-              stageNumber: 3
-              worldIndex: 0
-            normalizedPosition: {x: 0, y: 1}
-            isComplete: 0
-            stageNumber: 2
-            worldIndex: 0
-          normalizedPosition: {x: 0, y: 0}
-          isComplete: 0
-          stageNumber: 1
-          worldIndex: 0
-        nextNodes:
-        - prevNodes:
-          - prevNodes:
-            - prevNodes: []
-              nextNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 0}
-                  isComplete: 0
-                  stageNumber: 1
-                  worldIndex: 0
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 2}
-                  isComplete: 0
-                  stageNumber: 3
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 1}
-                isComplete: 0
-                stageNumber: 2
-                worldIndex: 0
-              normalizedPosition: {x: 0, y: 0}
-              isComplete: 0
-              stageNumber: 1
-              worldIndex: 0
-            nextNodes:
-            - prevNodes:
-              - prevNodes:
-                - normalizedPosition: {x: 0, y: 0}
-                  isComplete: 0
-                  stageNumber: 1
-                  worldIndex: 0
-                nextNodes:
-                - normalizedPosition: {x: 0, y: 2}
-                  isComplete: 0
-                  stageNumber: 3
-                  worldIndex: 0
-                normalizedPosition: {x: 0, y: 1}
-                isComplete: 0
-                stageNumber: 2
-                worldIndex: 0
-              nextNodes: []
-              normalizedPosition: {x: 0, y: 2}
-              isComplete: 0
-              stageNumber: 3
-              worldIndex: 0
-            normalizedPosition: {x: 0, y: 1}
-            isComplete: 0
-            stageNumber: 2
-            worldIndex: 0
-          nextNodes: []
-          normalizedPosition: {x: 0, y: 2}
-          isComplete: 0
-          stageNumber: 3
-          worldIndex: 0
-        normalizedPosition: {x: 0, y: 1}
-        isComplete: 0
-        stageNumber: 2
-        worldIndex: 0
-      nextNodes: []
-      normalizedPosition: {x: 0, y: 2}
+    - normalizedPosition: {x: 0, y: 2}
       isComplete: 0
       stageNumber: 3
       worldIndex: 0
@@ -1431,7 +1053,7 @@ Prefab:
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
       propertyPath: playerData.health.value
-      value: 10
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
@@ -1442,6 +1064,26 @@ Prefab:
         type: 2}
       propertyPath: playerData.defense.value
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.defense.coefficient
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: testing
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.health.coefficient
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.health.modifier
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}
