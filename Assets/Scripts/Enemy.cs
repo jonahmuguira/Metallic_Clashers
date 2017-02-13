@@ -11,7 +11,7 @@ public class Enemy
     public float attackSpeed;
     public int movesUntilAttack;
 
-    private int movesCounter;
+    private int movesCounter = 0;
     private float attackCountdown;
     private PlayerData playerData;
 
@@ -63,13 +63,18 @@ public class Enemy
     private void OnPlayerTurn()
     {
         movesCounter++;
-        if (movesCounter != 0 && movesCounter%movesUntilAttack == 0)
+        if (movesCounter != 0 && movesCounter % movesUntilAttack == 0)
         {
             Attack();
         }
     }
 
     private void Attack()
+    {
+        
+    }
+
+    public void TakeDamage(float damage)
     {
         
     }

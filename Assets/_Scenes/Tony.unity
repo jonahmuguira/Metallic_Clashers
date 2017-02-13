@@ -1436,12 +1436,32 @@ Prefab:
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
       propertyPath: playerData.attack.value
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
       propertyPath: playerData.defense.value
-      value: 10
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.defense.coefficient
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: testing
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.health.coefficient
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.health.modifier
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}
