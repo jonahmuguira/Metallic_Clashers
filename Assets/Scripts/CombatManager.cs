@@ -25,10 +25,9 @@ public class OnPlayerTurn : UnityEvent { }
 public class CombatManager : SubManager<CombatManager>
 {
     [SerializeField]
-    private List<Sprite> m_GemSprites = new List<Sprite>();
-
+    private RectTransform m_GridParentRectTransform;
     [SerializeField]
-    private Vector2 m_GemOffset;
+    private List<Sprite> m_GemSprites = new List<Sprite>();
 
     [Space, SerializeField]
     private OnCombatBegin m_OnCombatBegin = new OnCombatBegin();
@@ -41,14 +40,14 @@ public class CombatManager : SubManager<CombatManager>
     private OnPlayerTurn m_OnPlayerTurn = new OnPlayerTurn();
 
     [SerializeField]
-    private Grid m_Grid;
+    private GridMono m_GridMono;
 
     private GemMono m_LockedGemMono;
 
+    public RectTransform gridParentRectTransform { get { return m_GridParentRectTransform; } }
+
     //TODO: public List<Enemy> enemies = new List<>;
     public List<Sprite> gemSprites { get { return m_GemSprites; } }
-
-    public Vector3 gemOffset { get { return m_GemOffset; } set { m_GemOffset = value; } }
 
     public OnCombatBegin onCombatBegin { get { return m_OnCombatBegin; } }
     public OnCombatUpdate onCombatUpdate { get { return m_OnCombatUpdate; } }
@@ -56,15 +55,24 @@ public class CombatManager : SubManager<CombatManager>
 
     public OnPlayerTurn onPlayerTurn { get { return m_OnPlayerTurn; } }
 
-    public Grid grid { get { return m_Grid; } }
+    public GridMono gridMono { get { return m_GridMono; } }
 
     protected override void Init()
     {
         //TODO: Initialize Combat
+        if (m_GridParentRectTransform == null)
+            m_GridParentRectTransform = FindObjectOfType<Canvas>().GetComponent<RectTransform>();
 
-        m_Grid = new Grid(new Vector2(5f, 5f));
+        GridMono.Init();
+        GridCollectionMono.Init();
 
-        m_Grid.onSlide.AddListener(OnSlide);
+        GemMono.Init();
+
+        var newGrid = new Grid(new Vector2(5f, 5f));
+
+        m_GridMono = newGrid.GetComponent<GridMono>();
+
+        m_GridMono.grid.onSlide.AddListener(OnSlide);
     }
 
     private void Update()
@@ -85,6 +93,10 @@ public class CombatManager : SubManager<CombatManager>
             return;
 
         m_LockedGemMono = gemMono;
+        m_LockedGemMono.positionOffset +=
+            new Vector3(
+                dragInfo.totalDelta.x / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.x,
+                dragInfo.totalDelta.y / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.y);
     }
 
     protected override void OnDrag(DragInformation dragInfo)
@@ -93,7 +105,20 @@ public class CombatManager : SubManager<CombatManager>
         if (m_LockedGemMono == null)
             return;
 
-        m_LockedGemMono.positionOffset += (Vector3)dragInfo.delta;
+        var gridCollection =
+            Mathf.Abs(dragInfo.totalDelta.x) > Mathf.Abs(dragInfo.totalDelta.y) ?
+            m_LockedGemMono.row as GridCollection :
+            m_LockedGemMono.column as GridCollection;
+
+        foreach (var gem in gridCollection.gems)
+        {
+            var gemMono = gem.GetComponent<GemMono>();
+
+            gemMono.positionOffset +=
+                new Vector3(
+                    dragInfo.delta.x / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.x,
+                    dragInfo.delta.y / FindObjectOfType<Canvas>().GetComponent<RectTransform>().lossyScale.y);
+        }
     }
 
     protected override void OnEndDrag(DragInformation dragInfo)
