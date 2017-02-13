@@ -116,11 +116,6 @@
             }
         }
 
-        public T GetComponent<T>() where T : IComponent
-        {
-            return (T)components.First(component => component is T);
-        }
-
         private void CheckMatch()
         {
             //TODO: Check for matches in the entire grid
@@ -232,6 +227,11 @@
         private void OnGemTypeChange(TypeChangeInformation typeChangeInfo)
         {
             //TODO: Check for matches on gems in the same row and column
+        }
+
+        public T GetComponent<T>() where T : IComponent
+        {
+            return (T)components.First(component => component is T);
         }
     }
 }

@@ -47,11 +47,6 @@
 
         protected abstract bool CopyAt(List<List<Gem>> tempList, int fromIndex, int toIndex);
 
-        public T GetComponent<T>() where T : IComponent
-        {
-            return (T)components.First(component => component is T);
-        }
-
         public bool Slide(SlideDirection direction)
         {
             var tempList =
@@ -85,6 +80,11 @@
 
             grid.onSlide.Invoke(new SlideInformation { gridCollection = this });
             return true;
+        }
+
+        public T GetComponent<T>() where T : IComponent
+        {
+            return (T)components.First(component => component is T);
         }
     }
 
