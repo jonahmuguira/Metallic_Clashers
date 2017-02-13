@@ -35,22 +35,6 @@ namespace Board
             private set { m_Gem = value; }
         }
 
-        public Vector3 positionOffset
-        {
-            get { return m_PositionOffset; }
-            set
-            {
-                m_PositionOffset = value;
-
-                if (m_ReducePositionOffsetCoroutine != null)
-                    StopCoroutine(m_ReducePositionOffsetCoroutine);
-                if (m_UpdatePositionCoroutine == null)
-                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
-
-                m_ReducePositionOffsetCoroutine = StartCoroutine(ReducePositionOffset());
-            }
-        }
-
         public Grid grid { get { return m_Gem.grid; } }
         public GridMono gridMono { get { return grid.GetComponent<GridMono>(); } }
 
@@ -67,6 +51,22 @@ namespace Board
         public GridCollectionMono columnMono
         {
             get { return m_Gem.column.GetComponent<GridCollectionMono>(); }
+        }
+
+        public Vector3 positionOffset
+        {
+            get { return m_PositionOffset; }
+            set
+            {
+                m_PositionOffset = value;
+
+                if (m_ReducePositionOffsetCoroutine != null)
+                    StopCoroutine(m_ReducePositionOffsetCoroutine);
+                if (m_UpdatePositionCoroutine == null)
+                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
+
+                m_ReducePositionOffsetCoroutine = StartCoroutine(ReducePositionOffset());
+            }
         }
 
         private void Start()

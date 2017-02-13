@@ -9,8 +9,6 @@
 
     using Information;
 
-    using JetBrains.Annotations;
-
     public interface IComponent { }
 
     [Serializable]
