@@ -171,13 +171,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 544062738}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -13.97}
+  m_LocalRotation: {x: 0.46239412, y: -0, z: -0, w: 0.8866746}
+  m_LocalPosition: {x: 0, y: 8, z: -4.16}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 55.083004, y: 0, z: 0}
 --- !u!1001 &1813393323
 Prefab:
   m_ObjectHideFlags: 0
@@ -215,7 +215,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4202055453174718, guid: 6c86cf7b4241d5445bbc9591032f5e9a, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 6c86cf7b4241d5445bbc9591032f5e9a, type: 2}
@@ -251,7 +251,7 @@ MonoBehaviour:
   worlds:
   - nodes:
     - normalizedPosition: {x: 0, y: 0}
-      isComplete: 0
+      isComplete: 1
       stageNumber: 1
       worldIndex: 0
     - normalizedPosition: {x: 0, y: 1}
@@ -261,6 +261,26 @@ MonoBehaviour:
     - normalizedPosition: {x: 0, y: 2}
       isComplete: 0
       stageNumber: 3
+      worldIndex: 0
+    - normalizedPosition: {x: 0, y: 3}
+      isComplete: 0
+      stageNumber: Boss
+      worldIndex: 0
+    - normalizedPosition: {x: 1, y: 0}
+      isComplete: 0
+      stageNumber: 1A
+      worldIndex: 0
+    - normalizedPosition: {x: -1, y: 1}
+      isComplete: 0
+      stageNumber: 2A
+      worldIndex: 0
+    - normalizedPosition: {x: -2, y: 1}
+      isComplete: 0
+      stageNumber: 2B
+      worldIndex: 0
+    - normalizedPosition: {x: 1, y: 2}
+      isComplete: 0
+      stageNumber: 3A
       worldIndex: 0
   spacingMagnitude: 2
 --- !u!4 &1882947424
@@ -274,7 +294,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1949268153
 Prefab:
@@ -291,7 +311,7 @@ Prefab:
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
       propertyPath: playerData.worldData.Array.data[0].nodes.Array.size
-      value: 3
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
@@ -553,7 +573,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4902044863395634, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
@@ -1048,12 +1068,12 @@ Prefab:
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
       propertyPath: playerData.worldData.Array.data[0].nodes.Array.data[1].isComplete
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
       propertyPath: playerData.health.value
-      value: 100
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
@@ -1083,43 +1103,53 @@ Prefab:
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
       propertyPath: playerData.health.modifier
-      value: 8
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.worldData.Array.data[0].nodes.Array.data[3].isComplete
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.worldData.Array.data[0].nodes.Array.data[4].isComplete
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &2093148762
+--- !u!1 &2086796094
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 2093148764}
-  - component: {fileID: 2093148763}
+  - component: {fileID: 2086796096}
+  - component: {fileID: 2086796095}
   m_Layer: 0
-  m_Name: Directional Light
+  m_Name: Directional light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!108 &2093148763
+--- !u!108 &2086796095
 Light:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2093148762}
+  m_GameObject: {fileID: 2086796094}
   m_Enabled: 1
   serializedVersion: 7
   m_Type: 1
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Color: {r: 0.8602941, g: 0.8602941, b: 0.60094076, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 2
+    m_Type: 0
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1
@@ -1138,16 +1168,16 @@ Light:
   m_BounceIntensity: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
---- !u!4 &2093148764
+--- !u!4 &2086796096
 Transform:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2093148762}
+  m_GameObject: {fileID: 2086796094}
   m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
