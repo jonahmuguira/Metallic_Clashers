@@ -12,17 +12,20 @@
     using Random = UnityEngine.Random;
 
     [Serializable]
-    public class OnGridChange : UnityEvent<GridChangeInformation> { }
+    public class GridChange : UnityEvent<GridChangeInformation> { }
     [Serializable]
-    public class OnMatch : UnityEvent<MatchInformation> { }
+    public class MatchEvent : UnityEvent<MatchInformation> { }
 
     [Serializable]
-    public class OnSlide : UnityEvent<SlideInformation> { }
+    public class SlideEvent : UnityEvent<SlideInformation> { }
+
+    [SerializeField]
+    public class CreateGridEvent : UnityEvent<Grid> { }
 
     [Serializable]
     public class GemList
     {
-        public List<Gem> gems;
+        public List<Gem> gems = new List<Gem>();
 
         public Gem this[int index]
         {
@@ -34,9 +37,9 @@
         {
             return gemList.gems.ToList();
         }
-        public static implicit operator GemList(List<Gem> gemList)
+        public static implicit operator GemList(List<Gem> gemMonoList)
         {
-            return new GemList { gems = gemList.ToList() };
+            return new GemList { gems = gemMonoList.ToList() };
         }
     }
 
@@ -55,12 +58,16 @@
         private List<Row> m_Rows = new List<Row>();
 
         [SerializeField]
-        private OnMatch m_OnMatch = new OnMatch();
+        private MatchEvent m_OnMatch = new MatchEvent();
         [SerializeField]
-        private OnGridChange m_OnGridChange = new OnGridChange();
+        private GridChange m_OnGridChange = new GridChange();
 
         [SerializeField]
-        private OnSlide m_OnSlide = new OnSlide();
+        private SlideEvent m_OnSlide = new SlideEvent();
+
+        private readonly List<IComponent> m_Components = new List<IComponent>();
+
+        public static readonly CreateGridEvent onCreate = new CreateGridEvent();
 
         public List<GemList> gemLists { get { return m_GemLists; } }
 
@@ -69,35 +76,41 @@
         public List<Column> columns { get { return m_Columns; } }
         public List<Row> rows { get { return m_Rows; } }
 
-        public OnMatch onMatch { get { return m_OnMatch; } }
-        public OnGridChange onGridChange { get { return m_OnGridChange; } }
+        public MatchEvent onMatch { get { return m_OnMatch; } }
+        public GridChange onGridChange { get { return m_OnGridChange; } }
 
-        public OnSlide onSlide { get { return m_OnSlide; } }
+        public SlideEvent onSlide { get { return m_OnSlide; } }
+
+        public List<IComponent> components { get { return m_Components; } }
+
+        public GemList this[int index] { get { return m_GemLists[index]; } }
 
         private Grid() { }
         public Grid(Vector2 newSize) : this()
         {
             Random.InitState((int)DateTime.Now.Ticks);
 
-            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
-
             m_Size = newSize;
+
+            onCreate.Invoke(this);
+
+            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
 
             for (var y = 0; y < m_Size.y; ++y)
             {
-                m_Rows.Add(new Row { grid = this, index = y });
+                m_Rows.Add(new Row(this, y));
 
                 var newList = new List<Gem>();
                 for (var x = 0; x < m_Size.x; ++x)
                 {
                     if (x == 0)
-                        m_Columns.Add(new Column { grid = this, index = y });
+                        m_Columns.Add(new Column(this, y));
 
                     var gemType = (GemType)Random.Range(0, numGemTypes);
 
                     newList.Add(
-                        GemMono.Create(
-                            this, gemType, new Vector2(x, y)).gem);
+                        new Gem(
+                            this, new Vector2(x, y), gemType));
                 }
                 m_GemLists.Add(newList);
             }
@@ -162,7 +175,8 @@
 
             m_GemLists[foundY][foundX] = newGem;
 
-            onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { oldGem, newGem } });
+            onGridChange.Invoke(
+                new GridChangeInformation { gems = new List<Gem> { oldGem, newGem } });
             return true;
         }
         public bool SwapAt(Vector2 position1, Vector2 position2)
@@ -190,7 +204,8 @@
             m_GemLists[y2][x2] = gem1;
 
             // Use the references of each gem that was changed when invoking the onGridChange event
-            onGridChange.Invoke(new GridChangeInformation { gems = new List<Gem> { gem1, gem2 } });
+            onGridChange.Invoke(
+                new GridChangeInformation { gems = new List<Gem> { gem1, gem2 } });
             return true;
         }
 
@@ -212,6 +227,11 @@
         private void OnGemTypeChange(TypeChangeInformation typeChangeInfo)
         {
             //TODO: Check for matches on gems in the same row and column
+        }
+
+        public T GetComponent<T>() where T : IComponent
+        {
+            return (T)components.First(component => component is T);
         }
     }
 }
