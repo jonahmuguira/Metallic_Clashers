@@ -10,9 +10,9 @@
     [Serializable]
     public class Node
     {
-        [XmlIgnore]
+        [XmlIgnore, NonSerialized]
         public List<Node> prevNodes = new List<Node>();
-        [XmlIgnore]
+        [XmlIgnore, NonSerialized]
         public List<Node> nextNodes = new List<Node>();
 
         [XmlIgnore]

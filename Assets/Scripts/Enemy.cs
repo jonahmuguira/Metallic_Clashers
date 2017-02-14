@@ -11,7 +11,7 @@ public class Enemy
     public float attackSpeed;
     public int movesUntilAttack;
 
-    private int movesCounter;
+    private int movesCounter = 0;
     private float attackCountdown;
     private PlayerData playerData;
 
@@ -63,7 +63,7 @@ public class Enemy
     private void OnPlayerTurn()
     {
         movesCounter++;
-        if (movesCounter != 0 && movesCounter%movesUntilAttack == 0)
+        if (movesCounter != 0 && movesCounter % movesUntilAttack == 0)
         {
             Attack();
         }
@@ -71,6 +71,12 @@ public class Enemy
 
     private void Attack()
     {
-        
+        playerData.TakeDamage(attack.totalValue);
+    }
+
+    public void TakeDamage(float damage)
+    {
+        var percentage = damage / defense.totalValue;
+        health.modifier -= damage * Mathf.Clamp(percentage, 0f, 1f);
     }
 }
