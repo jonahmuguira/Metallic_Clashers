@@ -173,6 +173,7 @@ namespace Board
                 {
                     gemMono.m_CurrentPosition += gemMono.m_PositionOffset;
                     gemMono.m_RectTransform.anchoredPosition = gemMono.m_CurrentPosition;
+
                     gemMono.m_PositionOffset = Vector3.zero;
                 }
                 row.Slide(SlideDirection.Backward);
@@ -207,9 +208,20 @@ namespace Board
                     m_PositionOffset.x / spacing.x,
                     m_PositionOffset.y / spacing.y);
 
+            var nextPosition =
+                m_PositionOffset.x > m_PositionOffset.y ?
+                    m_PositionOffset.x > 0f ?
+                        GetNeighborPosition(Direction.Right) : GetNeighborPosition(Direction.Left)
+                    : m_PositionOffset.y > 0f ?
+                        GetNeighborPosition(Direction.Up) : GetNeighborPosition(Direction.Down);
+
+            nextPosition =
+                new Vector2(
+                    nextPosition.x * spacing.x, nextPosition.y * spacing.y);
+
             //TODO: Actually implement this
             m_RectTransform.anchoredPosition =
-                Vector2.Lerp(m_CurrentPosition, m_CurrentPosition, coefficient.x);
+                Vector2.Lerp(m_CurrentPosition, nextPosition, coefficient.x);
 
             m_UpdatePositionCoroutine = null;
         }
