@@ -108,7 +108,7 @@ public class CombatManager : SubManager<CombatManager>
 
     protected override void OnDrag(DragInformation dragInfo)
     {
-        // If we didn't hit a GemMono at the start of the drag
+        // If we didn't hit a GridCollectionMono at the start of the drag
         if (m_LockedGridCollectionMono == null)
             return;
 
@@ -118,8 +118,11 @@ public class CombatManager : SubManager<CombatManager>
 
             gemMono.positionOffset +=
                 new Vector3(
-                    dragInfo.delta.x / m_Canvas.GetComponent<RectTransform>().lossyScale.x,
-                    dragInfo.delta.y / m_Canvas.GetComponent<RectTransform>().lossyScale.y);
+                    m_LockedGridCollectionMono.gridCollection is Row
+                    ? dragInfo.delta.x / m_Canvas.GetComponent<RectTransform>().lossyScale.x : 0f,
+
+                    m_LockedGridCollectionMono.gridCollection is Column
+                    ? dragInfo.delta.y / m_Canvas.GetComponent<RectTransform>().lossyScale.y : 0f);
         }
     }
 
