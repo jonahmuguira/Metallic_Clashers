@@ -5,9 +5,11 @@ using System.IO;
 using UnityEngine;
 using System.Xml.Serialization;
 
-using Board;
-
 using Library;
+
+using StageSelection;
+
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -24,17 +26,31 @@ public class GameManager : MonoSingleton<GameManager>
     public GameState gameState;
 
     public PlayerData playerData;
+    private string currentScene = "Tony";
 
     protected override void Awake()
     {
         base.Awake();
-        CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
         DontDestroyOnLoad(gameObject);
+        if (File.Exists(Environment.CurrentDirectory + savePath))
+            Load();
+        else
+        {
+            Save();
+        }
+
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
     }
 
-    private void OnCombatEnd()
+    [ContextMenu("End Combat")]
+    public void OnCombatEnd()
     {
-        
+
+    }
+
+    public void OnStageSelectionEnd()
+    {
+        NextScene("Combat");
     }
 
     [ContextMenu("Save Player")]
@@ -55,7 +71,44 @@ public class GameManager : MonoSingleton<GameManager>
         var reader = new XmlSerializer(typeof(PlayerData));
         var file = new StreamReader(Environment.CurrentDirectory + savePath);
 
-        playerData = (PlayerData) reader.Deserialize(file);
+        playerData = (PlayerData)reader.Deserialize(file);
         file.Close();
+    }
+
+    private void NextScene(string nextScene)
+    {
+        StartCoroutine(LoadScene(nextScene));
+    }
+
+    private void AddSceneListeners()
+    {
+        switch (currentScene)
+        {
+            case "Combat":
+                CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
+                Debug.Log("Combat Ready");
+                break;
+
+            case "Tony":
+                StageSelectionManager.self.onStageSelectionEnd.AddListener(OnStageSelectionEnd);
+                Debug.Log("Tony Time");
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        currentScene = scene.name;
+        AddSceneListeners();
+    }
+
+    private IEnumerator LoadScene(string scene)
+    {
+        var asyncOperation = SceneManager.LoadSceneAsync(scene);
+
+        while (!asyncOperation.isDone) { yield return null; }
     }
 }
