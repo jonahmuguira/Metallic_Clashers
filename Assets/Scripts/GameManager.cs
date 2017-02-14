@@ -86,12 +86,10 @@ public class GameManager : MonoSingleton<GameManager>
         {
             case "Combat":
                 CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
-                Debug.Log("Combat Ready");
                 break;
 
             case "Tony":
                 StageSelectionManager.self.onStageSelectionEnd.AddListener(OnStageSelectionEnd);
-                Debug.Log("Tony Time");
                 break;
 
             default:
