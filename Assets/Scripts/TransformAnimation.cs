@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 
 using UnityEngine;
 
@@ -82,7 +83,7 @@ public class TransformAnimation
 
     public float startDelay
     {
-        get { return m_StartDelay;}
+        get { return m_StartDelay; }
     }
     public float endDelay
     {
@@ -91,11 +92,77 @@ public class TransformAnimation
 
     public Vector3 magnitude
     {
-        get { return m_Magnitude;}
+        get { return m_Magnitude; }
     }
 
     public IEnumerator Animate(Transform transform, List<Transform> targets)
     {
-        return null; //placed here to avoid error(s)
+        var childTransform = transform.GetChild(0);
+
+        transform.localPosition += m_PositionOffset;
+        transform.eulerAngles += m_RotationOffset;
+        childTransform.localPosition =
+            new Vector3(
+                childTransform.localPosition.x,
+                childTransform.localPosition.y,
+                childTransform.localPosition.z + m_ZoomOffset);
+
+        //TODO: Do something based on TargetType
+        PropertyInfo propertyInfo;
+        switch (animationType)
+        {
+            case AnimationType.Rotate:
+                propertyInfo = typeof(Transform).GetProperty("localEulerAngles");
+                break;
+            case AnimationType.Zoom:
+                propertyInfo = typeof(Transform).GetProperty("localPosition");
+                transform = childTransform;
+                break;
+            case AnimationType.Pan:
+                propertyInfo = typeof(Transform).GetProperty("localPosition");
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        var originalVector = (Vector3)propertyInfo.GetValue(transform, null);
+
+        if (m_StartDelay > 0f)
+        {
+            var startDelayTime = 0f;
+            while (startDelayTime < m_StartDelay)
+            {
+                startDelayTime += Time.deltaTime;
+                yield return null;
+            }
+        }
+
+        var deltaTime = 0f;
+        while (deltaTime < m_Duration)
+        {
+            propertyInfo.SetValue(
+                transform,
+                originalVector +
+                    new Vector3(
+                        m_Magnitude.x * m_AnimationCurve.Evaluate(deltaTime / m_Duration),
+                        m_Magnitude.y * m_AnimationCurve.Evaluate(deltaTime / m_Duration),
+                        m_Magnitude.z * m_AnimationCurve.Evaluate(deltaTime / m_Duration)), null);
+
+            deltaTime += Time.deltaTime;
+            yield return null;
+        }
+
+        propertyInfo.SetValue(transform, originalVector + magnitude, null);
+
+        if (m_EndDelay > 0f)
+        {
+            var endDelayTime = 0f;
+            while (endDelayTime < m_EndDelay)
+            {
+                endDelayTime += Time.deltaTime;
+                yield return null;
+            }
+        }
     }
 }
