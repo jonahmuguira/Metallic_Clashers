@@ -3,7 +3,7 @@
   <health>
     <value>10</value>
     <modifier>0</modifier>
-    <coefficient>0</coefficient>
+    <coefficient>1</coefficient>
   </health>
   <attack>
     <value>10</value>
@@ -13,7 +13,7 @@
   <defense>
     <value>10</value>
     <modifier>0</modifier>
-    <coefficient>0</coefficient>
+    <coefficient>1</coefficient>
   </defense>
   <gemSkills />
   <worldData>
@@ -21,6 +21,21 @@
       <nodes>
         <Node>
           <isComplete>true</isComplete>
+        </Node>
+        <Node>
+          <isComplete>true</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
         </Node>
         <Node>
           <isComplete>false</isComplete>

@@ -14,6 +14,7 @@
     public class StageSelectionManager : SubManager<StageSelectionManager>
     {
         public GameObject nodePrefab;
+        [HideInInspector]
         public List<Tree> worlds = new List<Tree>();
         public float spacingMagnitude;
         [ContextMenu("Awake")]
@@ -29,17 +30,22 @@
                             new Node{stageNumber = "1", normalizedPosition = new Vector2(0, 0)},
                             new Node{stageNumber = "2", normalizedPosition = new Vector2(0, 1)},
                             new Node{stageNumber = "3", normalizedPosition = new Vector2(0, 2)},
+                            new Node{stageNumber = "Boss", normalizedPosition = new Vector2(0, 3)},
+                            new Node{stageNumber = "1A", normalizedPosition = new Vector2(1, 0)},
+                            new Node{stageNumber = "2A", normalizedPosition = new Vector2(-1, 1)},
+                            new Node{stageNumber = "2B", normalizedPosition = new Vector2(-2, 1)},
+                            new Node{stageNumber = "3A", normalizedPosition = new Vector2(1, 2)},
                         }
                     }
                 };
-
-            // Next Lists
-            worlds[0].nodes[0].nextNodes.Add(worlds[0].nodes[1]);   // Next: 1-1 to 1-2
-            worlds[0].nodes[1].nextNodes.Add(worlds[0].nodes[2]);   // Next: 1-1 to 1-2
-
-            // Previous Lists
-            worlds[0].nodes[1].prevNodes.Add(worlds[0].nodes[0]);   // Previous: 1-2 to 1-1
-            worlds[0].nodes[2].prevNodes.Add(worlds[0].nodes[1]);   // Previous: 1-3 to 1-2
+            // Make Links
+            LinkNodes(worlds[0].nodes[0], worlds[0].nodes[4]);
+            LinkNodes(worlds[0].nodes[0], worlds[0].nodes[1]);
+            LinkNodes(worlds[0].nodes[1], worlds[0].nodes[5]);
+            LinkNodes(worlds[0].nodes[5], worlds[0].nodes[6]);
+            LinkNodes(worlds[0].nodes[1], worlds[0].nodes[2]);
+            LinkNodes(worlds[0].nodes[2], worlds[0].nodes[3]);
+            LinkNodes(worlds[0].nodes[2], worlds[0].nodes[7]);
 
             //Make GameObjects
             foreach (var tree in worlds)
@@ -57,6 +63,28 @@
                 }
             }
 
+            var counter = 0;
+            foreach (var monoNode in FindObjectsOfType<MonoNode>())
+            {
+                foreach (var n in monoNode.node.nextNodes)
+                {
+                    var lineObject = new GameObject {name = "Line Renderer " + counter};
+                    counter++;
+                    var lineRenderer = lineObject.AddComponent<LineRenderer>();
+                    lineRenderer.startWidth = .1f;
+                    lineRenderer.endWidth = .1f;
+
+                    lineRenderer.SetPosition(0, new Vector3(
+                        monoNode.node.normalizedPosition.x * spacingMagnitude, 0, monoNode.node.normalizedPosition.y * spacingMagnitude));
+                    lineRenderer.SetPosition(1, new Vector3(
+                        n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude));
+
+                    if (!monoNode.node.isComplete)
+                        continue;
+                    lineRenderer.material.color = Color.blue;
+                }
+            }
+
             var savedData = GameManager.self.playerData.worldData;
             for (var i = 0; i < savedData.Count; i++)
             {
@@ -65,6 +93,18 @@
                     worlds[i].nodes[j].isComplete = savedData[i].nodes[j].isComplete;
                 }
             }
+        }
+
+        private void LinkNodes(Node n1, Node n2)
+        {
+            n1.nextNodes.Add(n2);
+            n2.prevNodes.Add(n1);
+        }
+
+        [ContextMenu("Save Worlds")]
+        private void SaveWorlds()
+        {
+            GameManager.self.playerData.worldData = worlds;
         }
     }
 }
