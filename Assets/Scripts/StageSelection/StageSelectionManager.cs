@@ -3,7 +3,10 @@
     using System;
     using System.Collections.Generic;
 
+    using Input.Information;
+
     using UnityEngine;
+    using UnityEngine.Events;
 
     [Serializable]
     public class Tree
@@ -13,12 +16,14 @@
 
     public class StageSelectionManager : SubManager<StageSelectionManager>
     {
+        public UnityEvent onStageSelectionEnd = new UnityEvent();
+
         public GameObject nodePrefab;
         public Material lineRenderMaterial;
         [HideInInspector]
         public List<Tree> worlds = new List<Tree>();
         public float spacingMagnitude;
-        [ContextMenu("Awake")]
+
         protected override void Init()  //Awake for the Manager
         {
             worlds = 
@@ -81,18 +86,38 @@
             {
                 foreach (var n in monoNode.node.nextNodes)
                 {
-                    var lineObject = new GameObject { name = "Line Renderer " + counter };
+                    var lineObject = new GameObject { name = "Line Renderer " + counter };  //Create GameObject for LineRenderer
                     counter++;
-                    var lineRenderer = lineObject.AddComponent<LineRenderer>();
-                    lineRenderer.startWidth = .1f;
+                    var lineRenderer = lineObject.AddComponent<LineRenderer>(); //Attach Line Renderer
+                    lineRenderer.startWidth = .1f;  //Set width
                     lineRenderer.endWidth = .1f;
-                    lineRenderer.material = new Material(lineRenderMaterial) { color = (monoNode.node.isComplete) ? Color.blue : Color.red };
+                    lineRenderer.material = new Material(lineRenderMaterial) { color = (monoNode.node.isComplete) ? Color.blue : Color.red };   // Set Material Color
 
                     lineRenderer.SetPosition(0, new Vector3(
-                        monoNode.node.normalizedPosition.x * spacingMagnitude, 0, monoNode.node.normalizedPosition.y * spacingMagnitude));
+                        monoNode.node.normalizedPosition.x * spacingMagnitude, 0, monoNode.node.normalizedPosition.y * spacingMagnitude));  // Set Starting position
                     lineRenderer.SetPosition(1, new Vector3(
-                        n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude));
+                        n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude));  // Set Ending position
                 }
+            }
+        }
+
+        protected override void OnPress(TouchInformation touchInfo)     // Once Pressed
+        {
+            base.OnPress(touchInfo);
+            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);    // Shoot Ray 
+            var hit = new RaycastHit();                                     // Make a Hit
+            Physics.Raycast(ray.origin, ray.direction, out hit);            //See if the ray hit anything
+
+            try
+            {
+                var monoNode = hit.transform.gameObject.GetComponent<MonoNode>();   // See if the hit has a MonoNode
+                if (monoNode == null)       // If not, stop execution
+                    return;
+                onStageSelectionEnd.Invoke();   // If so, got what we want. Let's go home boys.
+            }
+            catch
+            {
+                // ignored
             }
         }
 
@@ -101,11 +126,12 @@
             n1.nextNodes.Add(n2);
             n2.prevNodes.Add(n1);
         }
-
-        [ContextMenu("Save Worlds")]
-        private void SaveWorlds()
-        {
-            GameManager.self.playerData.worldData = worlds;
-        }
+        
+        // Testing purposes
+        //[ContextMenu("Save Worlds")]    
+        //private void SaveWorlds()
+        //{
+        //    GameManager.self.playerData.worldData = worlds;
+        //}
     }
 }
