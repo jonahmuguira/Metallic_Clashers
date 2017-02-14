@@ -30,11 +30,18 @@ public class GameManager : MonoSingleton<GameManager>
     {
         base.Awake();
         DontDestroyOnLoad(gameObject);
+        if(File.Exists(Environment.CurrentDirectory + savePath))
+            Load();
+        else
+        {
+            Save();
+        }
     }
 
+    [ContextMenu("On Combat End")]
     private void OnCombatEnd()
     {
-        
+
     }
 
     [ContextMenu("Save Player")]
