@@ -16,9 +16,38 @@
     <coefficient>0</coefficient>
   </defense>
   <gemSkills />
-  <worldData />
+  <worldData>
+    <Tree>
+      <nodes>
+        <Node>
+          <isComplete>true</isComplete>
+        </Node>
+        <Node>
+          <isComplete>true</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+        <Node>
+          <isComplete>false</isComplete>
+        </Node>
+      </nodes>
+    </Tree>
+  </worldData>
   <staminaInformation>
-    <value>18</value>
-    <timeLastPlayed>2/15/2017 2:22:41 PM</timeLastPlayed>
+    <value>0</value>
+    <timeLastPlayed>2/15/2017 3:21:31 PM</timeLastPlayed>
   </staminaInformation>
 </PlayerData>

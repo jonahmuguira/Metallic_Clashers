@@ -194,8 +194,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e8c37c7afbc404b837dee61e18ad1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 5
-  staminaRate: 1
+  value: 0
+  staminaRate: 120
 --- !u!1001 &1813393323
 Prefab:
   m_ObjectHideFlags: 0
@@ -330,7 +330,7 @@ Prefab:
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
       propertyPath: playerData.worldData.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
