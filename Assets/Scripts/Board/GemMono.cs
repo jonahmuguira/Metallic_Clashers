@@ -2,6 +2,9 @@
 
 namespace Board
 {
+    using System;
+    using System.Linq;
+
     using UnityEngine;
 
     using Information;
@@ -19,11 +22,12 @@ namespace Board
         [SerializeField]
         private Gem m_Gem;
 
-        private Vector3 m_PositionOffset;
-        private float m_ReducePositionOffsetTime = 1f;
+        private Vector2 m_PositionOffset;
+        private float m_ReducePositionOffsetTime = 0.5f;
+        private Vector2 m_CurrentDirection;
         private Coroutine m_ReducePositionOffsetCoroutine;
 
-        private Vector3 m_CurrentPosition;
+        private Vector2 m_CurrentPosition;
         private float m_MoveToPositionTime = 1f;
         private Coroutine m_MoveToPositionCoroutine;
 
@@ -53,12 +57,18 @@ namespace Board
             get { return m_Gem.column.GetComponent<GridCollectionMono>(); }
         }
 
-        public Vector3 positionOffset
+        public Vector2 positionOffset
         {
             get { return m_PositionOffset; }
             set
             {
                 m_PositionOffset = value;
+                m_CurrentDirection =
+                    Mathf.Abs(m_PositionOffset.x) > Mathf.Abs(m_PositionOffset.y)
+                    ? m_PositionOffset.x > 0f
+                        ? Vector2.right : Vector2.left
+                    : m_PositionOffset.y > 0f
+                        ? Vector2.up : Vector2.down;
 
                 if (m_ReducePositionOffsetCoroutine != null)
                     StopCoroutine(m_ReducePositionOffsetCoroutine);
@@ -87,6 +97,49 @@ namespace Board
             OnPositionChange(new PositionChangeInformation { gem = gem, newPosition = gem.position });
         }
 
+        private void CheckPositionOffset()
+        {
+            var spacing = CalculateSpacing();
+            if (Mathf.Abs(m_PositionOffset.x) < spacing.x && Mathf.Abs(m_PositionOffset.y) < spacing.y)
+                return;
+
+            var gridCollection =
+                m_CurrentDirection == Vector2.left || m_CurrentDirection == Vector2.right
+                    ? row as GridCollection : column as GridCollection;
+
+            var gemMonos = gridCollection.gems.Select(rowGem => rowGem.GetComponent<GemMono>()).ToList();
+
+            foreach (var gemMono in gemMonos)
+            {
+                var newPosition = gemMono.CalculatePosition(gemMono.position + gemMono.m_CurrentDirection);
+
+                gemMono.m_CurrentPosition = newPosition;
+                gemMono.m_RectTransform.anchoredPosition = newPosition;
+
+                gemMono.m_PositionOffset = Vector2.zero;
+            }
+
+            gridCollection.Slide(
+                m_CurrentDirection == Vector2.right || m_CurrentDirection == Vector2.up
+                    ? SlideDirection.Backward : SlideDirection.Forward);
+        }
+
+        private Vector2 CalculateSpacing()
+        {
+            return
+                new Vector2(
+                    gridMono.rectTransform.rect.width / (grid.size.x - 1),
+                    gridMono.rectTransform.rect.height / (grid.size.y - 1));
+        }
+
+        private Vector2 CalculatePosition(Vector2 newPosition)
+        {
+            newPosition = grid.ClampPosition(newPosition);
+
+            var spacing = CalculateSpacing();
+            return new Vector2(newPosition.x * spacing.x, newPosition.y * spacing.y);
+        }
+
         private void OnTypeChange(TypeChangeInformation typeChangeInfo)
         {
             // This should not happen because we only subscribe to the gem we care about but still...
@@ -102,19 +155,15 @@ namespace Board
             if (m_MoveToPositionCoroutine != null)
                 StopCoroutine(m_MoveToPositionCoroutine);
 
-            m_MoveToPositionCoroutine =
-                StartCoroutine(
-                    MoveToPosition(
-                        new Vector2(
-                            positionChangeInfo.newPosition.x
-                            * (gridMono.rectTransform.rect.width
-                            / (grid.size.x - 1)),
-
-                            positionChangeInfo.newPosition.y
-                            * (gridMono.rectTransform.rect.height
-                            / (grid.size.y - 1)))));
-
             name = "Gem " + positionChangeInfo.newPosition;
+
+            var spacing = CalculateSpacing();
+            var moveToPosition =
+                new Vector2(
+                    positionChangeInfo.newPosition.x * spacing.x,
+                    positionChangeInfo.newPosition.y * spacing.y);
+
+            m_MoveToPositionCoroutine = StartCoroutine(MoveToPosition(moveToPosition));
         }
 
         private void OnMatch(MatchInformation matchInfo)
@@ -153,18 +202,38 @@ namespace Board
 
         private IEnumerator ReducePositionOffset()
         {
+            CheckPositionOffset();
+
             yield return null;
 
-            while (m_PositionOffset != Vector3.zero)
+            var deltaTime = 0f;
+            while (m_PositionOffset != Vector2.zero && deltaTime < m_ReducePositionOffsetTime)
             {
-                m_PositionOffset =
-                    Vector2.MoveTowards(m_PositionOffset, Vector2.zero, 100f * Time.deltaTime);
+                var spacing = CalculateSpacing();
+
+                if (Mathf.Abs(m_PositionOffset.x) > spacing.x / 2f ||
+                    Mathf.Abs(m_PositionOffset.y) > spacing.y / 2f)
+                {
+                    var newOffset = new Vector2(spacing.x * m_CurrentDirection.x, spacing.y * m_CurrentDirection.y);
+                    m_PositionOffset =
+                        Vector2.Lerp(m_PositionOffset, newOffset, deltaTime / m_ReducePositionOffsetTime);
+                }
+                else
+                {
+                    m_PositionOffset =
+                        Vector2.Lerp(m_PositionOffset, Vector2.zero, deltaTime / m_ReducePositionOffsetTime);
+                }
+
+                deltaTime += Time.deltaTime;
+
+                CheckPositionOffset();
 
                 if (m_UpdatePositionCoroutine == null)
                     m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
 
                 yield return null;
             }
+            m_CurrentDirection = Vector2.zero;
 
             if (m_UpdatePositionCoroutine == null)
                 m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
@@ -176,7 +245,33 @@ namespace Board
         {
             yield return new WaitForEndOfFrame();
 
-            m_RectTransform.anchoredPosition = m_CurrentPosition + m_PositionOffset;
+            var spacing = CalculateSpacing();
+            var coefficient =
+                Mathf.Abs(m_PositionOffset.x) > Mathf.Abs(m_PositionOffset.y)
+                    ? Mathf.Abs(m_PositionOffset.x / spacing.x)
+                    : Mathf.Abs(m_PositionOffset.y / spacing.y);
+
+            var nextPosition = grid.ClampPosition(position + m_CurrentDirection);
+            if (nextPosition != position + m_CurrentDirection)
+            {
+                transform.SetAsFirstSibling();
+                m_Image.color =
+                    new Color(
+                        m_Image.color.r,
+                        m_Image.color.g,
+                        m_Image.color.b,
+                        Mathf.Max(
+                            Mathf.Pow(coefficient, 1.1f),
+                            1f - Mathf.Pow(coefficient, 1.1f)));
+            }
+            else
+                m_Image.color =
+                    new Color(m_Image.color.r, m_Image.color.g, m_Image.color.b, 1f);
+
+            nextPosition = new Vector2(nextPosition.x * spacing.x, nextPosition.y * spacing.y);
+
+            m_RectTransform.anchoredPosition =
+                Vector2.Lerp(m_CurrentPosition, nextPosition, coefficient);
 
             m_UpdatePositionCoroutine = null;
         }
