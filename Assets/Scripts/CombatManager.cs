@@ -130,10 +130,10 @@ public class CombatManager : SubManager<CombatManager>
             gemMono.positionOffset +=
                 new Vector2(
                     m_LockedGridCollectionMono.gridCollection is Row
-                    ? dragInfo.delta.x / m_Canvas.GetComponent<RectTransform>().lossyScale.x : 0f,
+                    ? dragInfo.delta.x / m_Canvas.scaleFactor : 0f,
 
                     m_LockedGridCollectionMono.gridCollection is Column
-                    ? dragInfo.delta.y / m_Canvas.GetComponent<RectTransform>().lossyScale.y : 0f);
+                    ? dragInfo.delta.y / m_Canvas.scaleFactor : 0f);
         }
     }
 

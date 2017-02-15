@@ -26,7 +26,7 @@ namespace Board
                 return;
 
             var newGameObject = new GameObject(newGridCollection.GetType() + " " + newGridCollection.index);
-            newGameObject.transform.SetParent(gridMono.transform);
+            newGameObject.transform.SetParent(gridMono.transform, false);
 
             var newGridCollectionMono = newGameObject.AddComponent<GridCollectionMono>();
 

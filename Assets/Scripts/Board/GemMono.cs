@@ -31,6 +31,7 @@ namespace Board
         private float m_MoveToPositionTime = 1f;
         private Coroutine m_MoveToPositionCoroutine;
 
+        private GemMono m_DuplicateGemMono;
         private Coroutine m_UpdatePositionCoroutine;
 
         public Gem gem
@@ -254,19 +255,47 @@ namespace Board
             var nextPosition = grid.ClampPosition(position + m_CurrentDirection);
             if (nextPosition != position + m_CurrentDirection)
             {
-                transform.SetAsFirstSibling();
-                m_Image.color =
-                    new Color(
-                        m_Image.color.r,
-                        m_Image.color.g,
-                        m_Image.color.b,
-                        Mathf.Max(
-                            Mathf.Pow(coefficient, 1.1f),
-                            1f - Mathf.Pow(coefficient, 1.1f)));
+                if (m_DuplicateGemMono == null)
+                {
+                    m_DuplicateGemMono = Create(gem);
+                    m_DuplicateGemMono.StopAllCoroutines();
+
+                    m_DuplicateGemMono.m_CurrentPosition = m_CurrentPosition;
+                }
+
+                var dupNextPosition = m_DuplicateGemMono.position + m_CurrentDirection;
+                dupNextPosition =
+                    new Vector2(dupNextPosition.x * spacing.x, dupNextPosition.y * spacing.y);
+                Debug.Log(dupNextPosition);
+
+                m_DuplicateGemMono.m_RectTransform.anchoredPosition =
+                    Vector2.Lerp(m_DuplicateGemMono.m_CurrentPosition, dupNextPosition, coefficient);
+
+                m_CurrentPosition = nextPosition - m_CurrentDirection;
+                m_CurrentPosition =
+                    new Vector2(m_CurrentPosition.x * spacing.x, m_CurrentPosition.y * spacing.y);
+
+                //nextPosition = Vector2.zero;
+                //transform.SetAsFirstSibling();
+                //m_Image.color =
+                //    new Color(
+                //        m_Image.color.r,
+                //        m_Image.color.g,
+                //        m_Image.color.b,
+                //        Mathf.Max(
+                //            Mathf.Pow(coefficient, 1.1f),
+                //            1f - Mathf.Pow(coefficient, 1.1f)));
             }
             else
-                m_Image.color =
-                    new Color(m_Image.color.r, m_Image.color.g, m_Image.color.b, 1f);
+            {
+                if (m_DuplicateGemMono != null)
+                {
+                    Destroy(m_DuplicateGemMono.gameObject);
+                    m_CurrentPosition = CalculatePosition(position);
+                }
+                //m_Image.color =
+                //    new Color(m_Image.color.r, m_Image.color.g, m_Image.color.b, 1f);
+            }
 
             nextPosition = new Vector2(nextPosition.x * spacing.x, nextPosition.y * spacing.y);
 
@@ -278,10 +307,10 @@ namespace Board
 
         public static void Init()
         {
-            Gem.onCreate.AddListener(OnGemCreate);
+            Gem.onCreate.AddListener(gem => Create(gem));
         }
 
-        private static void OnGemCreate(Gem newGem)
+        public static GemMono Create(Gem newGem)
         {
             var newGameObject = new GameObject();
             var newGemMono = newGameObject.AddComponent<GemMono>();
@@ -313,7 +342,7 @@ namespace Board
             gridMono.grid.onGridChange.AddListener(newGemMono.OnGridChange);
 
             // Parent the object before moving it
-            newGameObject.transform.SetParent(gridMono.transform);
+            newGameObject.transform.SetParent(gridMono.transform, false);
 
             newGemMono.OnPositionChange(
                 new PositionChangeInformation
@@ -337,6 +366,10 @@ namespace Board
                     }));
 
             newGemMono.m_Image.SetNativeSize();
+
+            newGemMono.m_RectTransform.sizeDelta = newGemMono.m_RectTransform.sizeDelta * 1.5f;
+
+            return newGemMono;
         }
     }
 }
