@@ -76,6 +76,16 @@ public class CombatManager : SubManager<CombatManager>
     private void Update()
     {
         onCombatUpdate.Invoke();
+
+        //if (m_LockedGridCollectionMono == null)
+        //    return;
+
+        //foreach (var gem in m_LockedGridCollectionMono.gridCollection.gems)
+        //{
+        //    var gemMono = gem.GetComponent<GemMono>();
+
+        //    gemMono.positionOffset += new Vector2(0.5f, 0f);
+        //}
     }
 
     private void OnSlide(SlideInformation slideInfo)
@@ -95,15 +105,16 @@ public class CombatManager : SubManager<CombatManager>
             hitMono.rowMono :
             hitMono.columnMono;
 
-        foreach (var gem in m_LockedGridCollectionMono.gridCollection.gems)
-        {
-            var gemMono = gem.GetComponent<GemMono>();
+        OnDrag(dragInfo);
+        //foreach (var gem in m_LockedGridCollectionMono.gridCollection.gems)
+        //{
+        //    var gemMono = gem.GetComponent<GemMono>();
 
-            gemMono.positionOffset +=
-                new Vector3(
-                    dragInfo.delta.x / m_Canvas.GetComponent<RectTransform>().lossyScale.x,
-                    dragInfo.delta.y / m_Canvas.GetComponent<RectTransform>().lossyScale.y);
-        }
+        //    gemMono.positionOffset +=
+        //        new Vector3(
+        //            dragInfo.delta.x / m_Canvas.GetComponent<RectTransform>().lossyScale.x,
+        //            dragInfo.delta.y / m_Canvas.GetComponent<RectTransform>().lossyScale.y);
+        //}
     }
 
     protected override void OnDrag(DragInformation dragInfo)
@@ -117,7 +128,7 @@ public class CombatManager : SubManager<CombatManager>
             var gemMono = gem.GetComponent<GemMono>();
 
             gemMono.positionOffset +=
-                new Vector3(
+                new Vector2(
                     m_LockedGridCollectionMono.gridCollection is Row
                     ? dragInfo.delta.x / m_Canvas.GetComponent<RectTransform>().lossyScale.x : 0f,
 
@@ -129,35 +140,35 @@ public class CombatManager : SubManager<CombatManager>
     protected override void OnEndDrag(DragInformation dragInfo)
     {
         // If we didn't hit a GemMono at the start of the drag
-        if (m_LockedGridCollectionMono == null)
-            return;
+        //if (m_LockedGridCollectionMono == null)
+        //    return;
 
-        foreach (var gem in m_LockedGridCollectionMono.gridCollection.gems)
-        {
-            var gemMono = gem.GetComponent<GemMono>();
+        //foreach (var gem in m_LockedGridCollectionMono.gridCollection.gems)
+        //{
+        //    var gemMono = gem.GetComponent<GemMono>();
 
-            gemMono.positionOffset = Vector3.zero;
-        }
+        //    gemMono.positionOffset = Vector3.zero;
+        //}
 
-        if (Mathf.Abs(dragInfo.end.x - dragInfo.origin.x) >
-            Mathf.Abs(dragInfo.end.y - dragInfo.origin.y))
-        {
-            var slideDirection =
-                dragInfo.end.x - dragInfo.origin.x > 0
-                    ? SlideDirection.Backward
-                    : SlideDirection.Forward;
+        //if (Mathf.Abs(dragInfo.end.x - dragInfo.origin.x) >
+        //    Mathf.Abs(dragInfo.end.y - dragInfo.origin.y))
+        //{
+        //    var slideDirection =
+        //        dragInfo.end.x - dragInfo.origin.x > 0
+        //            ? SlideDirection.Backward
+        //            : SlideDirection.Forward;
 
-            m_LockedGridCollectionMono.gridCollection.Slide(slideDirection);
-        }
-        else
-        {
-            var slideDirection =
-                dragInfo.end.y - dragInfo.origin.y > 0
-                    ? SlideDirection.Backward
-                    : SlideDirection.Forward;
+        //    m_LockedGridCollectionMono.gridCollection.Slide(slideDirection);
+        //}
+        //else
+        //{
+        //    var slideDirection =
+        //        dragInfo.end.y - dragInfo.origin.y > 0
+        //            ? SlideDirection.Backward
+        //            : SlideDirection.Forward;
 
-            m_LockedGridCollectionMono.gridCollection.Slide(slideDirection);
-        }
+        //    m_LockedGridCollectionMono.gridCollection.Slide(slideDirection);
+        //}
     }
 
     [CanBeNull]
