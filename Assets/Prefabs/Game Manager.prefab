@@ -16,17 +16,17 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 4902044863395634}
-  - 114: {fileID: 114349760018057426}
+  - component: {fileID: 4902044863395634}
+  - component: {fileID: 114349760018057426}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4902044863395634
 Transform:
   m_ObjectHideFlags: 1
@@ -36,10 +36,10 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &114349760018057426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -52,3 +52,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: 0
+  playerData:
+    health:
+      value: 0
+      modifier: 0
+      coefficient: 0
+    attack:
+      value: 0
+      modifier: 0
+      coefficient: 0
+    defense:
+      value: 0
+      modifier: 0
+      coefficient: 0
+    gemSkills: []
+    worldData: []
