@@ -229,6 +229,24 @@
             //TODO: Check for matches on gems in the same row and column
         }
 
+        public Vector2 ClampPosition(Vector2 position)
+        {
+            var clampedPosition =
+                new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
+
+            while (clampedPosition.x > size.x - 1)
+                clampedPosition.x -= size.x;
+            while (clampedPosition.x < 0f)
+                clampedPosition.x += size.x;
+
+            while (clampedPosition.y > size.y - 1)
+                clampedPosition.y -= size.y;
+            while (clampedPosition.y < 0f)
+                clampedPosition.y += size.y;
+
+            return clampedPosition;
+        }
+
         public T GetComponent<T>() where T : IComponent
         {
             return (T)components.First(component => component is T);
