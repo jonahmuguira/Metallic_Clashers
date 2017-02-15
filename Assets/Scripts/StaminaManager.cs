@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-
+using System.Globalization;
 using Library;
 
 using UnityEngine;
@@ -17,34 +17,33 @@ public class StaminaManager : MonoSingleton<StaminaManager>
     public float staminaRate;
 
     [SerializeField]
-    private DateTime m_TimeLastPlayed = DateTime.Now;
+    private DateTime m_TimeLastPlayed;
     private float m_LastFrameTime;
 
 	public void Start()
 	{
-	    var playerDateLastPlayer = GameManager.self.playerData.dateLastPlayed;
-	    if (playerDateLastPlayer == null)
-	    {
-            playerDateLastPlayer = new StaminaInformation
-            {
-                timeLastPlayed = DateTime.Now.ToString("u")
-            };
-	        return;
-	    }
+	    var playerStaminaInfo = GameManager.self.playerData.staminaInformation;
 
-        m_TimeLastPlayed = DateTime.Parse(playerDateLastPlayer.timeLastPlayed);
+	    value = playerStaminaInfo.value;
 
-	    var yearChange = DateTime.Now.Year - m_TimeLastPlayed.Year;
-	}	
+        m_TimeLastPlayed = DateTime.Parse(playerStaminaInfo.timeLastPlayed);
+        var ts = DateTime.Now - m_TimeLastPlayed;
+        var secondsPassed = 0;
+        secondsPassed += ts.Days * 86164;
+        secondsPassed += ts.Hours * 3600;
+        secondsPassed += ts.Minutes * 60;
+        secondsPassed += ts.Seconds;
 
-	private IEnumerable UpdateStamina()
+        value += (int)(secondsPassed / staminaRate);
+    }	
+
+	private void Update()
 	{
 	    var currentTime = Time.time%staminaRate;
-        if (currentTime < m_LastFrameTime)
-        {
-            value++;
-        }
-        m_LastFrameTime = currentTime;
-	    yield return null;
-	}
+	    if (currentTime < m_LastFrameTime)
+	    {
+	        value++;
+	    }
+	    m_LastFrameTime = currentTime;
+    }
 }

@@ -195,7 +195,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 5
-  staminaRate: 120
+  staminaRate: 1
 --- !u!1001 &1813393323
 Prefab:
   m_ObjectHideFlags: 0

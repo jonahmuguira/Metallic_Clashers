@@ -17,7 +17,7 @@ public class PlayerData
     public List<GemSkill> gemSkills = new List<GemSkill>();
 
     public List<Tree> worldData = new List<Tree>();
-    public StaminaInformation dateLastPlayed;
+    public StaminaInformation staminaInformation;
 
     public void TakeDamage(float damage)
     {

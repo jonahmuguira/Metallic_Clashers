@@ -36,10 +36,22 @@ public class GameManager : MonoSingleton<GameManager>
             Load();
         else
         {
+            playerData.staminaInformation = new StaminaInformation
+            {
+                value = 0,
+                timeLastPlayed = DateTime.Now.ToString()
+            };
             Save();
         }
 
         SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    private void OnApplicationQuit()
+    {
+        playerData.staminaInformation.value = StaminaManager.self.value;
+        playerData.staminaInformation.timeLastPlayed = DateTime.Now.ToString();
+        Save();
     }
 
     [ContextMenu("End Combat")]
