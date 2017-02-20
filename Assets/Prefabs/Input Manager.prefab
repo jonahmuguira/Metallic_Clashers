@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b3b19e5d3336c841ab15d3e0fc68db1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DragDeadzone: 0
+  m_DragDeadzone: 5
   m_OnPress:
     m_PersistentCalls:
       m_Calls: []

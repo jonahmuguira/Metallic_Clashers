@@ -1144,7 +1144,8 @@ Prefab:
       propertyPath: playerData.lastTimePlayed
       value: 2/15/2017 9:04:33 AM
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 114734311121324470, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}
   m_IsPrefabParent: 0
 --- !u!1 &2086796094
