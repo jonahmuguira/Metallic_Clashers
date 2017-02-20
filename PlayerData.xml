@@ -1,19 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <PlayerData xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <health>
-    <value>10</value>
+    <value>0</value>
     <modifier>0</modifier>
-    <coefficient>1</coefficient>
+    <coefficient>0</coefficient>
   </health>
   <attack>
-    <value>10</value>
+    <value>0</value>
     <modifier>0</modifier>
     <coefficient>0</coefficient>
   </attack>
   <defense>
-    <value>10</value>
+    <value>0</value>
     <modifier>0</modifier>
-    <coefficient>1</coefficient>
+    <coefficient>0</coefficient>
   </defense>
   <gemSkills />
   <worldData>
@@ -46,4 +46,8 @@
       </nodes>
     </Tree>
   </worldData>
+  <staminaInformation>
+    <value>0</value>
+    <timeLastPlayed>2/20/2017 1:04:34 PM</timeLastPlayed>
+  </staminaInformation>
 </PlayerData>

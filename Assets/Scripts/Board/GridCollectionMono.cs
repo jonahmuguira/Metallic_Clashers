@@ -12,6 +12,8 @@ namespace Board
 
         public GridCollection gridCollection { get { return m_GridCollection; } }
 
+
+
         public static void Init()
         {
             GridCollection.onCreate.AddListener(OnCreateGridCollection);
@@ -26,7 +28,7 @@ namespace Board
                 return;
 
             var newGameObject = new GameObject(newGridCollection.GetType() + " " + newGridCollection.index);
-            newGameObject.transform.SetParent(gridMono.transform);
+            newGameObject.transform.SetParent(gridMono.transform, false);
 
             var newGridCollectionMono = newGameObject.AddComponent<GridCollectionMono>();
 
