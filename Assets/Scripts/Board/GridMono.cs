@@ -52,7 +52,7 @@ namespace Board
         private static void OnGridCreate(Grid newGrid)
         {
             var newGameObject = new GameObject();
-            newGameObject.transform.SetParent(CombatManager.self.gridParentRectTransform);
+            newGameObject.transform.SetParent(CombatManager.self.gridParentRectTransform, false);
 
             var newGridMono = newGameObject.AddComponent<GridMono>();
 
@@ -66,7 +66,7 @@ namespace Board
 
             newGridMono.m_RectTransform.anchorMin = Vector2.zero;
             newGridMono.m_RectTransform.anchorMax = Vector2.one;
-            newGridMono.m_RectTransform.sizeDelta = new Vector2(-60f, -60f);
+            newGridMono.m_RectTransform.sizeDelta = new Vector2(-115f, -125f);
 
             newGridMono.m_RectTransform.anchoredPosition = Vector2.zero;
         }
