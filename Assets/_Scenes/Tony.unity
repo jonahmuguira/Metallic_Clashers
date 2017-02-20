@@ -178,6 +178,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!1 &1693715469 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1357477400383080, guid: 13f28409c2a16c04abcb05d81141243b,
+    type: 2}
+  m_PrefabInternal: {fileID: 1949268153}
+--- !u!114 &1693715470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1693715469}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33e8c37c7afbc404b837dee61e18ad1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 0
+  staminaRate: 120
 --- !u!1001 &1813393323
 Prefab:
   m_ObjectHideFlags: 0
@@ -247,6 +265,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c920419d2d4134d41a58c92d071f6345, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onStageSelectionEnd:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
   nodePrefab: {fileID: 1938075192471666, guid: afd25102a7f6a494fa20b6614a62119b, type: 2}
   lineRenderMaterial: {fileID: 2100000, guid: 0cd8d2c0de952814cb9deb7a6a9d33bc, type: 2}
   worlds:
@@ -307,7 +330,7 @@ Prefab:
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
       propertyPath: playerData.worldData.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
         type: 2}
@@ -1115,6 +1138,11 @@ Prefab:
         type: 2}
       propertyPath: playerData.worldData.Array.data[0].nodes.Array.data[4].isComplete
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.lastTimePlayed
+      value: 2/15/2017 9:04:33 AM
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}

@@ -51,6 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c6cdaac12b58ea47a79ca7552f8aec7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Canvas: {fileID: 0}
   m_GridParentRectTransform: {fileID: 0}
   m_GemSprites:
   - {fileID: 21300000, guid: e57f79abee13a0440897147034156eec, type: 3}
@@ -61,19 +62,21 @@ MonoBehaviour:
   m_OnCombatBegin:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: OnCombatBegin, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   m_OnCombatUpdate:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: OnCombatUpdate, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   m_OnCombatEnd:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: OnCombatEnd, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
   m_OnPlayerTurn:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: OnPlayerTurn, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
   m_GridMono: {fileID: 0}

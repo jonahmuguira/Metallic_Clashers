@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4902044863395634}
   - component: {fileID: 114349760018057426}
+  - component: {fileID: 114734311121324470}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -53,4 +54,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameState: 0
   playerData:
+    health:
+      value: 0
+      modifier: 0
+      coefficient: 0
+    attack:
+      value: 0
+      modifier: 0
+      coefficient: 0
+    defense:
+      value: 0
+      modifier: 0
+      coefficient: 0
     gemSkills: []
+    worldData: []
+--- !u!114 &114734311121324470
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1357477400383080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33e8c37c7afbc404b837dee61e18ad1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: 0
+  staminaRate: 0
