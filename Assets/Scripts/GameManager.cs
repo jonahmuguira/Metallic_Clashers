@@ -62,7 +62,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnStageSelectionEnd()
     {
-        NextScene("Combat");
+        NextScene(1);
     }
 
     [ContextMenu("Save Player")]
@@ -87,9 +87,9 @@ public class GameManager : MonoSingleton<GameManager>
         file.Close();
     }
 
-    private void NextScene(string nextScene)
+    private void NextScene(int sceneIndex)
     {
-        StartCoroutine(LoadScene(nextScene));
+        StartCoroutine(LoadScene(sceneIndex));
     }
 
     private void AddSceneListeners()
@@ -115,9 +115,9 @@ public class GameManager : MonoSingleton<GameManager>
         AddSceneListeners();
     }
 
-    private IEnumerator LoadScene(string scene)
+    private IEnumerator LoadScene(int sceneIndex)
     {
-        var asyncOperation = SceneManager.LoadSceneAsync(scene);
+        var asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
 
         while (!asyncOperation.isDone) { yield return null; }
     }
