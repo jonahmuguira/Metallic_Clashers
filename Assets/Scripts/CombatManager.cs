@@ -123,17 +123,19 @@ public class CombatManager : SubManager<CombatManager>
         if (m_LockedGridCollectionMono == null)
             return;
 
-        foreach (var gem in m_LockedGridCollectionMono.gridCollection.gems)
+        var addedPositionOffset =
+            new Vector2(
+                m_LockedGridCollectionMono.gridCollection is Row
+                ? dragInfo.delta.x / m_Canvas.scaleFactor : 0f,
+
+                m_LockedGridCollectionMono.gridCollection is Column
+                ? dragInfo.delta.y / m_Canvas.scaleFactor : 0f);
+
+        var gems = m_LockedGridCollectionMono.gridCollection.gems.ToList();
+        foreach (var gem in gems)
         {
             var gemMono = gem.GetComponent<GemMono>();
-
-            gemMono.positionOffset +=
-                new Vector2(
-                    m_LockedGridCollectionMono.gridCollection is Row
-                    ? dragInfo.delta.x / m_Canvas.scaleFactor : 0f,
-
-                    m_LockedGridCollectionMono.gridCollection is Column
-                    ? dragInfo.delta.y / m_Canvas.scaleFactor : 0f);
+            gemMono.positionOffset += addedPositionOffset;
         }
     }
 

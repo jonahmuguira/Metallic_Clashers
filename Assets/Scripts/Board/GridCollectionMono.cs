@@ -12,6 +12,8 @@ namespace Board
 
         public GridCollection gridCollection { get { return m_GridCollection; } }
 
+
+
         public static void Init()
         {
             GridCollection.onCreate.AddListener(OnCreateGridCollection);

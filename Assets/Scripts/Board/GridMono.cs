@@ -66,7 +66,7 @@ namespace Board
 
             newGridMono.m_RectTransform.anchorMin = Vector2.zero;
             newGridMono.m_RectTransform.anchorMax = Vector2.one;
-            newGridMono.m_RectTransform.sizeDelta = new Vector2(-85f, -85f);
+            newGridMono.m_RectTransform.sizeDelta = new Vector2(-115f, -125f);
 
             newGridMono.m_RectTransform.anchoredPosition = Vector2.zero;
         }

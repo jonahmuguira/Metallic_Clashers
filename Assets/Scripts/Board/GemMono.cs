@@ -31,7 +31,7 @@ namespace Board
         private float m_MoveToPositionTime = 1f;
         private Coroutine m_MoveToPositionCoroutine;
 
-        private GemMono m_DuplicateGemMono;
+        private GameObject m_DuplicateGemMono;
         private Coroutine m_UpdatePositionCoroutine;
 
         public Gem gem
@@ -73,10 +73,11 @@ namespace Board
 
                 if (m_ReducePositionOffsetCoroutine != null)
                     StopCoroutine(m_ReducePositionOffsetCoroutine);
-                if (m_UpdatePositionCoroutine == null)
-                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
 
                 m_ReducePositionOffsetCoroutine = StartCoroutine(ReducePositionOffset());
+
+                if (m_UpdatePositionCoroutine == null)
+                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
             }
         }
 
@@ -215,7 +216,10 @@ namespace Board
                 if (Mathf.Abs(m_PositionOffset.x) > spacing.x / 2f ||
                     Mathf.Abs(m_PositionOffset.y) > spacing.y / 2f)
                 {
-                    var newOffset = new Vector2(spacing.x * m_CurrentDirection.x, spacing.y * m_CurrentDirection.y);
+                    var newOffset =
+                        new Vector2(
+                            spacing.x * m_CurrentDirection.x,
+                            spacing.y * m_CurrentDirection.y);
                     m_PositionOffset =
                         Vector2.Lerp(m_PositionOffset, newOffset, deltaTime / m_ReducePositionOffsetTime);
                 }
@@ -257,19 +261,33 @@ namespace Board
             {
                 if (m_DuplicateGemMono == null)
                 {
-                    m_DuplicateGemMono = Create(gem);
-                    m_DuplicateGemMono.StopAllCoroutines();
+                    m_DuplicateGemMono = new GameObject();
+                    m_DuplicateGemMono.transform.SetParent(transform.parent, false);
 
-                    m_DuplicateGemMono.m_CurrentPosition = m_CurrentPosition;
+                    var duplicateSpriteRenderer = m_DuplicateGemMono.AddComponent<Image>();
+                    var duplicateRectTransform = m_DuplicateGemMono.GetComponent<RectTransform>();
+
+                    duplicateSpriteRenderer.sprite = m_Image.sprite;
+
+                    duplicateRectTransform.anchorMin = Vector2.zero;
+                    duplicateRectTransform.anchorMax = Vector2.zero;
+                    duplicateRectTransform.sizeDelta = Vector2.zero;
+
+                    duplicateRectTransform.anchoredPosition = m_CurrentPosition;
+
+                    duplicateSpriteRenderer.SetNativeSize();
+                    duplicateRectTransform.sizeDelta = duplicateRectTransform.sizeDelta * 1.5f;
                 }
 
-                var dupNextPosition = m_DuplicateGemMono.position + m_CurrentDirection;
+                var dupNextPosition = position + m_CurrentDirection;
                 dupNextPosition =
                     new Vector2(dupNextPosition.x * spacing.x, dupNextPosition.y * spacing.y);
-                Debug.Log(dupNextPosition);
 
-                m_DuplicateGemMono.m_RectTransform.anchoredPosition =
-                    Vector2.Lerp(m_DuplicateGemMono.m_CurrentPosition, dupNextPosition, coefficient);
+                m_DuplicateGemMono.GetComponent<RectTransform>().anchoredPosition =
+                    Vector2.Lerp(
+                        CalculatePosition(position),
+                        dupNextPosition,
+                        coefficient);
 
                 m_CurrentPosition = nextPosition - m_CurrentDirection;
                 m_CurrentPosition =
