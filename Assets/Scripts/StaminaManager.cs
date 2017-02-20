@@ -7,13 +7,14 @@ using UnityEngine;
 
 public class StaminaInformation
 {
-    public int value;
+    public uint value;
     public string timeLastPlayed;
 }
 
 public class StaminaManager : MonoSingleton<StaminaManager>
 {     
-    public int value;
+    public uint value;
+    public uint maxValue;
     public float staminaRate;
 
     [SerializeField]
@@ -34,13 +35,17 @@ public class StaminaManager : MonoSingleton<StaminaManager>
         secondsPassed += ts.Minutes * 60;
         secondsPassed += ts.Seconds;
 
-        value += (int)(secondsPassed / staminaRate);
+        value += (uint)(secondsPassed / staminaRate);
+	    if (value > maxValue)
+	    {
+	        value = maxValue;
+	    }
     }	
 
 	private void Update()
 	{
 	    var currentTime = Time.time%staminaRate;
-	    if (currentTime < m_LastFrameTime)
+	    if (currentTime < m_LastFrameTime && value < maxValue)
 	    {
 	        value++;
 	    }
