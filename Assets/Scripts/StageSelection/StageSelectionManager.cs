@@ -24,7 +24,12 @@
         public List<Tree> worlds = new List<Tree>();
         public float spacingMagnitude;
 
-        protected override void Init()  //Awake for the Manager
+        protected override void Init()
+        {
+            
+        }
+
+        protected void Start()  //Awake for the Manager
         {
             worlds = 
                 new List<Tree>
@@ -33,7 +38,7 @@
                     {
                         nodes = new List<Node>
                         {
-                            new Node{stageNumber = "1", normalizedPosition = new Vector2(0, 0)},
+                            new Node{stageNumber = "1", normalizedPosition = new Vector2(0, 0), isComplete = true},
                             new Node{stageNumber = "2", normalizedPosition = new Vector2(0, 1)},
                             new Node{stageNumber = "3", normalizedPosition = new Vector2(0, 2)},
                             new Node{stageNumber = "Boss", normalizedPosition = new Vector2(0, 3)},
@@ -72,15 +77,24 @@
 
             // Get Player Data
             var savedData = GameManager.self.playerData.worldData;
-            for (var i = 0; i < savedData.Count; i++)
+
+            if (savedData.Count == 0)
             {
-                for (var j = 0; j < worlds[i].nodes.Count; j++)
+                GameManager.self.playerData.worldData = worlds;
+            }
+
+            else
+            {
+                for (var i = 0; i < savedData.Count; i++)
                 {
-                    worlds[i].nodes[j].isComplete = savedData[i].nodes[j].isComplete;
+                    for (var j = 0; j < worlds[i].nodes.Count; j++)
+                    {
+                        worlds[i].nodes[j].isComplete = savedData[i].nodes[j].isComplete;
+                    }
                 }
             }
 
-
+            // Line Renderers
             var counter = 0;
             foreach (var monoNode in FindObjectsOfType<MonoNode>())
             {
@@ -126,12 +140,5 @@
             n1.nextNodes.Add(n2);
             n2.prevNodes.Add(n1);
         }
-        
-        // Testing purposes
-        //[ContextMenu("Save Worlds")]    
-        //private void SaveWorlds()
-        //{
-        //    GameManager.self.playerData.worldData = worlds;
-        //}
     }
 }

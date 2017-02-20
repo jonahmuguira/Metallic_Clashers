@@ -36,10 +36,22 @@ public class GameManager : MonoSingleton<GameManager>
             Load();
         else
         {
+            playerData.staminaInformation = new StaminaInformation
+            {
+                value = 0,
+                timeLastPlayed = DateTime.Now.ToString()
+            };
             Save();
         }
 
         SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    private void OnApplicationQuit()
+    {
+        playerData.staminaInformation.value = StaminaManager.self.value;
+        playerData.staminaInformation.timeLastPlayed = DateTime.Now.ToString();
+        Save();
     }
 
     [ContextMenu("End Combat")]
@@ -86,12 +98,10 @@ public class GameManager : MonoSingleton<GameManager>
         {
             case "Combat":
                 CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
-                Debug.Log("Combat Ready");
                 break;
 
             case "Tony":
                 StageSelectionManager.self.onStageSelectionEnd.AddListener(OnStageSelectionEnd);
-                Debug.Log("Tony Time");
                 break;
 
             default:
