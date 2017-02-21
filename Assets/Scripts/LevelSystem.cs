@@ -36,9 +36,12 @@ public class LevelSystem
             tempExperience -= mathFormula;
         }
 
-        var levelInfo = new LevelInfo()
+        var levelInfo = new LevelInfo
         {
             level = tempLevel,
+            currentExperience = tempExperience,
+            experienceRequired = mathFormula,
+            experienceNeeded = mathFormula - tempExperience
         };
 
         return levelInfo;
