@@ -117,22 +117,13 @@
 
         protected override void OnPress(TouchInformation touchInfo)     // Once Pressed
         {
-            base.OnPress(touchInfo);
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);    // Shoot Ray 
+            var ray = Camera.main.ScreenPointToRay(touchInfo.position); 
             var hit = new RaycastHit();                                     // Make a Hit
-            Physics.Raycast(ray.origin, ray.direction, out hit);            //See if the ray hit anything
 
-            try
-            {
-                var monoNode = hit.transform.gameObject.GetComponent<MonoNode>();   // See if the hit has a MonoNode
-                if (monoNode == null)       // If not, stop execution
-                    return;
-                onStageSelectionEnd.Invoke();   // If so, got what we want. Let's go home boys.
-            }
-            catch
-            {
-                // ignored
-            }
+            //See if the ray hit anything
+            if (!(Physics.Raycast(ray.origin, ray.direction, out hit)))       // If not, stop execution
+                return;
+            onStageSelectionEnd.Invoke();               // If so, got what we want. Let's go home boys.
         }
 
         private void LinkNodes(Node n1, Node n2)
