@@ -13,7 +13,7 @@ public class LevelSystem
         public uint experienceNeeded; //experienceRequired - currentExperience
     }
 
-    public LevelInfo playLevelInfo;
+    public LevelInfo playerLevelInfo;
 
     //private LevelInfo CalculateLevel(uint exp)
     //{
@@ -25,14 +25,15 @@ public class LevelSystem
 
     //    var tempExperience = exp;
 
-    //    var level = 0;
-    //    var baseExperience = 100;
-    //    var factor = 2;
-    //    var math = baseExperience * (level + 1 ^ factor);
+    //    const uint c_baseExperience = 100;
+    //    uint level = 1;
+    //    const uint c_factor = 2;
 
-    //    for (level = 1; tempExperience > math; level++)
+    //    var mathFormula = c_baseExperience * ((level + 1) ^ c_factor);
+
+    //    for (level = 1; tempExperience > mathFormula; level++)
     //    {
-    //        tempExperience -= math;
+    //        tempExperience -= mathFormula;
     //    }
     //}
 
