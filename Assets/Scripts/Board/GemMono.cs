@@ -22,17 +22,14 @@ namespace Board
         [SerializeField]
         private Gem m_Gem;
 
-        private Vector2 m_PositionOffset;
-        private float m_ReducePositionOffsetTime = 0.5f;
-        private Vector2 m_CurrentDirection;
-        private Coroutine m_ReducePositionOffsetCoroutine;
-
         private Vector2 m_CurrentPosition;
         private float m_MoveToPositionTime = 1f;
         private Coroutine m_MoveToPositionCoroutine;
 
-        private GameObject m_DuplicateGemMono;
+        private GameObject m_DuplicateImage;
         private Coroutine m_UpdatePositionCoroutine;
+
+        public RectTransform rectTransform { get { return m_RectTransform; } }
 
         public Gem gem
         {
@@ -49,36 +46,19 @@ namespace Board
         public Row row { get { return m_Gem.row; } }
         public GridCollectionMono rowMono
         {
-            get { return m_Gem.row.GetComponent<GridCollectionMono>(); }
+            get { return row.GetComponent<GridCollectionMono>(); }
         }
 
         public Column column { get { return m_Gem.column; } }
         public GridCollectionMono columnMono
         {
-            get { return m_Gem.column.GetComponent<GridCollectionMono>(); }
+            get { return column.GetComponent<GridCollectionMono>(); }
         }
 
-        public Vector2 positionOffset
+        public Vector2 currentPosition
         {
-            get { return m_PositionOffset; }
-            set
-            {
-                m_PositionOffset = value;
-                m_CurrentDirection =
-                    Mathf.Abs(m_PositionOffset.x) > Mathf.Abs(m_PositionOffset.y)
-                    ? m_PositionOffset.x > 0f
-                        ? Vector2.right : Vector2.left
-                    : m_PositionOffset.y > 0f
-                        ? Vector2.up : Vector2.down;
-
-                if (m_ReducePositionOffsetCoroutine != null)
-                    StopCoroutine(m_ReducePositionOffsetCoroutine);
-
-                m_ReducePositionOffsetCoroutine = StartCoroutine(ReducePositionOffset());
-
-                if (m_UpdatePositionCoroutine == null)
-                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
-            }
+            get { return m_CurrentPosition; }
+            set { m_CurrentPosition = value; }
         }
 
         private void Start()
@@ -99,46 +79,16 @@ namespace Board
             OnPositionChange(new PositionChangeInformation { gem = gem, newPosition = gem.position });
         }
 
-        private void CheckPositionOffset()
+        public void UpdatePosition()
         {
-            var spacing = CalculateSpacing();
-            if (Mathf.Abs(m_PositionOffset.x) < spacing.x && Mathf.Abs(m_PositionOffset.y) < spacing.y)
-                return;
-
-            var gridCollection =
-                m_CurrentDirection == Vector2.left || m_CurrentDirection == Vector2.right
-                    ? row as GridCollection : column as GridCollection;
-
-            var gemMonos = gridCollection.gems.Select(rowGem => rowGem.GetComponent<GemMono>()).ToList();
-
-            foreach (var gemMono in gemMonos)
-            {
-                var newPosition = gemMono.CalculatePosition(gemMono.position + gemMono.m_CurrentDirection);
-
-                gemMono.m_CurrentPosition = newPosition;
-                gemMono.m_RectTransform.anchoredPosition = newPosition;
-
-                gemMono.m_PositionOffset = Vector2.zero;
-            }
-
-            gridCollection.Slide(
-                m_CurrentDirection == Vector2.right || m_CurrentDirection == Vector2.up
-                    ? SlideDirection.Backward : SlideDirection.Forward);
+            StartCoroutine(OnUpdatePosition());
         }
 
-        private Vector2 CalculateSpacing()
-        {
-            return
-                new Vector2(
-                    gridMono.rectTransform.rect.width / (grid.size.x - 1),
-                    gridMono.rectTransform.rect.height / (grid.size.y - 1));
-        }
-
-        private Vector2 CalculatePosition(Vector2 newPosition)
+        public Vector2 CalculatePosition(Vector2 newPosition)
         {
             newPosition = grid.ClampPosition(newPosition);
 
-            var spacing = CalculateSpacing();
+            var spacing = gridMono.CalculateSpacing();
             return new Vector2(newPosition.x * spacing.x, newPosition.y * spacing.y);
         }
 
@@ -159,7 +109,7 @@ namespace Board
 
             name = "Gem " + positionChangeInfo.newPosition;
 
-            var spacing = CalculateSpacing();
+            var spacing = gridMono.CalculateSpacing();
             var moveToPosition =
                 new Vector2(
                     positionChangeInfo.newPosition.x * spacing.x,
@@ -191,81 +141,36 @@ namespace Board
                 deltaTime += Time.deltaTime;
 
                 if (m_UpdatePositionCoroutine == null)
-                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
+                    m_UpdatePositionCoroutine = StartCoroutine(OnUpdatePosition());
 
                 yield return null;
             }
 
             if (m_UpdatePositionCoroutine == null)
-                m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
+                m_UpdatePositionCoroutine = StartCoroutine(OnUpdatePosition());
 
             m_MoveToPositionCoroutine = null;
         }
 
-        private IEnumerator ReducePositionOffset()
-        {
-            CheckPositionOffset();
-
-            yield return null;
-
-            var deltaTime = 0f;
-            while (m_PositionOffset != Vector2.zero && deltaTime < m_ReducePositionOffsetTime)
-            {
-                var spacing = CalculateSpacing();
-
-                if (Mathf.Abs(m_PositionOffset.x) > spacing.x / 2f ||
-                    Mathf.Abs(m_PositionOffset.y) > spacing.y / 2f)
-                {
-                    var newOffset =
-                        new Vector2(
-                            spacing.x * m_CurrentDirection.x,
-                            spacing.y * m_CurrentDirection.y);
-                    m_PositionOffset =
-                        Vector2.Lerp(m_PositionOffset, newOffset, deltaTime / m_ReducePositionOffsetTime);
-                }
-                else
-                {
-                    m_PositionOffset =
-                        Vector2.Lerp(m_PositionOffset, Vector2.zero, deltaTime / m_ReducePositionOffsetTime);
-                }
-
-                deltaTime += Time.deltaTime;
-
-                CheckPositionOffset();
-
-                if (m_UpdatePositionCoroutine == null)
-                    m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
-
-                yield return null;
-            }
-            m_CurrentDirection = Vector2.zero;
-
-            if (m_UpdatePositionCoroutine == null)
-                m_UpdatePositionCoroutine = StartCoroutine(UpdatePosition());
-
-            m_ReducePositionOffsetCoroutine = null;
-        }
-
-        private IEnumerator UpdatePosition()
+        private IEnumerator OnUpdatePosition()
         {
             yield return new WaitForEndOfFrame();
 
-            var spacing = CalculateSpacing();
-            var coefficient =
-                Mathf.Abs(m_PositionOffset.x) > Mathf.Abs(m_PositionOffset.y)
-                    ? Mathf.Abs(m_PositionOffset.x / spacing.x)
-                    : Mathf.Abs(m_PositionOffset.y / spacing.y);
+            var spacing = gridMono.CalculateSpacing();
 
-            var nextPosition = grid.ClampPosition(position + m_CurrentDirection);
-            if (nextPosition != position + m_CurrentDirection)
+            var nextPosition =
+                grid.ClampPosition(
+                    position + rowMono.currentDirection + columnMono.currentDirection);
+
+            if (nextPosition != position + rowMono.currentDirection + columnMono.currentDirection)
             {
-                if (m_DuplicateGemMono == null)
+                if (m_DuplicateImage == null)
                 {
-                    m_DuplicateGemMono = new GameObject();
-                    m_DuplicateGemMono.transform.SetParent(transform.parent, false);
+                    m_DuplicateImage = new GameObject();
+                    m_DuplicateImage.transform.SetParent(transform.parent, false);
 
-                    var duplicateSpriteRenderer = m_DuplicateGemMono.AddComponent<Image>();
-                    var duplicateRectTransform = m_DuplicateGemMono.GetComponent<RectTransform>();
+                    var duplicateSpriteRenderer = m_DuplicateImage.AddComponent<Image>();
+                    var duplicateRectTransform = m_DuplicateImage.GetComponent<RectTransform>();
 
                     duplicateSpriteRenderer.sprite = m_Image.sprite;
 
@@ -279,17 +184,13 @@ namespace Board
                     duplicateRectTransform.sizeDelta = duplicateRectTransform.sizeDelta * 1.5f;
                 }
 
-                var dupNextPosition = position + m_CurrentDirection;
-                dupNextPosition =
-                    new Vector2(dupNextPosition.x * spacing.x, dupNextPosition.y * spacing.y);
+                m_DuplicateImage.GetComponent<RectTransform>().anchoredPosition =
+                    CalculatePosition(position) + rowMono.positionOffset + columnMono.positionOffset;
+                //new Vector2(
+                //    Mathf.Lerp(CalculatePosition(position).x, dupNextPosition.x, coefficient.x),
+                //    Mathf.Lerp(CalculatePosition(position).y, dupNextPosition.y, coefficient.y));
 
-                m_DuplicateGemMono.GetComponent<RectTransform>().anchoredPosition =
-                    Vector2.Lerp(
-                        CalculatePosition(position),
-                        dupNextPosition,
-                        coefficient);
-
-                m_CurrentPosition = nextPosition - m_CurrentDirection;
+                m_CurrentPosition = nextPosition - rowMono.currentDirection - columnMono.currentDirection;
                 m_CurrentPosition =
                     new Vector2(m_CurrentPosition.x * spacing.x, m_CurrentPosition.y * spacing.y);
 
@@ -306,29 +207,30 @@ namespace Board
             }
             else
             {
-                if (m_DuplicateGemMono != null)
+                if (m_DuplicateImage != null)
                 {
-                    Destroy(m_DuplicateGemMono.gameObject);
+                    Destroy(m_DuplicateImage.gameObject);
                     m_CurrentPosition = CalculatePosition(position);
                 }
                 //m_Image.color =
                 //    new Color(m_Image.color.r, m_Image.color.g, m_Image.color.b, 1f);
             }
 
-            nextPosition = new Vector2(nextPosition.x * spacing.x, nextPosition.y * spacing.y);
-
             m_RectTransform.anchoredPosition =
-                Vector2.Lerp(m_CurrentPosition, nextPosition, coefficient);
+                m_CurrentPosition + columnMono.positionOffset + rowMono.positionOffset;
+            //new Vector2(
+            //    Mathf.Lerp(m_CurrentPosition.x, nextPosition.x, coefficient.x),
+            //    Mathf.Lerp(m_CurrentPosition.y, nextPosition.y, coefficient.y));
 
             m_UpdatePositionCoroutine = null;
         }
 
         public static void Init()
         {
-            Gem.onCreate.AddListener(gem => Create(gem));
+            Gem.onCreate.AddListener(OnCreateGem);
         }
 
-        public static GemMono Create(Gem newGem)
+        public static void OnCreateGem(Gem newGem)
         {
             var newGameObject = new GameObject();
             var newGemMono = newGameObject.AddComponent<GemMono>();
@@ -386,8 +288,6 @@ namespace Board
             newGemMono.m_Image.SetNativeSize();
 
             newGemMono.m_RectTransform.sizeDelta = newGemMono.m_RectTransform.sizeDelta * 1.5f;
-
-            return newGemMono;
         }
     }
 }
