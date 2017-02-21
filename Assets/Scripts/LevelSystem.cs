@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class LevelSystem
 {
+    [SerializeField]
     public struct LevelInfo
     {
         public uint level;
@@ -13,6 +14,7 @@ public class LevelSystem
         public uint experienceNeeded; //experienceRequired - currentExperience
     }
 
+    [SerializeField]
     public LevelInfo playerLevelInfo;
 
     private LevelInfo CalculateLevel(uint exp)
@@ -46,9 +48,17 @@ public class LevelSystem
 
         return levelInfo;
     }
-
+                                                     //fight exp
     public void IsLeveledUp(uint currentExperience, uint modifier)
     {
-        
+        var tempCurrentExperience = CalculateLevel(currentExperience);
+        var finalTotal = CalculateLevel(currentExperience + modifier);
+
+        if (finalTotal.level != tempCurrentExperience.level)
+        {
+            //TODO: Define what stats get changed and by how much.
+        }
+
+        playerLevelInfo = finalTotal;
     }
 }
