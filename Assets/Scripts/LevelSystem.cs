@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class LevelSystem
 {
+    [SerializeField]
     public struct LevelInfo
     {
         public uint level;
@@ -13,6 +14,7 @@ public class LevelSystem
         public uint experienceNeeded; //experienceRequired - currentExperience
     }
 
+    [SerializeField]
     public LevelInfo playerLevelInfo;
 
     private LevelInfo CalculateLevel(uint exp)
