@@ -44,6 +44,14 @@ namespace Board
             m_PreviousRectSize = currentRectSize;
         }
 
+        public Vector2 CalculateSpacing()
+        {
+            return
+                new Vector2(
+                    m_RectTransform.rect.width / (grid.size.x - 1),
+                    m_RectTransform.rect.height / (grid.size.y - 1));
+        }
+
         public static void Init()
         {
             Grid.onCreate.AddListener(OnGridCreate);

@@ -131,12 +131,7 @@ public class CombatManager : SubManager<CombatManager>
                 m_LockedGridCollectionMono.gridCollection is Column
                 ? dragInfo.delta.y / m_Canvas.scaleFactor : 0f);
 
-        var gems = m_LockedGridCollectionMono.gridCollection.gems.ToList();
-        foreach (var gem in gems)
-        {
-            var gemMono = gem.GetComponent<GemMono>();
-            gemMono.positionOffset += addedPositionOffset;
-        }
+        m_LockedGridCollectionMono.positionOffset += addedPositionOffset;
     }
 
     protected override void OnEndDrag(DragInformation dragInfo)
