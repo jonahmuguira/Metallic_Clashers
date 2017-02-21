@@ -12,6 +12,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class CombatManager : SubManager<CombatManager>
 {
@@ -19,6 +20,11 @@ public class CombatManager : SubManager<CombatManager>
     private Canvas m_Canvas;
     [SerializeField]
     private RectTransform m_GridParentRectTransform;
+    [SerializeField]
+    private VerticalLayoutGroup m_RowParent;
+    [SerializeField]
+    private HorizontalLayoutGroup m_ColumnParent;
+
     [SerializeField]
     private List<Sprite> m_GemSprites = new List<Sprite>();
 
@@ -39,6 +45,8 @@ public class CombatManager : SubManager<CombatManager>
 
     public Canvas canvas { get { return m_Canvas; } }
     public RectTransform gridParentRectTransform { get { return m_GridParentRectTransform; } }
+    public VerticalLayoutGroup rowParent { get { return m_RowParent; } }
+    public HorizontalLayoutGroup columnParent { get { return m_ColumnParent; } }
 
     public List<Sprite> gemSprites { get { return m_GemSprites; } }
 
@@ -95,17 +103,21 @@ public class CombatManager : SubManager<CombatManager>
 
     protected override void OnBeginDrag(DragInformation dragInfo)
     {
-        var hitMono = RaycastToGemMono(dragInfo.origin);
+        var hitMonos = RayCastToGridCollectionMono(dragInfo.origin).ToList();
         // If we didn't hit a GemMono first
-        if (hitMono == null)
+        if (hitMonos.Count == 0)
+        {
+            m_LockedGridCollectionMono = null;
             return;
+        }
 
         m_LockedGridCollectionMono =
-            Mathf.Abs(dragInfo.totalDelta.x) > Mathf.Abs(dragInfo.totalDelta.y) ?
-            hitMono.rowMono :
-            hitMono.columnMono;
+            hitMonos.First(
+                hitMono =>
+                    Mathf.Abs(dragInfo.totalDelta.x) > Mathf.Abs(dragInfo.totalDelta.y)
+                        ? hitMono.gridCollection is Row : hitMono.gridCollection is Column);
 
-        OnDrag(dragInfo);
+        //OnDrag(dragInfo);
         //foreach (var gem in m_LockedGridCollectionMono.gridCollection.gems)
         //{
         //    var gemMono = gem.GetComponent<GemMono>();
@@ -131,12 +143,7 @@ public class CombatManager : SubManager<CombatManager>
                 m_LockedGridCollectionMono.gridCollection is Column
                 ? dragInfo.delta.y / m_Canvas.scaleFactor : 0f);
 
-        var gems = m_LockedGridCollectionMono.gridCollection.gems.ToList();
-        foreach (var gem in gems)
-        {
-            var gemMono = gem.GetComponent<GemMono>();
-            gemMono.positionOffset += addedPositionOffset;
-        }
+        m_LockedGridCollectionMono.positionOffset += addedPositionOffset;
     }
 
     protected override void OnEndDrag(DragInformation dragInfo)
@@ -171,6 +178,28 @@ public class CombatManager : SubManager<CombatManager>
 
         //    m_LockedGridCollectionMono.gridCollection.Slide(slideDirection);
         //}
+    }
+
+    private static IEnumerable<GridCollectionMono> RayCastToGridCollectionMono(Vector2 origin)
+    {
+        var pointerEventData =
+            new PointerEventData(EventSystem.current) { position = origin };
+
+        var hits = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerEventData, hits);
+
+        // If nothing was hit
+        if (hits.Count <= 0)
+            return null;
+
+        // Return the first hit object's GridCollectionMono component
+        // Will be null if one was not found on the game object
+        return
+            hits.
+                Where(
+                    hit => hit.gameObject.GetComponent<GridCollectionMono>() != null).
+                        Select(
+                            hit => hit.gameObject.GetComponent<GridCollectionMono>());
     }
 
     [CanBeNull]
