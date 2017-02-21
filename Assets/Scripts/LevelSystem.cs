@@ -48,9 +48,17 @@ public class LevelSystem
 
         return levelInfo;
     }
-
+                                                     //fight exp
     public void IsLeveledUp(uint currentExperience, uint modifier)
     {
-        
+        var tempCurrentExperience = CalculateLevel(currentExperience);
+        var finalTotal = CalculateLevel(currentExperience + modifier);
+
+        if (finalTotal.level != tempCurrentExperience.level)
+        {
+            //TODO: Define what stats get changed and by how much.
+        }
+
+        playerLevelInfo = finalTotal;
     }
 }
