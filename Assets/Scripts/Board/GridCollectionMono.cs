@@ -5,9 +5,14 @@ namespace Board
     using System.Collections;
     using System.Linq;
 
-    [RequireComponent(typeof(RectTransform))]
+    using UnityEngine.UI;
+
+    [RequireComponent(typeof(Image))]
     public class GridCollectionMono : MonoBehaviour, IComponent
     {
+        [SerializeField]
+        private Image m_Image;
+
         [SerializeField]
         private GridCollection m_GridCollection;
 
@@ -45,7 +50,8 @@ namespace Board
         private void CheckForSlide()
         {
             var spacing = gridMono.CalculateSpacing();
-            if (Mathf.Abs(m_PositionOffset.x) < spacing.x && Mathf.Abs(m_PositionOffset.y) < spacing.y)
+            if (Mathf.Abs(m_PositionOffset.x) <= spacing.x / 2f &&
+                Mathf.Abs(m_PositionOffset.y) <= spacing.y / 2f)
                 return;
 
             var gemMonos = gridCollection.gems.Select(rowGem => rowGem.GetComponent<GemMono>()).ToList();
@@ -55,14 +61,17 @@ namespace Board
                 var newPosition = gemMono.CalculatePosition(gemMono.position + m_CurrentDirection);
 
                 gemMono.currentPosition = newPosition;
-                gemMono.rectTransform.anchoredPosition = newPosition;
             }
 
             gridCollection.Slide(
                 m_CurrentDirection == Vector2.right || m_CurrentDirection == Vector2.up
                     ? SlideDirection.Backward : SlideDirection.Forward);
 
-            m_PositionOffset = Vector2.zero;
+            m_PositionOffset -=
+                gridCollection is Row
+                    ? new Vector2(spacing.x * m_CurrentDirection.x, 0f)
+                    : new Vector2(0f, spacing.y * m_CurrentDirection.y);
+
             m_CurrentDirection = Vector2.zero;
         }
         private IEnumerator ReducePositionOffset()
@@ -135,12 +144,21 @@ namespace Board
                 return;
 
             var newGameObject = new GameObject(newGridCollection.GetType() + " " + newGridCollection.index);
-            newGameObject.transform.SetParent(gridMono.transform, false);
+            newGameObject.transform.SetParent(
+                newGridCollection is Row ?
+                    CombatManager.self.rowParent.transform : CombatManager.self.columnParent.transform,
+                false);
+
+            if (newGridCollection is Row)
+                newGameObject.transform.SetAsFirstSibling();
 
             var newGridCollectionMono = newGameObject.AddComponent<GridCollectionMono>();
 
             newGridCollectionMono.m_GridCollection = newGridCollection;
             newGridCollection.components.Add(newGridCollectionMono);
+
+            newGridCollectionMono.m_Image = newGameObject.GetComponent<Image>();
+            newGridCollectionMono.m_Image.color = new Color(0f, 0f, 0f, 0f);
         }
     }
 }
