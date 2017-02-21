@@ -13,28 +13,39 @@ public class LevelSystem
         public uint experienceNeeded; //experienceRequired - currentExperience
     }
 
-    public LevelInfo playLevelInfo;
+    public LevelInfo playerLevelInfo;
 
-    //private LevelInfo CalculateLevel(uint exp)
-    //{
-    //    //base_xp * (level_to_get ^ factor);
+    private LevelInfo CalculateLevel(uint exp)
+    {
+        //base_xp * (level_to_get ^ factor);
 
-    //    //base_xp = constant, how much xp needed to levelup.
-    //    //level_to_get = level aiming for.
-    //    //factor = constant, how much of an increase of xp needed for levelup.
+        //base_xp = constant, how much xp needed to levelup.
+        //level_to_get = level aiming for.
+        //factor = constant, how much of an increase of xp needed for levelup.
 
-    //    var tempExperience = exp;
+        var tempExperience = exp;
 
-    //    var level = 0;
-    //    var baseExperience = 100;
-    //    var factor = 2;
-    //    var math = baseExperience * (level + 1 ^ factor);
+        const uint c_baseExperience = 100;
+        uint tempLevel = 1;
+        const uint c_factor = 2;
 
-    //    for (level = 1; tempExperience > math; level++)
-    //    {
-    //        tempExperience -= math;
-    //    }
-    //}
+        var mathFormula = c_baseExperience * ((tempLevel + 1) ^ c_factor);
+
+        for (tempLevel = 1; tempExperience > mathFormula; tempLevel++)
+        {
+            tempExperience -= mathFormula;
+        }
+
+        var levelInfo = new LevelInfo
+        {
+            level = tempLevel,
+            currentExperience = tempExperience,
+            experienceRequired = mathFormula,
+            experienceNeeded = mathFormula - tempExperience
+        };
+
+        return levelInfo;
+    }
 
     public void IsLeveledUp(uint currentExperience, uint modifier)
     {
