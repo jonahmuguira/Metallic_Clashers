@@ -157,10 +157,6 @@ namespace Board
             yield return new WaitForEndOfFrame();
 
             var spacing = gridMono.CalculateSpacing();
-            var coefficient =
-                new Vector2(
-                    Mathf.Abs(rowMono.positionOffset.x / spacing.x),
-                    Mathf.Abs(columnMono.positionOffset.y / spacing.y));
 
             var nextPosition =
                 grid.ClampPosition(
@@ -188,14 +184,11 @@ namespace Board
                     duplicateRectTransform.sizeDelta = duplicateRectTransform.sizeDelta * 1.5f;
                 }
 
-                var dupNextPosition = position + rowMono.currentDirection + columnMono.currentDirection;
-                dupNextPosition =
-                    new Vector2(dupNextPosition.x * spacing.x, dupNextPosition.y * spacing.y);
-
                 m_DuplicateImage.GetComponent<RectTransform>().anchoredPosition =
-                    new Vector2(
-                        Mathf.Lerp(CalculatePosition(position).x, dupNextPosition.x, coefficient.x),
-                        Mathf.Lerp(CalculatePosition(position).y, dupNextPosition.y, coefficient.y));
+                    CalculatePosition(position) + rowMono.positionOffset + columnMono.positionOffset;
+                //new Vector2(
+                //    Mathf.Lerp(CalculatePosition(position).x, dupNextPosition.x, coefficient.x),
+                //    Mathf.Lerp(CalculatePosition(position).y, dupNextPosition.y, coefficient.y));
 
                 m_CurrentPosition = nextPosition - rowMono.currentDirection - columnMono.currentDirection;
                 m_CurrentPosition =
@@ -223,22 +216,21 @@ namespace Board
                 //    new Color(m_Image.color.r, m_Image.color.g, m_Image.color.b, 1f);
             }
 
-            nextPosition = new Vector2(nextPosition.x * spacing.x, nextPosition.y * spacing.y);
-
             m_RectTransform.anchoredPosition =
-                new Vector2(
-                    Mathf.Lerp(m_CurrentPosition.x, nextPosition.x, coefficient.x),
-                    Mathf.Lerp(m_CurrentPosition.y, nextPosition.y, coefficient.y));
+                m_CurrentPosition + columnMono.positionOffset + rowMono.positionOffset;
+            //new Vector2(
+            //    Mathf.Lerp(m_CurrentPosition.x, nextPosition.x, coefficient.x),
+            //    Mathf.Lerp(m_CurrentPosition.y, nextPosition.y, coefficient.y));
 
             m_UpdatePositionCoroutine = null;
         }
 
         public static void Init()
         {
-            Gem.onCreate.AddListener(gem => Create(gem));
+            Gem.onCreate.AddListener(OnCreateGem);
         }
 
-        public static GemMono Create(Gem newGem)
+        public static void OnCreateGem(Gem newGem)
         {
             var newGameObject = new GameObject();
             var newGemMono = newGameObject.AddComponent<GemMono>();
@@ -296,8 +288,6 @@ namespace Board
             newGemMono.m_Image.SetNativeSize();
 
             newGemMono.m_RectTransform.sizeDelta = newGemMono.m_RectTransform.sizeDelta * 1.5f;
-
-            return newGemMono;
         }
     }
 }

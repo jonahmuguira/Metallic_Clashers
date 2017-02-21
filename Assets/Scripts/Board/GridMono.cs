@@ -72,9 +72,9 @@ namespace Board
                 newGameObject.GetComponentsInParent<RectTransform>().First(
                     rectTransform => rectTransform != newGridMono.m_RectTransform);
 
-            newGridMono.m_RectTransform.anchorMin = Vector2.zero;
-            newGridMono.m_RectTransform.anchorMax = Vector2.one;
-            newGridMono.m_RectTransform.sizeDelta = new Vector2(-115f, -125f);
+            newGridMono.m_RectTransform.anchorMin = new Vector2(0.1f, 0.11f);
+            newGridMono.m_RectTransform.anchorMax = new Vector2(0.9f, 0.89f);
+            newGridMono.m_RectTransform.sizeDelta = Vector2.zero;
 
             newGridMono.m_RectTransform.anchoredPosition = Vector2.zero;
         }
