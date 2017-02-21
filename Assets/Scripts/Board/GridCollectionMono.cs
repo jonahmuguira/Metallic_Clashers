@@ -61,9 +61,14 @@ namespace Board
             gridCollection.Slide(
                 m_CurrentDirection == Vector2.right || m_CurrentDirection == Vector2.up
                     ? SlideDirection.Backward : SlideDirection.Forward);
+
+            m_PositionOffset = Vector2.zero;
+            m_CurrentDirection = Vector2.zero;
         }
         private IEnumerator ReducePositionOffset()
         {
+            CheckForSlide();
+
             foreach (var gem in gridCollection.gems)
             {
                 var gemMono = gem.GetComponent<GemMono>();
@@ -93,6 +98,8 @@ namespace Board
                         Vector2.Lerp(m_PositionOffset, Vector2.zero, deltaTime / m_ReducePositionOffsetTime);
                 }
 
+                CheckForSlide();
+
                 foreach (var gem in gridCollection.gems)
                 {
                     var gemMono = gem.GetComponent<GemMono>();
@@ -102,6 +109,15 @@ namespace Board
                 deltaTime += Time.deltaTime;
 
                 yield return null;
+            }
+
+            m_PositionOffset = Vector2.zero;
+            m_CurrentDirection = Vector2.zero;
+
+            foreach (var gem in gridCollection.gems)
+            {
+                var gemMono = gem.GetComponent<GemMono>();
+                gemMono.UpdatePosition();
             }
         }
 

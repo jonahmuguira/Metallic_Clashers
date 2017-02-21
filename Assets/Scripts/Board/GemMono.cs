@@ -158,7 +158,9 @@ namespace Board
 
             var spacing = gridMono.CalculateSpacing();
             var coefficient =
-                (rowMono.positionOffset.x / spacing.x) + (columnMono.positionOffset.y / spacing.y);
+                new Vector2(
+                    Mathf.Abs(rowMono.positionOffset.x / spacing.x),
+                    Mathf.Abs(columnMono.positionOffset.y / spacing.y));
 
             var nextPosition =
                 grid.ClampPosition(
@@ -191,12 +193,11 @@ namespace Board
                     new Vector2(dupNextPosition.x * spacing.x, dupNextPosition.y * spacing.y);
 
                 m_DuplicateImage.GetComponent<RectTransform>().anchoredPosition =
-                    Vector2.Lerp(
-                        CalculatePosition(position),
-                        dupNextPosition,
-                        coefficient);
+                    new Vector2(
+                        Mathf.Lerp(CalculatePosition(position).x, dupNextPosition.x, coefficient.x),
+                        Mathf.Lerp(CalculatePosition(position).y, dupNextPosition.y, coefficient.y));
 
-                m_CurrentPosition = nextPosition - rowMono.currentDirection + columnMono.currentDirection;
+                m_CurrentPosition = nextPosition - rowMono.currentDirection - columnMono.currentDirection;
                 m_CurrentPosition =
                     new Vector2(m_CurrentPosition.x * spacing.x, m_CurrentPosition.y * spacing.y);
 
@@ -225,7 +226,9 @@ namespace Board
             nextPosition = new Vector2(nextPosition.x * spacing.x, nextPosition.y * spacing.y);
 
             m_RectTransform.anchoredPosition =
-                Vector2.Lerp(m_CurrentPosition, nextPosition, coefficient);
+                new Vector2(
+                    Mathf.Lerp(m_CurrentPosition.x, nextPosition.x, coefficient.x),
+                    Mathf.Lerp(m_CurrentPosition.y, nextPosition.y, coefficient.y));
 
             m_UpdatePositionCoroutine = null;
         }

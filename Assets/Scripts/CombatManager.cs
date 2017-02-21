@@ -98,7 +98,10 @@ public class CombatManager : SubManager<CombatManager>
         var hitMono = RaycastToGemMono(dragInfo.origin);
         // If we didn't hit a GemMono first
         if (hitMono == null)
+        {
+            m_LockedGridCollectionMono = null;
             return;
+        }
 
         m_LockedGridCollectionMono =
             Mathf.Abs(dragInfo.totalDelta.x) > Mathf.Abs(dragInfo.totalDelta.y) ?
