@@ -7,6 +7,7 @@ public class StaminaInformation
 {
     public uint value;
     public string timeLastPlayed;
+    public uint maxValue;
 }
 
 public class StaminaManager : MonoSingleton<StaminaManager>

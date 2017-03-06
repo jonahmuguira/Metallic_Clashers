@@ -20,7 +20,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4902044863395634}
   - component: {fileID: 114349760018057426}
-  - component: {fileID: 114734311121324470}
+  - component: {fileID: 114796631700178808}
+  - component: {fileID: 114012943637859024}
+  - component: {fileID: 82232747633728092}
+  - component: {fileID: 81391494619646352}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -41,6 +44,109 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &81391494619646352
+AudioListener:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1357477400383080}
+  m_Enabled: 1
+--- !u!82 &82232747633728092
+AudioSource:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1357477400383080}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+--- !u!114 &114012943637859024
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1357477400383080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f3d7c394c59d684c9a8c6beb8bbde76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicList:
+  - {fileID: 8300000, guid: 725e352ffd58be344898ff920f12f30b, type: 3}
+  - {fileID: 8300000, guid: 5444f2d6e96ee8c4986b7cc0d06125a4, type: 3}
+  - {fileID: 8300000, guid: 5127d3e762faedc4d9a0b6983a2342f2, type: 3}
+  - {fileID: 8300000, guid: bbfb07eb7f7a7604988765485887b5ea, type: 3}
 --- !u!114 &114349760018057426
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -67,8 +173,41 @@ MonoBehaviour:
       modifier: 0
       coefficient: 0
     gemSkills: []
-    worldData: []
---- !u!114 &114734311121324470
+    worldData:
+    - nodes:
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 1
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 1
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+--- !u!114 &114796631700178808
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -80,4 +219,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 0
-  staminaRate: 0
+  maxValue: 10
+  staminaRate: 5
