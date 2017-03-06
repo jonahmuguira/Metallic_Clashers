@@ -5,23 +5,25 @@
  This script is used to level up the player.
 */
 
-using UnityEngine;
+using System;
 
 public class LevelSystem
 {
-    [SerializeField]
+    [Serializable]
     public struct LevelInfo
     {
         public uint level; //player's level
         public uint currentExperience; //player's current exp amount
         public uint experienceRequired; //the exp amount the player needs to level up
-        public uint experienceNeeded; //experienceRequired - currentExperience
+        public uint experienceNeeded //experienceRequired - currentExperience
+        {
+            get { return experienceRequired - currentExperience; }
+        } 
     }
 
-    [SerializeField]
     public LevelInfo playerLevelInfo;
 
-    private static LevelInfo CalculateLevel(uint exp)
+    private LevelInfo CalculateLevel(uint exp)
     {
         //base_xp * (level_to_get ^ factor);
 
@@ -35,52 +37,50 @@ public class LevelSystem
         uint tempLevel = 1; //level_to_get //player needs to start at level one
         const uint c_factor = 2; //factor //testing value from research results
 
-        var mathFormula = c_baseExperience * ((tempLevel + 1) ^ c_factor);
+        var experienceRequiredFormula = c_baseExperience * ((tempLevel + 1) ^ c_factor);
 
-        for (tempLevel = 1; tempExperience > mathFormula; tempLevel++)
+        for (tempLevel = 1; tempExperience > experienceRequiredFormula; tempLevel++)
         {
-            tempExperience -= mathFormula;
+            tempExperience -= experienceRequiredFormula;
+            experienceRequiredFormula = c_baseExperience * ((tempLevel + 2) ^ c_factor); //recalculate formula value
         }
 
         var levelInfo = new LevelInfo
         {
             level = tempLevel, //player's level
             currentExperience = tempExperience, //player's current exp amout
-            experienceRequired = mathFormula, //the exp amount the player needs to level up
-            experienceNeeded = mathFormula - tempExperience //experienceRequired - currentExperience
+            experienceRequired = experienceRequiredFormula, //the exp amount the player needs to level up
         };
 
         return levelInfo;
     }
-                                                     //fight exp
-    public void IsLeveledUp(uint currentExperience, uint modifier)
+                             //fight exp
+    public void IsLeveledUp(uint modifier)
     {
-        var tempCurrentExperience = CalculateLevel(currentExperience);
-        var finalTotal = CalculateLevel(currentExperience + modifier);
+        var tempCurrentExperience = CalculateLevel(playerLevelInfo.currentExperience);
+        var finalTotal = CalculateLevel(playerLevelInfo.currentExperience + modifier);
 
         if (finalTotal.level != tempCurrentExperience.level)
         {
-            //TODO: Define what stats get changed and by how much.
-            //Need a lot of feedback in this area.
+            uint differenceInLevel;
 
-            var playerData = new PlayerData();
+            for (differenceInLevel = finalTotal.level - tempCurrentExperience.level; differenceInLevel > 0; differenceInLevel--)
+            {
+                const int c_percentageValue = 10 / 100; //10%
 
-            const int c_percentageValue = 10 / 100;
+                //health stat change
+                GameManager.self.playerData.health.value *= c_percentageValue;
 
-            //health stat change
-            var healthPercentageResult = playerData.health.totalValue * c_percentageValue;
-            var statChangeHealth = playerData.health.totalValue + healthPercentageResult;
+                //attack stat change
+                GameManager.self.playerData.attack.value *= c_percentageValue;
 
-            //attack stat change
-            var attackPercentageResult = playerData.attack.totalValue * c_percentageValue;
-            var statChangeAttack = playerData.attack.totalValue + attackPercentageResult;
+                //defense stat change
+                GameManager.self.playerData.defense.value *= c_percentageValue;
 
-            //defense stat change
-            var defensePercentageResult = playerData.defense.totalValue * c_percentageValue;
-            var statChangeDefense = playerData.defense.totalValue + defensePercentageResult;
-
-            //stamina stat change
-            //TODO:
+                //TODO: Max stamina needs to be serialized. Change Max Value.
+                //stamina stat change
+                //GameManager.self.playerData.staminaInformation.value *= c_percentageValue;
+            }
         }
 
         playerLevelInfo = finalTotal;
