@@ -15,9 +15,9 @@ public class GameManager : MonoSingleton<GameManager>
 {
     public enum GameState
     {
-        Combat,
-        MainMenu,
-        StageSelection,
+        Combat = 2,
+        MainMenu = 0,
+        StageSelection = 1,
         StagePreparation,
     }
 
@@ -44,6 +44,7 @@ public class GameManager : MonoSingleton<GameManager>
             };
             Save();
         }
+        gameState = GameState.MainMenu;
         AddSceneListeners();
     }
 
@@ -70,15 +71,18 @@ public class GameManager : MonoSingleton<GameManager>
         {
             case 2:     // Combat
                 CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
+                gameState = GameState.Combat;
                 break;
 
             case 1:     // Stage Selection
                 StageSelectionManager.self.onStageSelectionEnd.AddListener(OnStageSelectionEnd);
+                gameState = GameState.StageSelection;
                 break;
 
             default:
                 break;
         }
+        AudioManager.self.ChangeMusic(currentScene);
     }
 
     [ContextMenu("Save Player")]
