@@ -26,12 +26,7 @@
 
         protected override void Init()
         {
-            
-        }
-
-        protected void Start()  //Awake for the Manager
-        {
-            worlds = 
+            worlds =
                 new List<Tree>
                 {
                     new Tree
@@ -64,8 +59,8 @@
             {
                 foreach (var n in tree.nodes)
                 {
-                    var nodeObject = 
-                        Instantiate(nodePrefab, 
+                    var nodeObject =
+                        Instantiate(nodePrefab,
                         new Vector3(
                             n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude
                             ), new Quaternion());
@@ -115,6 +110,11 @@
             }
         }
 
+        protected void Start()  //Awake for the Manager
+        {
+            
+        }
+
         protected override void OnPress(TouchInformation touchInfo)     // Once Pressed
         {
             var ray = Camera.main.ScreenPointToRay(touchInfo.position); 
@@ -123,6 +123,8 @@
             //See if the ray hit anything
             if (!(Physics.Raycast(ray.origin, ray.direction, out hit)))       // If not, stop execution
                 return;
+
+            hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = Color.magenta;
             onStageSelectionEnd.Invoke();               // If so, got what we want. Let's go home boys.
         }
 
