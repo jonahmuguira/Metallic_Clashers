@@ -118,7 +118,36 @@
 
         private void CheckMatch()
         {
-            //TODO: Check for matches in the entire grid
+            var gridMatchList = new List<List<int>>();
+            for (var i = 0; i < m_Size.y; ++i)
+                gridMatchList.Add(new List<int>((int)m_Size.x));
+
+            foreach (var row in m_Rows)
+            {
+                Gem prevGem = null;
+                var matchingGems = new List<Gem>();
+                foreach (var gem in row.gems)
+                {
+                    if (prevGem != null && prevGem.gemType == gem.gemType)
+                    {
+                        if (matchingGems.Count == 0)
+                            matchingGems.Add(prevGem);
+
+                        matchingGems.Add(gem);
+                    }
+                    else
+                    {
+                        if (matchingGems.Count >= 2)
+                            foreach (var matchingGem in matchingGems)
+                            {
+
+                            }
+                        matchingGems.Clear();
+                    }
+
+                    prevGem = gem;
+                }
+            }
         }
 
         private bool Add()

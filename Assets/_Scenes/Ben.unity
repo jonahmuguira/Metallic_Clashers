@@ -643,10 +643,12 @@ Prefab:
         type: 2}
       propertyPath: m_RowParent
       value: 
+      objectReference: {fileID: 1891895945}
     - target: {fileID: 114479076340579032, guid: bda3e5cb26f6deb48a0cfefb8f121f1f,
         type: 2}
       propertyPath: m_ColumnParent
       value: 
+      objectReference: {fileID: 1450378782}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bda3e5cb26f6deb48a0cfefb8f121f1f, type: 2}
   m_IsPrefabParent: 0
