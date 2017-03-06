@@ -5,8 +5,6 @@
  This script is used to level up the player.
 */
 
-using System.Reflection;
-
 using UnityEngine;
 
 public class LevelSystem
@@ -33,9 +31,9 @@ public class LevelSystem
 
         var tempExperience = exp;
 
-        const uint c_baseExperience = 100;
-        uint tempLevel = 1;
-        const uint c_factor = 2;
+        const uint c_baseExperience = 200; //base_xp //testing value from research results
+        uint tempLevel = 1; //level_to_get //player needs to start at level one
+        const uint c_factor = 2; //factor //testing value from research results
 
         var mathFormula = c_baseExperience * ((tempLevel + 1) ^ c_factor);
 
@@ -46,10 +44,10 @@ public class LevelSystem
 
         var levelInfo = new LevelInfo
         {
-            level = tempLevel,
-            currentExperience = tempExperience,
-            experienceRequired = mathFormula,
-            experienceNeeded = mathFormula - tempExperience
+            level = tempLevel, //player's level
+            currentExperience = tempExperience, //player's current exp amout
+            experienceRequired = mathFormula, //the exp amount the player needs to level up
+            experienceNeeded = mathFormula - tempExperience //experienceRequired - currentExperience
         };
 
         return levelInfo;

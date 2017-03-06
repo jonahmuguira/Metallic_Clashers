@@ -26,7 +26,8 @@ public class GameManager : MonoSingleton<GameManager>
     public GameState gameState;
 
     public PlayerData playerData;
-    private string currentScene = "Tony";
+
+    private int currentScene = 0;
 
     protected override void Awake()
     {
@@ -43,26 +44,41 @@ public class GameManager : MonoSingleton<GameManager>
             };
             Save();
         }
-
-        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+        AddSceneListeners();
     }
 
-    private void OnApplicationQuit()
-    {
-        playerData.staminaInformation.value = StaminaManager.self.value;
-        playerData.staminaInformation.timeLastPlayed = DateTime.Now.ToString();
-        Save();
-    }
+    //private void OnApplicationQuit()
+    //{
+    //    playerData.staminaInformation.value = StaminaManager.self.value;
+    //    playerData.staminaInformation.timeLastPlayed = DateTime.Now.ToString();
+    //    Save();
+    //}
 
-    [ContextMenu("End Combat")]
-    public void OnCombatEnd()
-    {
-
-    }
-
-    public void OnStageSelectionEnd()
+    private void OnCombatEnd()
     {
         NextScene(1);
+    }
+
+    private void OnStageSelectionEnd()
+    {
+        NextScene(2);
+    }
+
+    private void AddSceneListeners()
+    {
+        switch (currentScene)
+        {
+            case 2:     // Combat
+                CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
+                break;
+
+            case 1:     // Stage Selection
+                StageSelectionManager.self.onStageSelectionEnd.AddListener(OnStageSelectionEnd);
+                break;
+
+            default:
+                break;
+        }
     }
 
     [ContextMenu("Save Player")]
@@ -87,38 +103,19 @@ public class GameManager : MonoSingleton<GameManager>
         file.Close();
     }
 
-    private void NextScene(int sceneIndex)
+    public void NextScene(int sceneIndex)
     {
         StartCoroutine(LoadScene(sceneIndex));
-    }
-
-    private void AddSceneListeners()
-    {
-        switch (currentScene)
-        {
-            case "Combat":
-                CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
-                break;
-
-            case "Tony":
-                StageSelectionManager.self.onStageSelectionEnd.AddListener(OnStageSelectionEnd);
-                break;
-
-            default:
-                break;
-        }
-    }
-
-    private void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-    {
-        currentScene = scene.name;
-        AddSceneListeners();
     }
 
     private IEnumerator LoadScene(int sceneIndex)
     {
         var asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
+        currentScene = sceneIndex;
 
         while (!asyncOperation.isDone) { yield return null; }
+
+        currentScene = sceneIndex;
+        AddSceneListeners();
     }
 }
