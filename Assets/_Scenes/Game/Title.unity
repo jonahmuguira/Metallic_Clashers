@@ -611,6 +611,21 @@ Prefab:
       propertyPath: m_RootOrder
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.playerLevelSystem.playerLevelInfo.level
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.playerLevelSystem.playerLevelInfo.currentExperience
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.playerLevelSystem.playerLevelInfo.experienceRequired
+      value: 9001
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}
   m_IsPrefabParent: 0
