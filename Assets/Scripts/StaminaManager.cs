@@ -23,6 +23,7 @@ public class StaminaManager : MonoSingleton<StaminaManager>
 	    var playerStaminaInfo = GameManager.self.playerData.staminaInformation; // Get the Stamina Info
 
 	    value = playerStaminaInfo.value;    // Set value to StaminaInfo value
+	    maxValue = playerStaminaInfo.maxValue;
 
         var timeLastPlayed = DateTime.Parse(playerStaminaInfo.timeLastPlayed);   // Get Last Time the app was open 
         var ts = DateTime.Now - timeLastPlayed; // Calculate the time span
