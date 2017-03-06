@@ -77,9 +77,8 @@ public class LevelSystem
                 //defense stat change
                 GameManager.self.playerData.defense.value *= c_percentageValue;
 
-                //TODO: Max stamina needs to be serialized. Change Max Value.
                 //stamina stat change
-                //GameManager.self.playerData.staminaInformation.value *= c_percentageValue;
+                StaminaManager.self.maxValue *= c_percentageValue;
             }
         }
 
