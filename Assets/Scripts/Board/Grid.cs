@@ -116,9 +116,120 @@
             }
         }
 
-        private void CheckMatch()
+        private class MatchNode
         {
-            //TODO: Check for matches in the entire grid
+            public Gem gem;
+
+            public List<MatchNode> parents = new List<MatchNode>();
+            public List<MatchNode> children = new List<MatchNode>();
+        }
+
+        public void CheckMatch()
+        {
+            //var matchLists = new List<List<MatchInformation>>();
+            //for (var i = 0; i < m_Size.y; ++i)
+            //{
+            //    var newMatchList = new List<MatchInformation>();
+            //    for (var j = 0; j < m_Size.x; ++j)
+            //        newMatchList.Add(new MatchInformation());
+
+            //    matchLists.Add(newMatchList);
+            //}
+
+            var searchSpace =
+                gemLists.Select(
+                    gemList => gemList.gems.Select(
+                        currentGem => new MatchNode { gem = currentGem }).ToList()).ToList();
+
+            var currentNode = searchSpace.First().First();
+
+            var openList = new List<MatchNode> { currentNode };
+            var closedList = new List<MatchNode>();
+
+            var currentMatchType = currentNode.gem.gemType;
+            while (openList.Count != 0)
+            {
+                currentNode = openList.First();
+
+                Debug.Log(currentNode.gem.position + " " + currentNode.gem.gemType);
+
+                openList.Remove(currentNode);
+                closedList.Add(currentNode);
+
+                var adjacentGems =
+                    new List<Gem>
+                    {
+                        currentNode.gem.up,
+                        currentNode.gem.down,
+                        currentNode.gem.left,
+                        currentNode.gem.right,
+                    };
+
+                var adjacentNodes = new List<MatchNode>();
+
+                foreach (var adjacentGem in adjacentGems)
+                    if (adjacentGem != null)
+                        adjacentNodes.Add(
+                            searchSpace[(int)adjacentGem.position.y][(int)adjacentGem.position.x]);
+
+                foreach (var adjacentNode in adjacentNodes)
+                {
+                    if (currentNode.gem.gemType == adjacentNode.gem.gemType &&
+                        !closedList.Contains(adjacentNode))
+                    {
+                        openList.Insert(0, adjacentNode);
+
+                        Debug.DrawLine(
+                            currentNode.gem.GetComponent<GemMono>().transform.position,
+                            adjacentNode.gem.GetComponent<GemMono>().transform.position,
+                            Color.white, 4f);
+
+                        adjacentNode.parents.Add(currentNode);
+                        currentNode.children.Add(adjacentNode);
+                    }
+                    else if (!openList.Contains(adjacentNode) && !closedList.Contains(adjacentNode))
+                    {
+
+
+                        openList.Add(adjacentNode);
+                    }
+                }
+            }
+
+            //var matchingGems = new List<Gem>();
+            //foreach (var row in m_Rows)
+            //{
+            //    Gem prevGem = null;
+            //    foreach (var gem in row.gems)
+            //    {
+            //        if (prevGem != null && prevGem.gemType == gem.gemType)
+            //        {
+            //            if (matchingGems.Count == 0)
+            //                matchingGems.Add(prevGem);
+
+            //            matchingGems.Add(gem);
+            //        }
+            //        else
+            //        {
+            //            if (matchingGems.Count != 0)
+            //            {
+            //                foreach (var matchingGem in matchingGems)
+            //                {
+            //                    var x = (int)matchingGem.position.x;
+            //                    var y = (int)matchingGem.position.y;
+
+            //                    foreach (var matchGem in matchingGems)
+            //                        if (!matchLists[y][x].gems.Contains(matchGem))
+            //                            matchLists[y][x].gems.Add(matchGem);
+            //                }
+            //            }
+
+            //            matchingGems.Clear();
+            //        }
+
+            //        prevGem = gem;
+            //    }
+            //}
         }
 
         private bool Add()
