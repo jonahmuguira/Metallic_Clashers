@@ -19,6 +19,8 @@ public class PlayerData
     public List<Tree> worldData = new List<Tree>();
     public StaminaInformation staminaInformation;
 
+    public LevelSystem playerLevelSystem;
+
     public void TakeDamage(float damage)
     {
         var percentage = damage / defense.totalValue;
