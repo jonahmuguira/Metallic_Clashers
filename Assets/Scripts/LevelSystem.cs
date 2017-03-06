@@ -7,6 +7,7 @@
 
 using System;
 
+[Serializable]
 public class LevelSystem
 {
     [Serializable]
