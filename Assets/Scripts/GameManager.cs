@@ -47,19 +47,19 @@ public class GameManager : MonoSingleton<GameManager>
         AddSceneListeners();
     }
 
-    private void OnApplicationQuit()
-    {
-        playerData.staminaInformation.value = StaminaManager.self.value;
-        playerData.staminaInformation.timeLastPlayed = DateTime.Now.ToString();
-        Save();
-    }
+    //private void OnApplicationQuit()
+    //{
+    //    playerData.staminaInformation.value = StaminaManager.self.value;
+    //    playerData.staminaInformation.timeLastPlayed = DateTime.Now.ToString();
+    //    Save();
+    //}
 
-    public void OnCombatEnd()
+    private void OnCombatEnd()
     {
         NextScene(1);
     }
 
-    public void OnStageSelectionEnd()
+    private void OnStageSelectionEnd()
     {
         NextScene(2);
     }
@@ -68,11 +68,11 @@ public class GameManager : MonoSingleton<GameManager>
     {
         switch (currentScene)
         {
-            case 2:
+            case 2:     // Combat
                 CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
                 break;
 
-            case 1:
+            case 1:     // Stage Selection
                 StageSelectionManager.self.onStageSelectionEnd.AddListener(OnStageSelectionEnd);
                 break;
 
