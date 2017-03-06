@@ -26,12 +26,7 @@
 
         protected override void Init()
         {
-            
-        }
-
-        protected void Start()  //Awake for the Manager
-        {
-            worlds = 
+            worlds =
                 new List<Tree>
                 {
                     new Tree
@@ -64,8 +59,8 @@
             {
                 foreach (var n in tree.nodes)
                 {
-                    var nodeObject = 
-                        Instantiate(nodePrefab, 
+                    var nodeObject =
+                        Instantiate(nodePrefab,
                         new Vector3(
                             n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude
                             ), new Quaternion());
@@ -115,24 +110,22 @@
             }
         }
 
+        protected void Start()  //Awake for the Manager
+        {
+            
+        }
+
         protected override void OnPress(TouchInformation touchInfo)     // Once Pressed
         {
-            base.OnPress(touchInfo);
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);    // Shoot Ray 
+            var ray = Camera.main.ScreenPointToRay(touchInfo.position); 
             var hit = new RaycastHit();                                     // Make a Hit
-            Physics.Raycast(ray.origin, ray.direction, out hit);            //See if the ray hit anything
 
-            try
-            {
-                var monoNode = hit.transform.gameObject.GetComponent<MonoNode>();   // See if the hit has a MonoNode
-                if (monoNode == null)       // If not, stop execution
-                    return;
-                onStageSelectionEnd.Invoke();   // If so, got what we want. Let's go home boys.
-            }
-            catch
-            {
-                // ignored
-            }
+            //See if the ray hit anything
+            if (!(Physics.Raycast(ray.origin, ray.direction, out hit)))       // If not, stop execution
+                return;
+
+            hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = Color.magenta;
+            onStageSelectionEnd.Invoke();               // If so, got what we want. Let's go home boys.
         }
 
         private void LinkNodes(Node n1, Node n2)
