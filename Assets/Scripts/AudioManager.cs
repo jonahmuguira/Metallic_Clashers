@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Board.Information;
 using Input.Information;
 
 using StageSelection;
-
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,6 +10,7 @@ public class AudioManager : SubManager<AudioManager>
 {
     public List<AudioClip> musicList;
     public AudioClip clickSound;
+    public AudioClip dragSound;
 
     private AudioSource m_MusicSource;
     private AudioSource m_MenuSource;
@@ -27,6 +28,7 @@ public class AudioManager : SubManager<AudioManager>
 
     protected override void OnPress(TouchInformation touchInfo)
     {
+        m_MenuSource.clip = clickSound;
         if(EventSystem.current.currentSelectedGameObject != null)
             m_MenuSource.Play();
 
@@ -41,6 +43,12 @@ public class AudioManager : SubManager<AudioManager>
         var obj = hit.transform.gameObject;
         if(obj.GetComponent<MonoNode>() != null)
             m_MenuSource.Play();
+    }
+
+    public void PlayDragSound(SlideInformation slidInfo)
+    {
+        m_MenuSource.clip = dragSound;
+        m_MenuSource.Play();
     }
 
     protected override void Init()
