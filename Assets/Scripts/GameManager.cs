@@ -5,6 +5,8 @@ using System.IO;
 using UnityEngine;
 using System.Xml.Serialization;
 
+using Board;
+
 using Library;
 
 using StageSelection;
@@ -72,6 +74,7 @@ public class GameManager : MonoSingleton<GameManager>
         {
             case 2:     // Combat
                 CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
+                CombatManager.self.gridMono.grid.onSlide.AddListener(AudioManager.self.PlayDragSound);
                 gameState = GameState.Combat;
                 break;
 
