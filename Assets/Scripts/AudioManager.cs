@@ -1,21 +1,34 @@
 ﻿using System.Collections.Generic;
-using Library;
+using Input.Information;
 using UnityEngine;
 
-[RequireComponent(typeof(AudioSource), typeof(AudioListener))]
-public class AudioManager : MonoSingleton<AudioManager>
+public class AudioManager : SubManager<AudioManager>
 {
     public List<AudioClip> musicList;
-    private AudioSource m_Source;
+    public AudioClip clickSound;
+
+    private AudioSource m_MusicSource;
+    private AudioSource m_MenuSource;
 
     public void ChangeMusic(int sceneIndex)
     {
-        if (m_Source == null)
-        {
-            m_Source = gameObject.GetComponent<AudioSource>();
-            m_Source.loop = true;
-        }
-        m_Source.clip = musicList[sceneIndex];
-        m_Source.Play();
+        m_MusicSource.clip = musicList[sceneIndex];
+        m_MusicSource.Play();
+    }
+
+    protected override void OnPress(TouchInformation touchInfo)
+    {
+        m_MenuSource.Play();
+    }
+
+    protected override void Init()
+    {
+        DontDestroyOnLoad(gameObject);
+
+        m_MusicSource = gameObject.AddComponent<AudioSource>();
+        m_MusicSource.loop = true;
+
+        m_MenuSource = gameObject.AddComponent<AudioSource>();
+        m_MenuSource.clip = clickSound;
     }
 }
