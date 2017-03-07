@@ -47,7 +47,8 @@
     </Tree>
   </worldData>
   <staminaInformation>
-    <value>0</value>
-    <timeLastPlayed>3/6/2017 11:46:50 AM</timeLastPlayed>
+    <value>10</value>
+    <timeLastPlayed>3/6/2017 4:33:21 PM</timeLastPlayed>
+    <maxValue>10</maxValue>
   </staminaInformation>
 </PlayerData>

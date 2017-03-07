@@ -24,10 +24,10 @@ namespace Board
 
         private Vector2 m_CurrentPosition;
         private float m_MoveToPositionTime = 1f;
-        private Coroutine m_MoveToPositionCoroutine;
+        private IEnumerator m_MoveToPositionCoroutine;
 
         private GameObject m_DuplicateImage;
-        private Coroutine m_UpdatePositionCoroutine;
+        private IEnumerator m_UpdatePositionCoroutine;
 
         public RectTransform rectTransform { get { return m_RectTransform; } }
 
@@ -79,6 +79,15 @@ namespace Board
             OnPositionChange(new PositionChangeInformation { gem = gem, newPosition = gem.position });
         }
 
+        private void OnCombatUpdate()
+        {
+            if (m_MoveToPositionCoroutine != null && m_MoveToPositionCoroutine.MoveNext()) ;
+            else { m_MoveToPositionCoroutine = null; }
+
+            if (m_UpdatePositionCoroutine != null && m_UpdatePositionCoroutine.MoveNext()) ;
+            else { m_UpdatePositionCoroutine = null; }
+        }
+
         public void UpdatePosition()
         {
             StartCoroutine(OnUpdatePosition());
@@ -115,7 +124,7 @@ namespace Board
                     positionChangeInfo.newPosition.x * spacing.x,
                     positionChangeInfo.newPosition.y * spacing.y);
 
-            m_MoveToPositionCoroutine = StartCoroutine(MoveToPosition(moveToPosition));
+            m_MoveToPositionCoroutine = MoveToPosition(moveToPosition);
         }
 
         private void OnMatch(MatchInformation matchInfo)
@@ -141,20 +150,20 @@ namespace Board
                 deltaTime += Time.deltaTime;
 
                 if (m_UpdatePositionCoroutine == null)
-                    m_UpdatePositionCoroutine = StartCoroutine(OnUpdatePosition());
+                    m_UpdatePositionCoroutine = OnUpdatePosition();
 
                 yield return null;
             }
 
             if (m_UpdatePositionCoroutine == null)
-                m_UpdatePositionCoroutine = StartCoroutine(OnUpdatePosition());
+                m_UpdatePositionCoroutine = OnUpdatePosition();
 
             m_MoveToPositionCoroutine = null;
         }
 
         private IEnumerator OnUpdatePosition()
         {
-            yield return new WaitForEndOfFrame();
+            yield return null;
 
             var spacing = gridMono.CalculateSpacing();
 
@@ -186,41 +195,19 @@ namespace Board
 
                 m_DuplicateImage.GetComponent<RectTransform>().anchoredPosition =
                     CalculatePosition(position) + rowMono.positionOffset + columnMono.positionOffset;
-                //new Vector2(
-                //    Mathf.Lerp(CalculatePosition(position).x, dupNextPosition.x, coefficient.x),
-                //    Mathf.Lerp(CalculatePosition(position).y, dupNextPosition.y, coefficient.y));
 
                 m_CurrentPosition = nextPosition - rowMono.currentDirection - columnMono.currentDirection;
                 m_CurrentPosition =
                     new Vector2(m_CurrentPosition.x * spacing.x, m_CurrentPosition.y * spacing.y);
-
-                //nextPosition = Vector2.zero;
-                //transform.SetAsFirstSibling();
-                //m_Image.color =
-                //    new Color(
-                //        m_Image.color.r,
-                //        m_Image.color.g,
-                //        m_Image.color.b,
-                //        Mathf.Max(
-                //            Mathf.Pow(coefficient, 1.1f),
-                //            1f - Mathf.Pow(coefficient, 1.1f)));
             }
-            else
+            else if (m_DuplicateImage != null)
             {
-                if (m_DuplicateImage != null)
-                {
-                    Destroy(m_DuplicateImage.gameObject);
-                    m_CurrentPosition = CalculatePosition(position);
-                }
-                //m_Image.color =
-                //    new Color(m_Image.color.r, m_Image.color.g, m_Image.color.b, 1f);
+                Destroy(m_DuplicateImage.gameObject);
+                m_CurrentPosition = CalculatePosition(position);
             }
 
             m_RectTransform.anchoredPosition =
                 m_CurrentPosition + columnMono.positionOffset + rowMono.positionOffset;
-            //new Vector2(
-            //    Mathf.Lerp(m_CurrentPosition.x, nextPosition.x, coefficient.x),
-            //    Mathf.Lerp(m_CurrentPosition.y, nextPosition.y, coefficient.y));
 
             m_UpdatePositionCoroutine = null;
         }
@@ -288,6 +275,8 @@ namespace Board
             newGemMono.m_Image.SetNativeSize();
 
             newGemMono.m_RectTransform.sizeDelta = newGemMono.m_RectTransform.sizeDelta * 1.5f;
+
+            CombatManager.self.onCombatUpdate.AddListener(newGemMono.OnCombatUpdate);
         }
     }
 }
