@@ -74,7 +74,7 @@ public class GameManager : MonoSingleton<GameManager>
         {
             case 2:     // Combat
                 CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
-                CombatManager.self.gridMono.grid.onSlide.AddListener(AudioManager.self.PlayDragSound);
+                CombatManager.self.onPlayerTurn.AddListener(AudioManager.self.PlayDragSound);
                 gameState = GameState.Combat;
                 break;
 
