@@ -9,6 +9,8 @@
 
     using Information;
 
+    using JetBrains.Annotations;
+
     public interface IComponent { }
 
     [Serializable]
@@ -25,6 +27,14 @@
         Green,
         Yellow,
         Purple,
+    }
+
+    public enum Direction
+    {
+        Up,
+        Down,
+        Left,
+        Right,
     }
 
     [Serializable]
@@ -83,6 +93,11 @@
         public Row row { get { return grid.rows[(int)position.y]; } }
         public Column column { get { return grid.columns[(int)position.x]; } }
 
+        public Gem up { get { return GetNeighbor(Direction.Up); } }
+        public Gem down { get { return GetNeighbor(Direction.Down); } }
+        public Gem left { get { return GetNeighbor(Direction.Left); } }
+        public Gem right { get { return GetNeighbor(Direction.Right); } }
+
         #endregion
 
         private Gem() { }
@@ -100,6 +115,42 @@
         public T GetComponent<T>() where T : IComponent
         {
             return (T)components.First(component => component is T);
+        }
+
+        [CanBeNull]
+        public Gem GetNeighbor(Direction direction, bool clamp = false)
+        {
+            var nextPosition = m_Position;
+
+            switch (direction)
+            {
+            case Direction.Up:
+                nextPosition += Vector2.up;
+                break;
+            case Direction.Down:
+                nextPosition += Vector2.down;
+                break;
+            case Direction.Left:
+                nextPosition += Vector2.left;
+                break;
+            case Direction.Right:
+                nextPosition += Vector2.right;
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException("direction", direction, null);
+            }
+
+            if (clamp)
+            {
+                nextPosition = grid.ClampPosition(nextPosition);
+
+                return grid[(int)nextPosition.y][(int)nextPosition.x];
+            }
+
+            return
+                nextPosition == grid.ClampPosition(nextPosition) ?
+                grid[(int)nextPosition.y][(int)nextPosition.x] : null;
         }
     }
 }

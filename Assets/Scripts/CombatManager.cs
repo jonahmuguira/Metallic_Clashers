@@ -230,4 +230,10 @@ public class CombatManager : SubManager<CombatManager>
         // If we didn't hit a GemMono first
         return gemMono ? gemMono.gem : null;
     }
+
+    [ContextMenu("Test Match")]
+    public void TestMatch()
+    {
+        m_GridMono.grid.CheckMatch();
+    }
 }

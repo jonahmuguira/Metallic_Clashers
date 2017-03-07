@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace Library
 {
+    using System.Linq;
+
     public class MonoSingleton<T> : MonoBehaviour where T : MonoBehaviour
     {
         private static bool s_IsQuitting;
@@ -19,8 +21,14 @@ namespace Library
                 if (s_IsQuitting)
                     return null;
 
+                var singletons = FindObjectsOfType<T>().ToList();
                 if (s_Self == null)
-                    s_Self = FindObjectOfType<T>();
+                    s_Self = singletons.First();
+                else
+                    foreach (var singleton in singletons)
+                        if (singleton != s_Self)
+                            Destroy(singleton.gameObject);
+
                 return s_Self;
             }
         }
