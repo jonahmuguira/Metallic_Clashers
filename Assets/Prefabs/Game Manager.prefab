@@ -85,6 +85,8 @@ MonoBehaviour:
       value: 0
       modifier: 0
       coefficient: 0
+    resistances: 
+    weaknesses: 
     gemSkills: []
     worldData:
     - nodes:
