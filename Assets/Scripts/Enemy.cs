@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Board;
 
@@ -19,7 +20,6 @@ public class Enemy
 
     private int movesCounter = 0;
     private float attackCountdown;
-    private PlayerData playerData;
 
     public Enemy()
     {
@@ -37,18 +37,23 @@ public class Enemy
         CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
 
         health.value = pHealth;
+        health.coefficient = 1;
+
         attack.value = pAttack;
+        attack.coefficient = 1;
+
         defense.value = pDefense;
+        defense.coefficient = 1;
 
         attackSpeed = pattackSpeed;
         attackCountdown = attackSpeed;
 
         movesUntilAttack = pmovesUntilAttack;
+
     }
 
     private void OnCombatBegin()
     {
-        playerData = GameManager.self.playerData;
     }
 
     private void OnCombatUpdate()
@@ -62,7 +67,7 @@ public class Enemy
 
     private void OnCombatEnd()
     {
-
+        //TODO: Define what the enemy should do here. Possibly Nothing.
     }
 
     private void OnPlayerTurn()
@@ -76,7 +81,7 @@ public class Enemy
 
     private void Attack()
     {
-        playerData.TakeDamage(attack.totalValue, damageType);
+        GameManager.self.playerData.TakeDamage(attack.totalValue, damageType);
     }
 
     public void TakeDamage(float damage, GemType gemType)

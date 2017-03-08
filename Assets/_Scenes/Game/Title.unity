@@ -774,6 +774,11 @@ Prefab:
       propertyPath: playerData.health.modifier
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114796631700178808, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 81391494619646352, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}
     - {fileID: 0}
