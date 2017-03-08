@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4902044863395634}
   - component: {fileID: 114349760018057426}
   - component: {fileID: 114796631700178808}
+  - component: {fileID: 114034150488514194}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -41,6 +42,24 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114034150488514194
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1357477400383080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f3d7c394c59d684c9a8c6beb8bbde76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicList:
+  - {fileID: 8300000, guid: 725e352ffd58be344898ff920f12f30b, type: 3}
+  - {fileID: 8300000, guid: 5444f2d6e96ee8c4986b7cc0d06125a4, type: 3}
+  - {fileID: 8300000, guid: 5127d3e762faedc4d9a0b6983a2342f2, type: 3}
+  - {fileID: 8300000, guid: bbfb07eb7f7a7604988765485887b5ea, type: 3}
+  clickSound: {fileID: 8300000, guid: 6e8ec08970b513b4ebbf38f9c2fc4b9c, type: 3}
+  dragSound: {fileID: 8300000, guid: cb42fec09f2b9c742ac2e7608e5e3d67, type: 3}
 --- !u!114 &114349760018057426
 MonoBehaviour:
   m_ObjectHideFlags: 1
