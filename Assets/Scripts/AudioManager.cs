@@ -45,7 +45,7 @@ public class AudioManager : SubManager<AudioManager>
             m_MenuSource.Play();
     }
 
-    public void PlayDragSound(SlideInformation slidInfo)
+    public void PlayDragSound()
     {
         m_MenuSource.clip = dragSound;
         m_MenuSource.Play();
