@@ -16,6 +16,16 @@ using UnityEngine.UI;
 
 public class CombatManager : SubManager<CombatManager>
 {
+    [Serializable]
+    public class GemMonoInformation
+    {
+        public Sprite backgroundImage;
+        public Sprite midgroundImage;
+        public Sprite foregroundImage;
+
+        public List<Color> colors = new List<Color>();
+    }
+
     [SerializeField]
     private Canvas m_Canvas;
     [SerializeField]
@@ -26,7 +36,7 @@ public class CombatManager : SubManager<CombatManager>
     private HorizontalLayoutGroup m_ColumnParent;
 
     [SerializeField]
-    private List<Sprite> m_GemSprites = new List<Sprite>();
+    private GemMonoInformation m_GemMonoInformation;
 
     [Space, SerializeField]
     private UnityEvent m_OnCombatBegin = new UnityEvent();
@@ -48,7 +58,7 @@ public class CombatManager : SubManager<CombatManager>
     public VerticalLayoutGroup rowParent { get { return m_RowParent; } }
     public HorizontalLayoutGroup columnParent { get { return m_ColumnParent; } }
 
-    public List<Sprite> gemSprites { get { return m_GemSprites; } }
+    public GemMonoInformation gemMonoInformation { get { return m_GemMonoInformation; } }
 
     //TODO: public List<Enemy> enemies = new List<>;
 
