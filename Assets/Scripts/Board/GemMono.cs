@@ -94,11 +94,6 @@ namespace Board
             else { m_UpdatePositionCoroutine = null; }
         }
 
-        public void UpdatePosition()
-        {
-            StartCoroutine(OnUpdatePosition());
-        }
-
         public Vector2 CalculatePosition(Vector2 newPosition)
         {
             newPosition = grid.ClampPosition(newPosition);
@@ -120,9 +115,6 @@ namespace Board
         }
         private void OnPositionChange(PositionChangeInformation positionChangeInfo)
         {
-            if (m_MoveToPositionCoroutine != null)
-                StopCoroutine(m_MoveToPositionCoroutine);
-
             name = "Gem " + positionChangeInfo.newPosition;
 
             var spacing = gridMono.CalculateSpacing();
@@ -136,11 +128,19 @@ namespace Board
 
         private void OnMatch(MatchInformation matchInfo)
         {
-            //TODO: Check if this gem matched and play an animation if so. Delete afterwards
+            foreach (var matchInfoGem in matchInfo.gems)
+                if (matchInfoGem == m_Gem)
+                    gridMono.gemMatchAnimations.Add(MatchAnimation());
         }
         private void OnGridChange(GridChangeInformation gridChangeInfo)
         {
             //TODO: Check to see if this gem was changed in the grid
+        }
+
+        public void UpdatePositionOffset()
+        {
+            if (m_UpdatePositionCoroutine == null)
+                m_UpdatePositionCoroutine = UpdatePosition();
         }
 
         private IEnumerator MoveToPosition(Vector2 newPosition)
@@ -157,18 +157,18 @@ namespace Board
                 deltaTime += Time.deltaTime;
 
                 if (m_UpdatePositionCoroutine == null)
-                    m_UpdatePositionCoroutine = OnUpdatePosition();
+                    m_UpdatePositionCoroutine = UpdatePosition();
 
                 yield return null;
             }
 
             if (m_UpdatePositionCoroutine == null)
-                m_UpdatePositionCoroutine = OnUpdatePosition();
+                m_UpdatePositionCoroutine = UpdatePosition();
 
             m_MoveToPositionCoroutine = null;
         }
 
-        private IEnumerator OnUpdatePosition()
+        private IEnumerator UpdatePosition()
         {
             yield return null;
 
@@ -244,6 +244,40 @@ namespace Board
                 m_CurrentPosition + columnMono.positionOffset + rowMono.positionOffset;
 
             m_UpdatePositionCoroutine = null;
+        }
+
+        private IEnumerator MatchAnimation()
+        {
+            var deltaTime = 0f;
+            while (deltaTime < 2f)
+            {
+                m_BackgroundImage.color =
+                    new Color(
+                        m_BackgroundImage.color.r,
+                        m_BackgroundImage.color.g,
+                        m_BackgroundImage.color.b,
+                        1 - deltaTime / 2f);
+
+                m_MidgroundImage.color =
+                    new Color(
+                        m_MidgroundImage.color.r,
+                        m_MidgroundImage.color.g,
+                        m_MidgroundImage.color.b,
+                        1 - deltaTime / 2f);
+
+                m_ForegroundImage.color =
+                    new Color(
+                        m_ForegroundImage.color.r,
+                        m_ForegroundImage.color.g,
+                        m_ForegroundImage.color.b,
+                        1 - deltaTime / 2f);
+
+                deltaTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            Destroy(gameObject);
         }
 
         public static void Init()
