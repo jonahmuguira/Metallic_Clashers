@@ -54,6 +54,9 @@
             LinkNodes(worlds[0].nodes[2], worlds[0].nodes[3]);
             LinkNodes(worlds[0].nodes[2], worlds[0].nodes[7]);
 
+            var num = 0;
+            var averagePosition = new Vector3();
+
             //Make GameObjects
             foreach (var tree in worlds)
             {
@@ -63,12 +66,23 @@
                         Instantiate(nodePrefab,
                         new Vector3(
                             n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude
-                            ), new Quaternion());
+                            ), nodePrefab.transform.rotation);
 
                     var monoNode = nodeObject.AddComponent<MonoNode>();
                     monoNode.node = n;
                 }
             }
+
+            foreach (var m in FindObjectsOfType<MonoNode>())
+            {
+                num++;
+                averagePosition += m.transform.position;
+            }
+
+            var finalPosition = averagePosition / num;
+            var cam = Camera.main;
+
+            
 
             // Get Player Data
             var savedData = GameManager.self.playerData.worldData;
@@ -108,6 +122,8 @@
                         n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude));  // Set Ending position
                 }
             }
+
+
         }
 
         protected void Start()  //Awake for the Manager
@@ -124,7 +140,7 @@
             if (!(Physics.Raycast(ray.origin, ray.direction, out hit)))       // If not, stop execution
                 return;
 
-            hit.transform.gameObject.GetComponent<MeshRenderer>().material.color = Color.magenta;
+            hit.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
             onStageSelectionEnd.Invoke();               // If so, got what we want. Let's go home boys.
         }
 
