@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4902044863395634}
   - component: {fileID: 114349760018057426}
-  - component: {fileID: 114734311121324470}
+  - component: {fileID: 114796631700178808}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -67,8 +67,46 @@ MonoBehaviour:
       modifier: 0
       coefficient: 0
     gemSkills: []
-    worldData: []
---- !u!114 &114734311121324470
+    worldData:
+    - nodes:
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 1
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 1
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+    playerLevelSystem:
+      playerLevelInfo:
+        level: 0
+        currentExperience: 0
+        experienceRequired: 0
+--- !u!114 &114796631700178808
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -80,4 +118,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   value: 0
-  staminaRate: 0
+  maxValue: 10
+  staminaRate: 5

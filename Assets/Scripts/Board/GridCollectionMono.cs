@@ -21,7 +21,7 @@ namespace Board
         private Vector2 m_PositionOffset;
         private Vector2 m_CurrentDirection;
         private float m_ReducePositionOffsetTime = 1f;
-        private Coroutine m_ReducePositionOffsetCoroutine;
+        private IEnumerator m_ReducePositionOffsetCoroutine;
 
         public Grid grid { get { return m_GridCollection.grid; } }
         public GridMono gridMono { get { return grid.GetComponent<GridMono>(); } }
@@ -39,13 +39,16 @@ namespace Board
                     : m_PositionOffset.y > 0f
                         ? Vector2.up : Vector2.down;
 
-                if (m_ReducePositionOffsetCoroutine != null)
-                    StopCoroutine(m_ReducePositionOffsetCoroutine);
-
-                m_ReducePositionOffsetCoroutine = StartCoroutine(ReducePositionOffset());
+                m_ReducePositionOffsetCoroutine = ReducePositionOffset();
             }
         }
         public Vector2 currentDirection { get { return m_CurrentDirection; } }
+
+        private void OnCombatUpdate()
+        {
+            if (m_ReducePositionOffsetCoroutine != null && m_ReducePositionOffsetCoroutine.MoveNext()) ;
+            else { m_ReducePositionOffsetCoroutine = null; }
+        }
 
         private void CheckForSlide()
         {
@@ -159,6 +162,8 @@ namespace Board
 
             newGridCollectionMono.m_Image = newGameObject.GetComponent<Image>();
             newGridCollectionMono.m_Image.color = new Color(0f, 0f, 0f, 0f);
+
+            CombatManager.self.onCombatUpdate.AddListener(newGridCollectionMono.OnCombatUpdate);
         }
     }
 }

@@ -1,16 +1,25 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿/*
+ Script Info
+ Script Name: LevelSystem.cs
+ Created By: Brock Barlow
+ This script is used to level up the player.
+*/
 
-using UnityEngine;
+using System;
 
+[Serializable]
 public class LevelSystem
 {
+    [Serializable]
     public struct LevelInfo
     {
-        public uint level;
-        public uint currentExperience;
-        public uint experienceRequired;
-        public uint experienceNeeded; //experienceRequired - currentExperience
+        public uint level; //player's level
+        public uint currentExperience; //player's current exp amount
+        public uint experienceRequired; //the exp amount the player needs to level up
+        public uint experienceNeeded //experienceRequired - currentExperience
+        {
+            get { return experienceRequired - currentExperience; }
+        } 
     }
 
     public LevelInfo playerLevelInfo;
@@ -25,30 +34,55 @@ public class LevelSystem
 
         var tempExperience = exp;
 
-        const uint c_baseExperience = 100;
-        uint tempLevel = 1;
-        const uint c_factor = 2;
+        const uint c_baseExperience = 200; //base_xp //testing value from research results
+        uint tempLevel = 1; //level_to_get //player needs to start at level one
+        const uint c_factor = 2; //factor //testing value from research results
 
-        var mathFormula = c_baseExperience * ((tempLevel + 1) ^ c_factor);
+        var experienceRequiredFormula = c_baseExperience * ((tempLevel + 1) ^ c_factor);
 
-        for (tempLevel = 1; tempExperience > mathFormula; tempLevel++)
+        for (tempLevel = 1; tempExperience > experienceRequiredFormula; tempLevel++)
         {
-            tempExperience -= mathFormula;
+            tempExperience -= experienceRequiredFormula;
+            experienceRequiredFormula = c_baseExperience * ((tempLevel + 2) ^ c_factor); //recalculate formula value
         }
 
         var levelInfo = new LevelInfo
         {
-            level = tempLevel,
-            currentExperience = tempExperience,
-            experienceRequired = mathFormula,
-            experienceNeeded = mathFormula - tempExperience
+            level = tempLevel, //player's level
+            currentExperience = tempExperience, //player's current exp amout
+            experienceRequired = experienceRequiredFormula, //the exp amount the player needs to level up
         };
 
         return levelInfo;
     }
-
-    public void IsLeveledUp(uint currentExperience, uint modifier)
+                             //fight exp
+    public void IsLeveledUp(uint modifier)
     {
-        
+        var tempCurrentExperience = CalculateLevel(playerLevelInfo.currentExperience);
+        var finalTotal = CalculateLevel(playerLevelInfo.currentExperience + modifier);
+
+        if (finalTotal.level != tempCurrentExperience.level)
+        {
+            uint differenceInLevel;
+
+            for (differenceInLevel = finalTotal.level - tempCurrentExperience.level; differenceInLevel > 0; differenceInLevel--)
+            {
+                const int c_percentageValue = 10 / 100; //10%
+
+                //health stat change
+                GameManager.self.playerData.health.value *= c_percentageValue;
+
+                //attack stat change
+                GameManager.self.playerData.attack.value *= c_percentageValue;
+
+                //defense stat change
+                GameManager.self.playerData.defense.value *= c_percentageValue;
+
+                //stamina stat change
+                StaminaManager.self.maxValue *= c_percentageValue;
+            }
+        }
+
+        playerLevelInfo = finalTotal;
     }
 }
