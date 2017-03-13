@@ -486,53 +486,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
---- !u!1001 &940561318
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4240176260938032, guid: 3c2f47d277586e746b1dc4448d902faf, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4240176260938032, guid: 3c2f47d277586e746b1dc4448d902faf, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4240176260938032, guid: 3c2f47d277586e746b1dc4448d902faf, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4240176260938032, guid: 3c2f47d277586e746b1dc4448d902faf, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4240176260938032, guid: 3c2f47d277586e746b1dc4448d902faf, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4240176260938032, guid: 3c2f47d277586e746b1dc4448d902faf, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4240176260938032, guid: 3c2f47d277586e746b1dc4448d902faf, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4240176260938032, guid: 3c2f47d277586e746b1dc4448d902faf, type: 2}
-      propertyPath: m_RootOrder
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 114774917770985622, guid: 3c2f47d277586e746b1dc4448d902faf,
-        type: 2}
-      propertyPath: dragSound
-      value: 
-      objectReference: {fileID: 8300000, guid: cb42fec09f2b9c742ac2e7608e5e3d67, type: 3}
-    m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 100100000, guid: 3c2f47d277586e746b1dc4448d902faf, type: 2}
-  m_IsPrefabParent: 0
 --- !u!1 &1075716266
 GameObject:
   m_ObjectHideFlags: 0
@@ -709,6 +662,16 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.weaknesses.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.resistances.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4902044863395634, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -780,6 +743,41 @@ Prefab:
         type: 2}
       propertyPath: staminaRate
       value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.resistances.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.health.value
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.health.coefficient
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.weaknesses.Array.data[0]
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.defense.value
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 114349760018057426, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: playerData.health.modifier
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114796631700178808, guid: 13f28409c2a16c04abcb05d81141243b,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 81391494619646352, guid: 13f28409c2a16c04abcb05d81141243b, type: 2}

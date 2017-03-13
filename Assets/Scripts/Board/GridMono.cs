@@ -2,6 +2,8 @@
 
 namespace Board
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
 
     using Information;
@@ -26,12 +28,17 @@ namespace Board
 
         private Vector2 m_PreviousRectSize;
 
+        private bool m_GemsAreAnimating;
+        private List<IEnumerator> m_GemMatchAnimations = new List<IEnumerator>();
+
         public Grid grid { get { return m_Grid; } }
 
         public RectTransform rectTransform { get { return m_RectTransform; } }
         public RectTransform parentRectTransform { get { return m_ParentRectTransform; } }
 
         public GridResizeEvent onGridResize { get { return m_OnGridResize; } }
+
+        public List<IEnumerator> gemMatchAnimations { get { return m_GemMatchAnimations; } }
 
         private void LateUpdate()
         {
@@ -42,6 +49,25 @@ namespace Board
             m_OnGridResize.Invoke(new GridResizeInformation { newRect = m_RectTransform.rect });
 
             m_PreviousRectSize = currentRectSize;
+        }
+
+        private void OnCombatUpdate()
+        {
+            if (m_GemMatchAnimations.Count != 0)
+            {
+                m_GemsAreAnimating = true;
+
+                var tempList = m_GemMatchAnimations.ToList();
+                foreach (var gemMatchAnimation in tempList)
+                    if (!gemMatchAnimation.MoveNext())
+                        m_GemMatchAnimations.Remove(gemMatchAnimation);
+            }
+            else if (m_GemsAreAnimating)
+            {
+                m_GemsAreAnimating = false;
+
+                m_Grid.ApplyGravity();
+            }
         }
 
         public Vector2 CalculateSpacing()
@@ -72,11 +98,13 @@ namespace Board
                 newGameObject.GetComponentsInParent<RectTransform>().First(
                     rectTransform => rectTransform != newGridMono.m_RectTransform);
 
-            newGridMono.m_RectTransform.anchorMin = new Vector2(0.1f, 0.11f);
-            newGridMono.m_RectTransform.anchorMax = new Vector2(0.9f, 0.89f);
+            newGridMono.m_RectTransform.anchorMin = new Vector2(0.1f, 0.1f);
+            newGridMono.m_RectTransform.anchorMax = new Vector2(0.9f, 0.9f);
             newGridMono.m_RectTransform.sizeDelta = Vector2.zero;
 
             newGridMono.m_RectTransform.anchoredPosition = Vector2.zero;
+
+            CombatManager.self.onCombatUpdate.AddListener(newGridMono.OnCombatUpdate);
         }
     }
 }

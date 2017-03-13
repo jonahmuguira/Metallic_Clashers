@@ -120,22 +120,37 @@
         {
             public Gem gem;
 
-            public List<MatchNode> parents = new List<MatchNode>();
-            public List<MatchNode> children = new List<MatchNode>();
+            public MatchNode parent;
+
+            public Dictionary<Direction, MatchNode> adjacents = new Dictionary<Direction, MatchNode>();
+
+            public IEnumerable<MatchNode> nestedChildren
+            {
+                get
+                {
+                    var totalChildren = new List<MatchNode> { this };
+                    foreach (var adjacent in adjacents.Values)
+                        if (adjacent != parent)
+                            foreach (var nestedAdjacent in adjacent.nestedChildren)
+                                if (!totalChildren.Contains(nestedAdjacent))
+                                    totalChildren.Add(nestedAdjacent);
+
+                    return totalChildren;
+                }
+            }
+
+            public MatchNode rootNode { get { return parent == null ? this : parent.rootNode; } }
+        }
+
+        private class AdjacentNode
+        {
+            public MatchNode node;
+
+            public Direction directionFromCurrent;
         }
 
         public void CheckMatch()
         {
-            //var matchLists = new List<List<MatchInformation>>();
-            //for (var i = 0; i < m_Size.y; ++i)
-            //{
-            //    var newMatchList = new List<MatchInformation>();
-            //    for (var j = 0; j < m_Size.x; ++j)
-            //        newMatchList.Add(new MatchInformation());
-
-            //    matchLists.Add(newMatchList);
-            //}
-
             var searchSpace =
                 gemLists.Select(
                     gemList => gemList.gems.Select(
@@ -146,90 +161,118 @@
             var openList = new List<MatchNode> { currentNode };
             var closedList = new List<MatchNode>();
 
-            var currentMatchType = currentNode.gem.gemType;
+            var matches = new List<MatchNode>();
             while (openList.Count != 0)
             {
                 currentNode = openList.First();
 
-                Debug.Log(currentNode.gem.position + " " + currentNode.gem.gemType);
-
                 openList.Remove(currentNode);
                 closedList.Add(currentNode);
 
-                var adjacentGems =
-                    new List<Gem>
-                    {
-                        currentNode.gem.up,
-                        currentNode.gem.down,
-                        currentNode.gem.left,
-                        currentNode.gem.right,
-                    };
+                var adjacentNodes = new List<AdjacentNode>();
 
-                var adjacentNodes = new List<MatchNode>();
+                var adjacentGem = currentNode.gem.up;
+                if (adjacentGem != null)
+                    adjacentNodes.Add(
+                        new AdjacentNode
+                        {
+                            node = searchSpace[(int)adjacentGem.position.y][(int)adjacentGem.position.x],
+                            directionFromCurrent = Direction.Up,
+                        });
 
-                foreach (var adjacentGem in adjacentGems)
-                    if (adjacentGem != null)
-                        adjacentNodes.Add(
-                            searchSpace[(int)adjacentGem.position.y][(int)adjacentGem.position.x]);
+                adjacentGem = currentNode.gem.down;
+                if (adjacentGem != null)
+                    adjacentNodes.Add(
+                        new AdjacentNode
+                        {
+                            node = searchSpace[(int)adjacentGem.position.y][(int)adjacentGem.position.x],
+                            directionFromCurrent = Direction.Down,
+                        });
+
+                adjacentGem = currentNode.gem.left;
+                if (adjacentGem != null)
+                    adjacentNodes.Add(
+                        new AdjacentNode
+                        {
+                            node = searchSpace[(int)adjacentGem.position.y][(int)adjacentGem.position.x],
+                            directionFromCurrent = Direction.Left,
+                        });
+
+                adjacentGem = currentNode.gem.right;
+                if (adjacentGem != null)
+                    adjacentNodes.Add(
+                        new AdjacentNode
+                        {
+                            node = searchSpace[(int)adjacentGem.position.y][(int)adjacentGem.position.x],
+                            directionFromCurrent = Direction.Right,
+                        });
 
                 foreach (var adjacentNode in adjacentNodes)
                 {
-                    if (currentNode.gem.gemType == adjacentNode.gem.gemType &&
-                        !closedList.Contains(adjacentNode))
+                    if (currentNode.gem.gemType == adjacentNode.node.gem.gemType &&
+                        !closedList.Contains(adjacentNode.node))
                     {
-                        openList.Insert(0, adjacentNode);
+                        openList.Insert(0, adjacentNode.node);
 
-                        Debug.DrawLine(
-                            currentNode.gem.GetComponent<GemMono>().transform.position,
-                            adjacentNode.gem.GetComponent<GemMono>().transform.position,
-                            Color.white, 4f);
+                        adjacentNode.node.parent = currentNode;
 
-                        adjacentNode.parents.Add(currentNode);
-                        currentNode.children.Add(adjacentNode);
+                        currentNode.adjacents[adjacentNode.directionFromCurrent] = adjacentNode.node;
+                        adjacentNode.node.adjacents[adjacentNode.directionFromCurrent.Reverse()] =
+                            currentNode;
+
+                        var currentChild = adjacentNode.node;
+                        var childCount = 1;
+                        while (
+                            currentChild.adjacents.ContainsKey(adjacentNode.directionFromCurrent.Reverse()))
+                        {
+                            currentChild =
+                                currentChild.adjacents[adjacentNode.directionFromCurrent.Reverse()];
+
+                            ++childCount;
+                        }
+
+                        if (childCount >= 3 && !matches.Contains(currentNode.rootNode))
+                            matches.Add(currentNode.rootNode);
                     }
-                    else if (!openList.Contains(adjacentNode) && !closedList.Contains(adjacentNode))
-                    {
-
-
-                        openList.Add(adjacentNode);
-                    }
+                    else if (!openList.Contains(adjacentNode.node) && !closedList.Contains(adjacentNode.node))
+                        openList.Add(adjacentNode.node);
                 }
             }
 
-            //var matchingGems = new List<Gem>();
-            //foreach (var row in m_Rows)
-            //{
-            //    Gem prevGem = null;
-            //    foreach (var gem in row.gems)
-            //    {
-            //        if (prevGem != null && prevGem.gemType == gem.gemType)
-            //        {
-            //            if (matchingGems.Count == 0)
-            //                matchingGems.Add(prevGem);
+            foreach (var match in matches)
+            {
+                var matchGems = match.nestedChildren.Select(nestedChild => nestedChild.gem).ToList();
+                m_OnMatch.Invoke(
+                    new MatchInformation
+                    {
+                        gems = matchGems,
+                        type = match.gem.gemType,
+                    });
 
-            //            matchingGems.Add(gem);
-            //        }
-            //        else
-            //        {
-            //            if (matchingGems.Count != 0)
-            //            {
-            //                foreach (var matchingGem in matchingGems)
-            //                {
-            //                    var x = (int)matchingGem.position.x;
-            //                    var y = (int)matchingGem.position.y;
+                foreach (var matchGem in matchGems)
+                    m_GemLists[(int)matchGem.position.y][(int)matchGem.position.x] = null;
+            }
+        }
 
-            //                    foreach (var matchGem in matchingGems)
-            //                        if (!matchLists[y][x].gems.Contains(matchGem))
-            //                            matchLists[y][x].gems.Add(matchGem);
-            //                }
-            //            }
+        public void ApplyGravity()
+        {
+            for (var y = 0; y < m_GemLists.Count; y++)
+            {
+                for (var x = 0; x < m_GemLists[y].gems.Count; ++x)
+                {
+                    if (m_GemLists[y][x] == null)
+                    {
+                        var newY = y;
+                        while (newY < m_GemLists.Count - 1 && m_GemLists[newY][x] == null)
+                            ++newY;
 
-            //            matchingGems.Clear();
-            //        }
-
-            //        prevGem = gem;
-            //    }
-            //}
+                        m_GemLists[y][x] = m_GemLists[newY][x];
+                        m_GemLists[newY][x] = null;
+                        if (m_GemLists[y][x] != null)
+                            m_GemLists[y][x].position = new Vector2(x, y);
+                    }
+                }
+            }
         }
 
         private bool Add()

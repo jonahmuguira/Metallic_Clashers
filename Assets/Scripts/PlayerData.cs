@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using Board;
 using UnityEngine;
 
 using Tree = StageSelection.Tree;
@@ -14,6 +14,9 @@ public class PlayerData
 
     public Attribute defense;
 
+    public List<GemType> resistances;
+    public List<GemType> weaknesses;
+
     public List<GemSkill> gemSkills = new List<GemSkill>();
 
     public List<Tree> worldData = new List<Tree>();
@@ -21,9 +24,21 @@ public class PlayerData
 
     public LevelSystem playerLevelSystem;
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, GemType gemType)
     {
         var percentage = damage / defense.totalValue;
-        health.modifier -=  damage * Mathf.Clamp(percentage, 0f, 1f);
+        var finalDamage =  damage * Mathf.Clamp(percentage, 0f, 1f);
+
+        if (resistances.Contains(gemType))
+        {
+            finalDamage *= .75f;
+        }
+
+        else if (weaknesses.Contains(gemType))
+        {
+            finalDamage *= 1.25f;
+        }
+
+        health.modifier -= finalDamage;
     }
 }
