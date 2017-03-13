@@ -29,8 +29,11 @@ public class AudioManager : SubManager<AudioManager>
     protected override void OnPress(TouchInformation touchInfo)
     {
         m_MenuSource.clip = clickSound;
-        if(EventSystem.current.currentSelectedGameObject != null)
-            m_MenuSource.Play();
+        if (EventSystem.current != null)
+        {
+            if (EventSystem.current.currentSelectedGameObject != null)
+                m_MenuSource.Play();
+        }
 
         // See if Hit certain GameObject
         var ray = Camera.main.ScreenPointToRay(touchInfo.position);
