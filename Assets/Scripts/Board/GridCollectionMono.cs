@@ -84,7 +84,7 @@ namespace Board
             foreach (var gem in gridCollection.gems)
             {
                 var gemMono = gem.GetComponent<GemMono>();
-                gemMono.UpdatePosition();
+                gemMono.UpdatePositionOffset();
             }
 
             yield return null;
@@ -115,7 +115,7 @@ namespace Board
                 foreach (var gem in gridCollection.gems)
                 {
                     var gemMono = gem.GetComponent<GemMono>();
-                    gemMono.UpdatePosition();
+                    gemMono.UpdatePositionOffset();
                 }
 
                 deltaTime += Time.deltaTime;
@@ -129,7 +129,7 @@ namespace Board
             foreach (var gem in gridCollection.gems)
             {
                 var gemMono = gem.GetComponent<GemMono>();
-                gemMono.UpdatePosition();
+                gemMono.UpdatePositionOffset();
             }
         }
 
