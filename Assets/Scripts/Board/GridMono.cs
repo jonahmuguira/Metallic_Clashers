@@ -38,6 +38,7 @@ namespace Board
 
         public GridResizeEvent onGridResize { get { return m_OnGridResize; } }
 
+        public bool gemsAreAnimating { get { return m_GemsAreAnimating; } }
         public List<IEnumerator> gemMatchAnimations { get { return m_GemMatchAnimations; } }
 
         private void LateUpdate()
@@ -62,7 +63,8 @@ namespace Board
                     if (!gemMatchAnimation.MoveNext())
                         m_GemMatchAnimations.Remove(gemMatchAnimation);
             }
-            else if (m_GemsAreAnimating)
+            else
+            if (m_GemsAreAnimating)
             {
                 m_Grid.ApplyGravity();
                 m_Grid.Fill();

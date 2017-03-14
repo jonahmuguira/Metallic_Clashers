@@ -45,6 +45,8 @@ public class CombatManager : SubManager<CombatManager>
     [SerializeField]
     private UnityEvent m_OnCombatUpdate = new UnityEvent();
     [SerializeField]
+    private UnityEvent m_OnCombatLateUpdate = new UnityEvent();
+    [SerializeField]
     private UnityEvent m_OnCombatEnd = new UnityEvent();
 
     [SerializeField]
@@ -55,6 +57,7 @@ public class CombatManager : SubManager<CombatManager>
 
     private GridCollectionMono m_LockedGridCollectionMono;
 
+    private bool m_CombatHasBegun;
     private bool m_IsPaused;
 
     private bool m_HasSlid;
@@ -70,6 +73,7 @@ public class CombatManager : SubManager<CombatManager>
 
     public UnityEvent onCombatBegin { get { return m_OnCombatBegin; } }
     public UnityEvent onCombatUpdate { get { return m_OnCombatUpdate; } }
+    public UnityEvent onCombatLateUpdate { get { return m_OnCombatLateUpdate; } }
     public UnityEvent onCombatEnd { get { return m_OnCombatEnd; } }
 
     public UnityEvent onPlayerTurn { get { return m_OnPlayerTurn; } }
@@ -99,11 +103,18 @@ public class CombatManager : SubManager<CombatManager>
 
     private void Update()
     {
-        if (UnityEngine.Input.GetKeyDown(KeyCode.P))
-            m_IsPaused = !m_IsPaused;
+        if (m_CombatHasBegun == false)
+        {
+            m_OnCombatBegin.Invoke();
+
+            m_CombatHasBegun = true;
+        }
+
+        //if (UnityEngine.Input.GetKeyDown(KeyCode.P))
+        //   m_IsPaused = !m_IsPaused;
 
         if (!m_IsPaused)
-            onCombatUpdate.Invoke();
+            m_OnCombatUpdate.Invoke();
 
         //if (m_LockedGridCollectionMono == null)
         //    return;
@@ -114,6 +125,12 @@ public class CombatManager : SubManager<CombatManager>
 
         //    gemMono.positionOffset += new Vector2(0.5f, 0f);
         //}
+    }
+
+    private void LateUpdate()
+    {
+        if (!m_IsPaused)
+            m_OnCombatLateUpdate.Invoke();
     }
 
     private void OnSlide(SlideInformation slideInfo)
@@ -141,6 +158,13 @@ public class CombatManager : SubManager<CombatManager>
 
     protected override void OnDrag(DragInformation dragInfo)
     {
+        if (gridMono.gemsAreAnimating ||
+            gridMono.grid.gemLists.Any(
+                gemList => gemList.gems.Where(
+                    gem => gem != null).Any(
+                        gem => gem.GetComponent<GemMono>().moveToPositionCoroutine != null)))
+            return;
+
         // If we didn't hit a GridCollectionMono at the start of the drag
         if (m_LockedGridCollectionMono == null)
             return;
