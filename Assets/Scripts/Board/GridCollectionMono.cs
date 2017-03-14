@@ -81,10 +81,10 @@ namespace Board
         {
             CheckForSlide();
 
-            foreach (var gem in gridCollection.gems)
+            foreach (var gem in gridCollection.gems.Where(gem => gem != null))
             {
                 var gemMono = gem.GetComponent<GemMono>();
-                gemMono.UpdatePosition();
+                gemMono.UpdatePositionOffset();
             }
 
             yield return null;
@@ -112,10 +112,10 @@ namespace Board
 
                 CheckForSlide();
 
-                foreach (var gem in gridCollection.gems)
+                foreach (var gem in gridCollection.gems.Where(gem => gem != null))
                 {
                     var gemMono = gem.GetComponent<GemMono>();
-                    gemMono.UpdatePosition();
+                    gemMono.UpdatePositionOffset();
                 }
 
                 deltaTime += Time.deltaTime;
@@ -126,10 +126,10 @@ namespace Board
             m_PositionOffset = Vector2.zero;
             m_CurrentDirection = Vector2.zero;
 
-            foreach (var gem in gridCollection.gems)
+            foreach (var gem in gridCollection.gems.Where(gem => gem != null))
             {
                 var gemMono = gem.GetComponent<GemMono>();
-                gemMono.UpdatePosition();
+                gemMono.UpdatePositionOffset();
             }
         }
 

@@ -2,6 +2,8 @@
 
 namespace Board
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Linq;
 
     using Information;
@@ -26,12 +28,17 @@ namespace Board
 
         private Vector2 m_PreviousRectSize;
 
+        private bool m_GemsAreAnimating;
+        private List<IEnumerator> m_GemMatchAnimations = new List<IEnumerator>();
+
         public Grid grid { get { return m_Grid; } }
 
         public RectTransform rectTransform { get { return m_RectTransform; } }
         public RectTransform parentRectTransform { get { return m_ParentRectTransform; } }
 
         public GridResizeEvent onGridResize { get { return m_OnGridResize; } }
+
+        public List<IEnumerator> gemMatchAnimations { get { return m_GemMatchAnimations; } }
 
         private void LateUpdate()
         {
@@ -42,6 +49,33 @@ namespace Board
             m_OnGridResize.Invoke(new GridResizeInformation { newRect = m_RectTransform.rect });
 
             m_PreviousRectSize = currentRectSize;
+        }
+
+        private void OnCombatUpdate()
+        {
+            if (m_GemMatchAnimations.Count != 0)
+            {
+                m_GemsAreAnimating = true;
+
+                var tempList = m_GemMatchAnimations.ToList();
+                foreach (var gemMatchAnimation in tempList)
+                    if (!gemMatchAnimation.MoveNext())
+                        m_GemMatchAnimations.Remove(gemMatchAnimation);
+            }
+            else if (m_GemsAreAnimating)
+            {
+                m_Grid.ApplyGravity();
+                m_Grid.Fill();
+
+                m_Grid.CheckMatch();
+
+                m_GemsAreAnimating = false;
+            }
+        }
+
+        private void OnPlayerTurn()
+        {
+            m_Grid.CheckMatch();
         }
 
         public Vector2 CalculateSpacing()
@@ -77,6 +111,9 @@ namespace Board
             newGridMono.m_RectTransform.sizeDelta = Vector2.zero;
 
             newGridMono.m_RectTransform.anchoredPosition = Vector2.zero;
+
+            CombatManager.self.onCombatUpdate.AddListener(newGridMono.OnCombatUpdate);
+            CombatManager.self.onPlayerTurn.AddListener(newGridMono.OnPlayerTurn);
         }
     }
 }

@@ -13,30 +13,65 @@ using UnityEngine;
 [Serializable]
 public class BaseItem
 {
-    public uint modifier; //value that will "modifier" player attribute(s).
+    private float m_age; //current durabilities max value.
 
-    protected virtual void UseItem() //use item function. TODO - define what function needs and return type
+    public float durability = 0; //how long the item will last.
+    public uint modifier; //value that will "modify" player attribute(s).
+
+    public virtual void UseItem() { }
+}
+
+//[Serializable]
+public class TurnBased : BaseItem
+{
+    public void UpdateSelf()
     {
         
     }
 }
 
-[Serializable]
-public class InstantBased : BaseItem
-{
-    
-}
-
-[Serializable]
-public class TurnBased : BaseItem
-{
-    private int m_Turns; //will determine how long effect will last based on turns.
-    private bool m_IsTurnActive = false; //starts false, becomes true when active.
-}
-
-[Serializable]
+//[Serializable]
 public class TimeBased : BaseItem
 {
-    private float m_Timer; //will determine how long effect will last based on time.
-    private bool m_IsTimeActive = false; //starts false, becomes true when active.
+    public void UpdateSelf()
+    {
+
+    }
+}
+
+//[Serializable]
+public class InstantItemTestClass : BaseItem
+{
+    public override void UseItem()
+    {
+        //Instantly do effect. No lasting effects.
+    }
+}
+
+//[Serializable]
+public class TurnItemTestClass : TurnBased
+{
+    public override void UseItem()
+    {
+        
+    }
+
+    public void test()
+    {
+        var test = durability + 1;
+    }
+}
+
+//[Serializable]
+public class TimeItemTestClass : TimeBased
+{
+    public override void UseItem()
+    {
+
+    }
+
+    public void test()
+    {
+
+    }
 }

@@ -27,6 +27,7 @@
         Green,
         Yellow,
         Purple,
+        Orange,
     }
 
     public enum Direction
@@ -151,6 +152,26 @@
             return
                 nextPosition == grid.ClampPosition(nextPosition) ?
                 grid[(int)nextPosition.y][(int)nextPosition.x] : null;
+        }
+    }
+
+    public static class DirectionExtentions
+    {
+        public static Direction Reverse(this Direction direction)
+        {
+            switch (direction)
+            {
+            case Direction.Up:
+                return Direction.Down;
+            case Direction.Down:
+                return Direction.Up;
+            case Direction.Left:
+                return Direction.Right;
+            case Direction.Right:
+                return Direction.Left;
+            default:
+                throw new ArgumentOutOfRangeException("direction", direction, null);
+            }
         }
     }
 }

@@ -121,92 +121,23 @@
             public Gem gem;
 
             public MatchNode parent;
+            public List<MatchNode> children = new List<MatchNode>();
 
-            public MatchNode topChild;
-            public MatchNode bottomChild;
-            public MatchNode rightChild;
-            public MatchNode leftChild;
+            public Dictionary<Direction, MatchNode> adjacents = new Dictionary<Direction, MatchNode>();
 
-            public List<MatchNode> nestedChildren
+            public IEnumerable<MatchNode> nestedChildren
             {
                 get
                 {
-                    var neighbors =
-                        new List<MatchNode>
-                        {
-                            topChild,
-                            bottomChild,
-                            rightChild,
-                            leftChild,
-                        };
+                    yield return this;
 
-                    var totalChildren = new List<MatchNode>();
-                    foreach (var neighbor in neighbors)
-                    {
-                        if (neighbor != null)
-                        {
-                            totalChildren.Add(neighbor);
-                            totalChildren.AddRange(neighbor.nestedChildren);
-                        }
-                    }
-
-                    return totalChildren;
+                    foreach (var child in children)
+                        foreach (var nestedChild in child.nestedChildren)
+                            yield return nestedChild;
                 }
             }
 
             public MatchNode rootNode { get { return parent == null ? this : parent.rootNode; } }
-
-            public int topChildrenCount
-            {
-                get
-                {
-                    var childrenCount = 1;
-                    if (topChild == null)
-                        return childrenCount;
-
-                    childrenCount += topChild.topChildrenCount;
-                    return childrenCount;
-                }
-            }
-
-            public int bottomChildrenCount
-            {
-                get
-                {
-                    var childrenCount = 1;
-                    if (bottomChild == null)
-                        return childrenCount;
-
-                    childrenCount += bottomChild.bottomChildrenCount;
-                    return childrenCount;
-                }
-            }
-
-            public int leftChildrenCount
-            {
-                get
-                {
-                    var childrenCount = 1;
-                    if (leftChild == null)
-                        return childrenCount;
-
-                    childrenCount += leftChild.leftChildrenCount;
-                    return childrenCount;
-                }
-            }
-
-            public int rightChildrenCount
-            {
-                get
-                {
-                    var childrenCount = 1;
-                    if (rightChild == null)
-                        return childrenCount;
-
-                    childrenCount += rightChild.rightChildrenCount;
-                    return childrenCount;
-                }
-            }
         }
 
         private class AdjacentNode
@@ -216,7 +147,7 @@
             public Direction directionFromCurrent;
         }
 
-        public void CheckMatch()
+        public bool CheckMatch()
         {
             var searchSpace =
                 gemLists.Select(
@@ -279,36 +210,28 @@
                     if (currentNode.gem.gemType == adjacentNode.node.gem.gemType &&
                         !closedList.Contains(adjacentNode.node))
                     {
-                        if (currentNode.parent == null)
-                            matches.Add(currentNode);
-
                         openList.Insert(0, adjacentNode.node);
 
-                        Debug.DrawLine(
-                            currentNode.gem.GetComponent<GemMono>().transform.position,
-                            adjacentNode.node.gem.GetComponent<GemMono>().transform.position,
-                            Color.white, 4f);
-
                         adjacentNode.node.parent = currentNode;
+                        currentNode.children.Add(adjacentNode.node);
 
-                        switch (adjacentNode.directionFromCurrent)
+                        currentNode.adjacents[adjacentNode.directionFromCurrent] = adjacentNode.node;
+                        adjacentNode.node.adjacents[adjacentNode.directionFromCurrent.Reverse()] =
+                            currentNode;
+
+                        var currentChild = adjacentNode.node;
+                        var childCount = 1;
+                        while (
+                            currentChild.adjacents.ContainsKey(adjacentNode.directionFromCurrent.Reverse()))
                         {
-                        case Direction.Up:
-                            currentNode.topChild = adjacentNode.node;
-                            break;
-                        case Direction.Down:
-                            currentNode.bottomChild = adjacentNode.node;
-                            break;
-                        case Direction.Left:
-                            currentNode.leftChild = adjacentNode.node;
-                            break;
-                        case Direction.Right:
-                            currentNode.rightChild = adjacentNode.node;
-                            break;
+                            currentChild =
+                                currentChild.adjacents[adjacentNode.directionFromCurrent.Reverse()];
 
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                            ++childCount;
                         }
+
+                        if (childCount >= 3 && !matches.Contains(currentNode.rootNode))
+                            matches.Add(currentNode.rootNode);
                     }
                     else if (!openList.Contains(adjacentNode.node) && !closedList.Contains(adjacentNode.node))
                         openList.Add(adjacentNode.node);
@@ -317,12 +240,55 @@
 
             foreach (var match in matches)
             {
-                if (match.topChildrenCount >= 3 || match.bottomChildrenCount >= 3 ||
-                    match.leftChildrenCount >= 3 || match.rightChildrenCount >= 3)
+                var matchGems = match.nestedChildren.Select(nestedChild => nestedChild.gem).ToList();
+                m_OnMatch.Invoke(
+                    new MatchInformation
+                    {
+                        gems = matchGems,
+                        type = match.gem.gemType,
+                    });
+
+                foreach (var matchGem in matchGems)
+                    m_GemLists[(int)matchGem.position.y][(int)matchGem.position.x] = null;
+            }
+
+            return matches.Count != 0;
+        }
+
+        public void ApplyGravity()
+        {
+            for (var y = 0; y < m_GemLists.Count; y++)
+            {
+                for (var x = 0; x < m_GemLists[y].gems.Count; ++x)
                 {
-                    match.gem.GetComponent<GemMono>().transform.localScale += Vector3.one / 3f;
-                    foreach (var child in match.nestedChildren)
-                        child.gem.GetComponent<GemMono>().transform.localScale += Vector3.one / 3f;
+                    if (m_GemLists[y][x] == null)
+                    {
+                        var newY = y;
+                        while (newY < m_GemLists.Count - 1 && m_GemLists[newY][x] == null)
+                            ++newY;
+
+                        m_GemLists[y][x] = m_GemLists[newY][x];
+                        m_GemLists[newY][x] = null;
+                        if (m_GemLists[y][x] != null)
+                            m_GemLists[y][x].position = new Vector2(x, y);
+                    }
+                }
+            }
+        }
+
+        public void Fill()
+        {
+            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
+
+            for (var y = 0; y < m_GemLists.Count; ++y)
+            {
+                for (var x = 0; x < m_GemLists[y].gems.Count; ++x)
+                {
+                    if (m_GemLists[y][x] != null)
+                        continue;
+
+                    var gemType = (GemType)Random.Range(0, numGemTypes);
+                    m_GemLists[y][x] = new Gem(this, new Vector2(x, y), gemType);
                 }
             }
         }
