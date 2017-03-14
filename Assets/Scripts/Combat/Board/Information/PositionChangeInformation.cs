@@ -1,5 +1,5 @@
 ﻿// ---------------------------------------------------------------------------------------------------------
-// <copyright file="TypeChangeInformation.cs" company="Metallic Clashers">
+// <copyright file="PositionChangeInformation.cs" company="Metallic Clashers">
 //   CLash On
 // </copyright>
 // <summary>
@@ -7,14 +7,14 @@
 // </summary>
 // ---------------------------------------------------------------------------------------------------------
 
-namespace Board.Information
+namespace Combat.Board.Information
 {
     using UnityEngine;
 
-    public class TypeChangeInformation
+    public class PositionChangeInformation
     {
         public Gem gem;
 
-        public GemType newType;
+        public Vector2 newPosition;
     }
 }

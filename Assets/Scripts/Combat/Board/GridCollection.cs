@@ -1,4 +1,4 @@
-﻿namespace Board
+﻿namespace Combat.Board
 {
     using System;
     using System.Collections.Generic;

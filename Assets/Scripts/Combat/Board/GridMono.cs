@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace Board
+﻿namespace Combat.Board
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -8,6 +6,7 @@ namespace Board
 
     using Information;
 
+    using UnityEngine;
     using UnityEngine.Events;
 
     public class GridResizeEvent : UnityEvent<GridResizeInformation> { }

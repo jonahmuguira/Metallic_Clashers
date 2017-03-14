@@ -1,5 +1,4 @@
-﻿using Board.Information;
-using Input.Information;
+﻿using Input.Information;
 
 using StageSelection;
 using System.Collections.Generic;

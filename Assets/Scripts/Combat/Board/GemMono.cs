@@ -1,15 +1,12 @@
-﻿using System.Collections;
-
-namespace Board
+﻿namespace Combat.Board
 {
-    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
-    using UnityEngine;
-
     using Information;
 
+    using UnityEngine;
     using UnityEngine.UI;
 
     [RequireComponent(typeof(Image))]
@@ -129,9 +126,10 @@ namespace Board
 
             var spriteIndex = (int)typeChangeInfo.newType;
 
-            m_MidgroundImage.color = CombatManager.self.gemMonoInformation.colors[spriteIndex];
-            m_ForegroundImage.color = CombatManager.self.gemMonoInformation.colors[spriteIndex];
+            m_MidgroundImage.color = CombatManager.self.combatUiInformation.gemColors[spriteIndex];
+            m_ForegroundImage.color = CombatManager.self.combatUiInformation.gemColors[spriteIndex];
         }
+
         private void OnPositionChange(PositionChangeInformation positionChangeInfo)
         {
             name = "Gem " + positionChangeInfo.newPosition;
@@ -153,6 +151,18 @@ namespace Board
         private void OnGridChange(GridChangeInformation gridChangeInfo)
         {
             //TODO: Check to see if this gem was changed in the grid
+        }
+
+        private void OnCombatModeChange()
+        {
+            m_BackgroundImage.sprite =
+                CombatManager.self.combatUiInformation.currentModeUiInformation.backgroundImage;
+
+            m_MidgroundImage.sprite =
+                CombatManager.self.combatUiInformation.currentModeUiInformation.midgroundImage;
+
+            m_ForegroundImage.sprite =
+                CombatManager.self.combatUiInformation.currentModeUiInformation.foregroundImage;
         }
 
         private IEnumerator MoveToPosition(Vector2 newPosition)
@@ -303,7 +313,8 @@ namespace Board
             newGemMono.m_RectTransform.sizeDelta = Vector2.zero;
 
             newGemMono.m_BackgroundImage = newGameObject.GetComponent<Image>();
-            newGemMono.m_BackgroundImage.sprite = CombatManager.self.gemMonoInformation.backgroundImage;
+            newGemMono.m_BackgroundImage.sprite =
+                CombatManager.self.combatUiInformation.currentModeUiInformation.backgroundImage;
             newGemMono.m_BackgroundImage.SetNativeSize();
 
             newGemMono.m_RectTransform.sizeDelta = newGemMono.m_RectTransform.sizeDelta / 8f;
@@ -312,7 +323,8 @@ namespace Board
             var midgroundRectTransform = midgroundGameObject.AddComponent<RectTransform>();
 
             newGemMono.m_MidgroundImage = midgroundGameObject.AddComponent<Image>();
-            newGemMono.m_MidgroundImage.sprite = CombatManager.self.gemMonoInformation.midgroundImage;
+            newGemMono.m_MidgroundImage.sprite =
+                CombatManager.self.combatUiInformation.currentModeUiInformation.midgroundImage;
             newGemMono.m_MidgroundImage.SetNativeSize();
 
             midgroundGameObject.transform.SetParent(newGemMono.transform, false);
@@ -323,7 +335,8 @@ namespace Board
             var foregroundRectTransform = foregroundGameObject.AddComponent<RectTransform>();
 
             newGemMono.m_ForegroundImage = foregroundGameObject.AddComponent<Image>();
-            newGemMono.m_ForegroundImage.sprite = CombatManager.self.gemMonoInformation.foregroundImage;
+            newGemMono.m_ForegroundImage.sprite =
+                CombatManager.self.combatUiInformation.currentModeUiInformation.foregroundImage;
             newGemMono.m_ForegroundImage.SetNativeSize();
 
             foregroundGameObject.transform.SetParent(newGemMono.transform, false);
@@ -349,6 +362,8 @@ namespace Board
             // Parent the object before moving it
             newGameObject.transform.SetParent(gridMono.transform, false);
 
+            // Manually invoke some functions that would normally wait for events
+            // This is done for initialization
             newGemMono.OnPositionChange(
                 new PositionChangeInformation
                 {
@@ -372,6 +387,8 @@ namespace Board
 
             CombatManager.self.onCombatUpdate.AddListener(newGemMono.OnCombatUpdate);
             CombatManager.self.onCombatLateUpdate.AddListener(newGemMono.OnCombatLateUpdate);
+
+            CombatManager.self.onCombatModeChange.AddListener(newGemMono.OnCombatModeChange);
         }
     }
 }

@@ -7,14 +7,12 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Board.Information
+namespace Combat.Board.Information
 {
     using System.Collections.Generic;
-
-    using UnityEngine;
 
     public class GridChangeInformation
     {
         public List<Gem> gems;
-    }    
+    }
 }
