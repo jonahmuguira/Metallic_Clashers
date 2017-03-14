@@ -6,9 +6,6 @@
 */
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 [Serializable]
 public class BaseItem
@@ -25,7 +22,9 @@ public class BaseItem
 
     public virtual void UseItem()
     {
-        
+        age = 0;
+        durability = 0;
+        modifier = 0;
     }
 }
 
@@ -33,21 +32,30 @@ public class BaseItem
 public class InstantItem : BaseItem 
 {
     //instant item idea: heal up item.
-    //will "restore" the player's missing health value, but not fully.
+    //will "restore" the player's "missing health" value, but not fully.
     //effect will be instant, no lasting/timed effect.
 
-    //instant item idea: instant attack item.
-    //will attack the enemy for a set amount of damage.
-    //effect will be instant, no lasting/timed effect.
-
-    //no "own" attributes, no age, no durability.
-    //just modifier.
+    //TODO. Reconfirm if healing item restores some or all health for player.
 
     public override void UseItem()
     {
-        modifier = GameManager.self.playerData.health.value / 100;
+        //TODO. Calculate the player's missing health and calculate how much health should be restored.
 
-        GameManager.self.playerData.health.value += modifier;
+        modifier = GameManager.self.playerData.health.value;
+
+        if (GameManager.self.playerData.health.value < modifier)
+        {
+            GameManager.self.playerData.health.value = modifier;
+            if (modifier < GameManager.self.playerData.health.value)
+            {
+                modifier = GameManager.self.playerData.health.value;
+            }
+        }
+
+        //modifier = GameManager.self.playerData.health.totalValue - GameManager.self.playerData.health.value;
+
+        //modifier = GameManager.self.playerData.health.value / 75;
+        //GameManager.self.playerData.health.value *= modifier;
     }
 }
 
@@ -55,9 +63,6 @@ public class InstantItem : BaseItem
 public class TurnBased : BaseItem
 {
     //these items are based on the amount of turns the player makes during play.
-
-    //no "own" attributes, no modifier, no durability.
-    //just age.
 
     public void UpdateSelf() //increment age.
     {
@@ -68,39 +73,58 @@ public class TurnBased : BaseItem
 [Serializable]
 public class TurnItem : TurnBased
 {
-    //turn item idea: attack increase item.
-    //will raise the player's attack value.
+    //turn item idea: attack increase item. will raise the player's attack value.
     //effect will have a lasting/timed effect (based off turns).
 
-    //turn item idea: defense increase item.
-    //will raise the player's defense value.
+    //turn item idea: defense increase item. will raise the player's defense value.
     //effect will have a lasting/timed effect (based off turns).
 
-    //no "own" attributes
-    //will need age, durability and modifier
+    public int itemStatType = 2;
 
     public override void UseItem()
     {
+        var tempAttackValue = GameManager.self.playerData.attack.value;
+        var tempDefenseValue = GameManager.self.playerData.defense.value;
 
+        switch (itemStatType)
+        {
+            case 2: //this case is for the attack stat.
+                durability = 10;
+                modifier = 10 / 100; //10%
+                GameManager.self.playerData.attack.value *= modifier;
+
+                if (age >= durability) //Destroy/Remove attack buff.
+                {
+                    //TODO. Revert attack buff.
+                    GameManager.self.playerData.attack.value = tempAttackValue;
+                }
+                break;
+
+            case 1: //this case is for the defense stat.
+                durability = 10;
+                modifier = 10 / 100; //10%
+                GameManager.self.playerData.defense.value *= modifier;
+
+                if (age >= durability) //Destroy/Remove defense buff.
+                {
+                    //TODO. Revert defense buff.
+                    GameManager.self.playerData.defense.value = tempDefenseValue;
+                }
+                break;
+
+            default:
+                break;
+        }
     }
-
-    //public void test()
-    //{
-    //    var test = durability + 1;
-    //}
 }
 
 [Serializable]
 public class TimeBased : BaseItem
 {
-    //these items are based on a timer when activated by player during play.
+    //these items are based on a timer when activated by the player during play.
 
-    //no "own" attributes, no modifier, no durability.
-    //just age.
-
-    public void UpdateSelf(float value)
+    public void UpdateSelf(float value) //modify age with float value.
     {
-        //modify age with float value.
         age += value;
     }
 }
@@ -108,18 +132,47 @@ public class TimeBased : BaseItem
 [Serializable]
 public class TimeItem : TimeBased
 {
-    //time item idea: attack increase item.
-    //will raise the player's attack value.
+    //time item idea: attack increase item. will raise the player's attack value.
     //effect will have a lasting/timed effect (based off time).
 
-    //time item idea: defense increase item.
-    //will raise the player's defense value.
+    //time item idea: defense increase item. will raise the player's defense value.
     //effect will have a lasting/timed effect (based off time).
 
-    //no attributes
+    public int itemStatType = 2;
 
     public override void UseItem()
     {
+        var tempAttackValue = GameManager.self.playerData.attack.value;
+        var tempDefenseValue = GameManager.self.playerData.defense.value;
 
+        switch (itemStatType)
+        {
+            case 2: //this case is for the attack stat.
+                durability = 10;
+                modifier = 10 / 100; //10%
+                GameManager.self.playerData.attack.value *= modifier;
+
+                if (age >= durability) //Destroy/Remove attack buff.
+                {
+                    //TODO. Revert attack buff.
+                    GameManager.self.playerData.attack.value = tempAttackValue;
+                }
+                break;
+
+            case 1: //this case is for the defense stat.
+                durability = 10;
+                modifier = 10 / 100; //10%
+                GameManager.self.playerData.defense.value *= modifier;
+
+                if (age >= durability) //Destroy/Remove defense buff.
+                {
+                    //TODO. Revert defense buff.
+                    GameManager.self.playerData.defense.value = tempDefenseValue;
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 }
