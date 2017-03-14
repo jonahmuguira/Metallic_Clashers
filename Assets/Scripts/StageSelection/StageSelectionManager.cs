@@ -7,6 +7,7 @@
 
     using UnityEngine;
     using UnityEngine.Events;
+    using UnityEngine.UI;
 
     [Serializable]
     public class Tree
@@ -19,6 +20,7 @@
         public UnityEvent onStageSelectionEnd = new UnityEvent();
 
         public GameObject nodePrefab;
+        public GameObject linePrefab;
         public Material lineRenderMaterial;
         [HideInInspector]
         public List<Tree> worlds = new List<Tree>();
@@ -55,34 +57,55 @@
             LinkNodes(worlds[0].nodes[2], worlds[0].nodes[7]);
 
             var num = 0;
-            var averagePosition = new Vector3();
+            var averagePosition = new Vector2();
 
-            //Make GameObjects
+            var canvas = FindObjectOfType<Canvas>();
+
+            //Make Node GameObjects.
             foreach (var tree in worlds)
             {
                 foreach (var n in tree.nodes)
                 {
-                    var nodeObject =
-                        Instantiate(nodePrefab,
-                        new Vector3(
-                            n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude
-                            ), nodePrefab.transform.rotation);
+                    var nodeObject = Instantiate(nodePrefab);
 
                     var monoNode = nodeObject.AddComponent<MonoNode>();
                     monoNode.node = n;
+
+                    nodeObject.transform.SetParent(canvas.transform);
+
+                    var nodeTransform = nodeObject.GetComponent<RectTransform>();
+                    nodeTransform.anchoredPosition = new Vector3(n.normalizedPosition.x * spacingMagnitude, n.normalizedPosition.y * spacingMagnitude , 0);
+
+                    var button = nodeObject.GetComponent<Button>();
+                    button.onClick.AddListener(this.OnStageSelectionEnd);
                 }
             }
 
-            foreach (var m in FindObjectsOfType<MonoNode>())
+            var max = new Vector2();
+            var min = new Vector2();
+            // Move to center
+            foreach (var m in FindObjectsOfType<RectTransform>())
             {
-                num++;
-                averagePosition += m.transform.position;
+                if (!m.gameObject.GetComponent<MonoNode>())
+                    continue;
+
+                if (m.anchoredPosition.x > max.x)
+                    max.x = m.anchoredPosition.x;
+                else if (m.anchoredPosition.x < min.x)
+                    min.x = m.anchoredPosition.x;
+
+                if (m.anchoredPosition.y > max.y)
+                    max.y = m.anchoredPosition.y;
+                else if (m.anchoredPosition.y < min.y)
+                    min.y = m.anchoredPosition.y;
             }
 
-            var finalPosition = averagePosition / num;
-            var cam = Camera.main;
+            var offset = (max + min)/2;
 
-            
+            foreach (var m in FindObjectsOfType<RectTransform>())
+            {
+                m.anchoredPosition += Vector2.zero - offset;
+            }
 
             // Get Player Data
             var savedData = GameManager.self.playerData.worldData;
@@ -109,39 +132,51 @@
             {
                 foreach (var n in monoNode.node.nextNodes)
                 {
-                    var lineObject = new GameObject { name = "Line Renderer " + counter };  //Create GameObject for LineRenderer
+                    var lineObject = Instantiate(linePrefab);  //Create GameObject for LineRenderer
+                    var lineTransform = lineObject.GetComponent<RectTransform>();
+                    lineObject.name = "Line " + counter;
                     counter++;
-                    var lineRenderer = lineObject.AddComponent<LineRenderer>(); //Attach Line Renderer
-                    lineRenderer.startWidth = .1f;  //Set width
-                    lineRenderer.endWidth = .1f;
-                    lineRenderer.material = new Material(lineRenderMaterial) { color = (monoNode.node.isComplete) ? Color.blue : Color.red };   // Set Material Color
+                    lineObject.transform.SetParent(canvas.transform);
+                    GameObject nextNodeGameObject = null;
+                    foreach (var g in FindObjectsOfType<MonoNode>())
+                    {
+                        if (g.GetComponent<MonoNode>().node == n)
+                            nextNodeGameObject = g.gameObject;
+                    }
 
-                    lineRenderer.SetPosition(0, new Vector3(
-                        monoNode.node.normalizedPosition.x * spacingMagnitude, 0, monoNode.node.normalizedPosition.y * spacingMagnitude));  // Set Starting position
-                    lineRenderer.SetPosition(1, new Vector3(
-                        n.normalizedPosition.x * spacingMagnitude, 0, n.normalizedPosition.y * spacingMagnitude));  // Set Ending position
+                    if (nextNodeGameObject == null)
+                        return;
+
+                    var differance = nextNodeGameObject.transform.position - monoNode.transform.position;
+
+                    var linePosition = monoNode.transform.position + (differance / 2f);
+
+                    lineTransform.sizeDelta = Math.Abs(differance.x) > Math.Abs(differance.y) ? new Vector2(differance.magnitude, 10) : new Vector2(10, differance.magnitude);
+
+                    lineObject.GetComponent<Image>().color = (monoNode.node.isComplete) ? Color.blue : Color.red ;   // Set Material Color
+
+                    lineTransform.position = linePosition;
                 }
             }
 
+            var startingIndex = GameObject.Find("Line " + (counter - 1)).transform.GetSiblingIndex();
 
+            counter = startingIndex + 1;
+
+            //Move Lines Behind Nodes
+            foreach (var m in FindObjectsOfType<RectTransform>())
+            {
+                if (!m.gameObject.GetComponent<MonoNode>())
+                    continue;
+
+                m.transform.SetSiblingIndex(counter);
+                counter++;
+            }
         }
 
-        protected void Start()  //Awake for the Manager
+        public void OnStageSelectionEnd()  //Awake for the Manager
         {
-            
-        }
-
-        protected override void OnPress(TouchInformation touchInfo)     // Once Pressed
-        {
-            var ray = Camera.main.ScreenPointToRay(touchInfo.position); 
-            var hit = new RaycastHit();                                     // Make a Hit
-
-            //See if the ray hit anything
-            if (!(Physics.Raycast(ray.origin, ray.direction, out hit)))       // If not, stop execution
-                return;
-
-            hit.transform.gameObject.GetComponent<SpriteRenderer>().color = Color.magenta;
-            onStageSelectionEnd.Invoke();               // If so, got what we want. Let's go home boys.
+            onStageSelectionEnd.Invoke();
         }
 
         private void LinkNodes(Node n1, Node n2)
