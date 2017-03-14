@@ -7,6 +7,8 @@
     using System.Linq;
     using System.Xml.Serialization;
 
+    using UnityEngine.UI;
+
     [Serializable]
     public class Node
     {
@@ -31,26 +33,27 @@
         public Node node;
 
         //Testing If the Node is active or not.
-        //private void Start()
-        //{
-        //    var mat = GetComponent<Renderer>().material;
+        private void Start()
+        {
+            var mat = GetComponent<Image>();
 
-        //    // If the node is done and playable
-        //    if (node.isComplete)
-        //    {
-        //        mat.color = Color.green;
-        //        return;
-        //    }
+            // If the node is done and playable
+            if (node.isComplete)
+            {
+                mat.color = Color.green;
+            }
 
-        //    // If the node is playable
-        //    if (node.prevNodes.Any(n => n.isComplete))
-        //    {
-        //        mat.color = Color.blue;
-        //        return;
-        //    }
+            // If the node is playable
+            else if (node.prevNodes.Any(n => n.isComplete))
+            {
+                mat.color = Color.blue;
+            }
 
-        //    // Node is not playable
-        //    mat.color = Color.black;
-        //}
+            // Node is not playable
+            else
+            {
+                GetComponent<Button>().interactable = false;
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-using Board;
+using Combat.Board;
 
 [Serializable]
 public class GemSkill

@@ -4,6 +4,8 @@ using System.IO;
 using UnityEngine;
 using System.Xml.Serialization;
 
+using Combat;
+
 using Library;
 
 using StageSelection;
