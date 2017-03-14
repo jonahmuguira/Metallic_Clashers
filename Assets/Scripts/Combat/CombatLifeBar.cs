@@ -19,7 +19,8 @@
 
             m_HealthText = GetComponentInChildren<Text>();
             m_HealthText.text =
-                GameManager.self.playerData.health.totalValue + "/" + GameManager.self.playerData.health.value;
+                GameManager.self.playerData.health.totalValue + "/" +
+                GameManager.self.playerData.health.value;
 
             CombatManager.self.onCombatModeChange.AddListener(OnCombatModeChange);
         }
