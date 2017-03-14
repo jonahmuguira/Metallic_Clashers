@@ -1,4 +1,4 @@
-﻿namespace Board.Information
+﻿namespace Combat.Board.Information
 {
     public class SlideInformation
     {

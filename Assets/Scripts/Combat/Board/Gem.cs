@@ -1,15 +1,15 @@
-﻿namespace Board
+﻿namespace Combat.Board
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    using UnityEngine;
-    using UnityEngine.Events;
-
     using Information;
 
     using JetBrains.Annotations;
+
+    using UnityEngine;
+    using UnityEngine.Events;
 
     public interface IComponent { }
 
@@ -23,11 +23,11 @@
     public enum GemType
     {
         Red,
-        Blue,
-        Green,
-        Yellow,
-        Purple,
         Orange,
+        Yellow,
+        Green,
+        Blue,
+        Purple,
     }
 
     public enum Direction

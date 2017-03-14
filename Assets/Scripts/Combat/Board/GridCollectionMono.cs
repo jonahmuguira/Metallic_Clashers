@@ -1,10 +1,9 @@
-﻿using UnityEngine;
-
-namespace Board
+﻿namespace Combat.Board
 {
     using System.Collections;
     using System.Linq;
 
+    using UnityEngine;
     using UnityEngine.UI;
 
     [RequireComponent(typeof(Image))]

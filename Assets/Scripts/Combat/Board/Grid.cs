@@ -1,13 +1,13 @@
-﻿namespace Board
+﻿namespace Combat.Board
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    using Information;
+
     using UnityEngine;
     using UnityEngine.Events;
-
-    using Information;
 
     using Random = UnityEngine.Random;
 
