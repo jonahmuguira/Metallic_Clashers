@@ -165,13 +165,21 @@
                 CombatManager.self.combatUiInformation.currentModeUiInformation.foregroundImage;
         }
 
+        private void OnUseAlternativeColorsChange(bool value)
+        {
+            var spriteIndex = (int)gemType;
+
+            m_MidgroundImage.color = CombatManager.self.combatUiInformation.gemColors[spriteIndex];
+            m_ForegroundImage.color = CombatManager.self.combatUiInformation.gemColors[spriteIndex];
+        }
+
         private IEnumerator MoveToPosition(Vector2 newPosition)
         {
             var deltaTime = 0f;
             while (m_CurrentPosition != newPosition)
             {
                 m_CurrentPosition =
-                    Vector2.MoveTowards(m_CurrentPosition, newPosition, 40f * deltaTime);
+                    Vector2.MoveTowards(m_CurrentPosition, newPosition, 50f * deltaTime);
 
                 deltaTime += Time.deltaTime;
 
@@ -389,6 +397,8 @@
             CombatManager.self.onCombatLateUpdate.AddListener(newGemMono.OnCombatLateUpdate);
 
             CombatManager.self.onCombatModeChange.AddListener(newGemMono.OnCombatModeChange);
+            CombatManager.self.combatUiInformation.onUseAlternativeColorsChange.AddListener(
+                newGemMono.OnUseAlternativeColorsChange);
         }
     }
 }
