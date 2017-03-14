@@ -84,7 +84,7 @@ namespace Board
             foreach (var gem in gridCollection.gems.Where(gem => gem != null))
             {
                 var gemMono = gem.GetComponent<GemMono>();
-                gemMono.UpdatePositionOffset();
+                gemMono.positionIsDirty = true;
             }
 
             yield return null;
@@ -115,7 +115,7 @@ namespace Board
                 foreach (var gem in gridCollection.gems.Where(gem => gem != null))
                 {
                     var gemMono = gem.GetComponent<GemMono>();
-                    gemMono.UpdatePositionOffset();
+                    gemMono.positionIsDirty = true;
                 }
 
                 deltaTime += Time.deltaTime;
@@ -129,7 +129,7 @@ namespace Board
             foreach (var gem in gridCollection.gems.Where(gem => gem != null))
             {
                 var gemMono = gem.GetComponent<GemMono>();
-                gemMono.UpdatePositionOffset();
+                gemMono.positionIsDirty = true;
             }
         }
 

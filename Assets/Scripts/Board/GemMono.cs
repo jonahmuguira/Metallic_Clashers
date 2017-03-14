@@ -3,6 +3,7 @@
 namespace Board
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using UnityEngine;
@@ -31,16 +32,15 @@ namespace Board
         private float m_MoveToPositionTime = 1f;
         private IEnumerator m_MoveToPositionCoroutine;
 
+        private bool m_PositionIsDirty;
+
         private GameObject m_DuplicateImage;
-        private IEnumerator m_UpdatePositionCoroutine;
+
+        private static List<GemMono> s_GemsCreatedThisFrame = new List<GemMono>();
 
         public RectTransform rectTransform { get { return m_RectTransform; } }
 
-        public Gem gem
-        {
-            get { return m_Gem; }
-            private set { m_Gem = value; }
-        }
+        public Gem gem { get { return m_Gem; } private set { m_Gem = value; } }
 
         public Grid grid { get { return m_Gem.grid; } }
         public GridMono gridMono { get { return grid.GetComponent<GridMono>(); } }
@@ -55,10 +55,7 @@ namespace Board
         }
 
         public Column column { get { return m_Gem.column; } }
-        public GridCollectionMono columnMono
-        {
-            get { return column.GetComponent<GridCollectionMono>(); }
-        }
+        public GridCollectionMono columnMono { get { return column.GetComponent<GridCollectionMono>(); } }
 
         public Vector2 currentPosition
         {
@@ -66,32 +63,54 @@ namespace Board
             set { m_CurrentPosition = value; }
         }
 
+        public IEnumerator moveToPositionCoroutine { get { return m_MoveToPositionCoroutine; } }
+
+        public bool positionIsDirty { get { return m_PositionIsDirty; } set { m_PositionIsDirty = value; } }
+
+        private void Awake()
+        {
+            s_GemsCreatedThisFrame.Add(this);
+        }
+
         private void Start()
         {
-            // Now that everything should be initialized, we can show the gem visually
-            m_BackgroundImage.enabled = true;
-            m_ForegroundImage.enabled = true;
+            var stackPosition = 0f;
+            foreach (var gemMono in s_GemsCreatedThisFrame)
+                if (position.x == gemMono.position.x)
+                    if (position.y > gemMono.position.y)
+                        stackPosition++;
 
             m_CurrentPosition =
                 new Vector2(
                     m_Gem.position.x
-                    * (gridMono.rectTransform.rect.width
-                    / (grid.size.x - 1)),
+                    * (gridMono.rectTransform.rect.width / (grid.size.x - 1)),
 
-                    CombatManager.self.gridParentRectTransform.rect.height);
+                    CombatManager.self.gridParentRectTransform.rect.height
+                    + stackPosition
+                    * (gridMono.rectTransform.rect.height / (grid.size.y - 1)));
 
             m_RectTransform.anchoredPosition = m_CurrentPosition;
 
             OnPositionChange(new PositionChangeInformation { gem = gem, newPosition = gem.position });
+
+            // Now that everything should be initialized, we can show the gem visually
+            m_BackgroundImage.enabled = true;
+            m_ForegroundImage.enabled = true;
         }
 
         private void OnCombatUpdate()
         {
-            if (m_MoveToPositionCoroutine != null && m_MoveToPositionCoroutine.MoveNext()) ;
-            else { m_MoveToPositionCoroutine = null; }
+            s_GemsCreatedThisFrame.Remove(this);
 
-            if (m_UpdatePositionCoroutine != null && m_UpdatePositionCoroutine.MoveNext()) ;
-            else { m_UpdatePositionCoroutine = null; }
+            if (m_MoveToPositionCoroutine != null)
+                if (!m_MoveToPositionCoroutine.MoveNext())
+                    m_MoveToPositionCoroutine = null;
+        }
+
+        private void OnCombatLateUpdate()
+        {
+            if (m_PositionIsDirty)
+                UpdatePosition();
         }
 
         public Vector2 CalculatePosition(Vector2 newPosition)
@@ -136,41 +155,28 @@ namespace Board
             //TODO: Check to see if this gem was changed in the grid
         }
 
-        public void UpdatePositionOffset()
-        {
-            if (m_UpdatePositionCoroutine == null)
-                m_UpdatePositionCoroutine = UpdatePosition();
-        }
-
         private IEnumerator MoveToPosition(Vector2 newPosition)
         {
             var deltaTime = 0f;
-            while (deltaTime < m_MoveToPositionTime)
+            while (m_CurrentPosition != newPosition)
             {
                 m_CurrentPosition =
-                    Vector2.Lerp(
-                        m_CurrentPosition,
-                        newPosition,
-                        deltaTime / m_MoveToPositionTime);
+                    Vector2.MoveTowards(m_CurrentPosition, newPosition, 40f * deltaTime);
 
                 deltaTime += Time.deltaTime;
 
-                if (m_UpdatePositionCoroutine == null)
-                    m_UpdatePositionCoroutine = UpdatePosition();
+                m_PositionIsDirty = true;
 
                 yield return null;
             }
 
-            if (m_UpdatePositionCoroutine == null)
-                m_UpdatePositionCoroutine = UpdatePosition();
+            m_PositionIsDirty = true;
 
             m_MoveToPositionCoroutine = null;
         }
 
-        private IEnumerator UpdatePosition()
+        private void UpdatePosition()
         {
-            yield return null;
-
             var spacing = gridMono.CalculateSpacing();
 
             var nextPosition =
@@ -241,8 +247,6 @@ namespace Board
 
             m_RectTransform.anchoredPosition =
                 m_CurrentPosition + columnMono.positionOffset + rowMono.positionOffset;
-
-            m_UpdatePositionCoroutine = null;
         }
 
         private IEnumerator MatchAnimation()
@@ -275,6 +279,7 @@ namespace Board
 
                 yield return null;
             }
+
             if (m_DuplicateImage != null)
                 Destroy(m_DuplicateImage);
 
@@ -366,6 +371,7 @@ namespace Board
                     }));
 
             CombatManager.self.onCombatUpdate.AddListener(newGemMono.OnCombatUpdate);
+            CombatManager.self.onCombatLateUpdate.AddListener(newGemMono.OnCombatLateUpdate);
         }
     }
 }
