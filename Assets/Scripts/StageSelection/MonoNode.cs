@@ -30,26 +30,27 @@
     {
         public Node node;
 
-        private void Start()
-        {
-            var mat = GetComponent<Renderer>().material;
-            
-            // If the node is done and playable
-            if (node.isComplete)    
-            {
-                mat.color = Color.green;
-                return;
-            }
+        //Testing If the Node is active or not.
+        //private void Start()
+        //{
+        //    var mat = GetComponent<Renderer>().material;
 
-            // If the node is playable
-            if (node.prevNodes.Any(n => n.isComplete))
-            {
-                mat.color = Color.blue;
-                return;
-            }
+        //    // If the node is done and playable
+        //    if (node.isComplete)
+        //    {
+        //        mat.color = Color.green;
+        //        return;
+        //    }
 
-            // Node is not playable
-            mat.color = Color.black;
-        }
+        //    // If the node is playable
+        //    if (node.prevNodes.Any(n => n.isComplete))
+        //    {
+        //        mat.color = Color.blue;
+        //        return;
+        //    }
+
+        //    // Node is not playable
+        //    mat.color = Color.black;
+        //}
     }
 }
