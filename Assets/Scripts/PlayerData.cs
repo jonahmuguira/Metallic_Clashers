@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Board;
+
+using Combat.Board;
+
 using UnityEngine;
 
 using Tree = StageSelection.Tree;
@@ -23,6 +25,8 @@ public class PlayerData
     public StaminaInformation staminaInformation;
 
     public LevelSystem playerLevelSystem;
+
+    //public List<BaseItems> itemInventory = new List<BaseItems>();
 
     public void TakeDamage(float damage, GemType gemType)
     {
