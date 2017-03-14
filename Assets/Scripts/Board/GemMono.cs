@@ -78,7 +78,7 @@ namespace Board
                     * (gridMono.rectTransform.rect.width
                     / (grid.size.x - 1)),
 
-                    gridMono.rectTransform.rect.height);
+                    CombatManager.self.gridParentRectTransform.rect.height);
 
             m_RectTransform.anchoredPosition = m_CurrentPosition;
 
@@ -128,9 +128,8 @@ namespace Board
 
         private void OnMatch(MatchInformation matchInfo)
         {
-            foreach (var matchInfoGem in matchInfo.gems)
-                if (matchInfoGem == m_Gem)
-                    gridMono.gemMatchAnimations.Add(MatchAnimation());
+            if (matchInfo.gems.Any(matchInfoGem => matchInfoGem == m_Gem))
+                gridMono.gemMatchAnimations.Add(MatchAnimation());
         }
         private void OnGridChange(GridChangeInformation gridChangeInfo)
         {
@@ -249,33 +248,35 @@ namespace Board
         private IEnumerator MatchAnimation()
         {
             var deltaTime = 0f;
-            while (deltaTime < 2f)
+            while (deltaTime < 1f)
             {
                 m_BackgroundImage.color =
                     new Color(
                         m_BackgroundImage.color.r,
                         m_BackgroundImage.color.g,
                         m_BackgroundImage.color.b,
-                        1 - deltaTime / 2f);
+                        1 - deltaTime / 1f);
 
                 m_MidgroundImage.color =
                     new Color(
                         m_MidgroundImage.color.r,
                         m_MidgroundImage.color.g,
                         m_MidgroundImage.color.b,
-                        1 - deltaTime / 2f);
+                        1 - deltaTime / 1f);
 
                 m_ForegroundImage.color =
                     new Color(
                         m_ForegroundImage.color.r,
                         m_ForegroundImage.color.g,
                         m_ForegroundImage.color.b,
-                        1 - deltaTime / 2f);
+                        1 - deltaTime / 1f);
 
                 deltaTime += Time.deltaTime;
 
                 yield return null;
             }
+            if (m_DuplicateImage != null)
+                Destroy(m_DuplicateImage);
 
             Destroy(gameObject);
         }
@@ -296,10 +297,6 @@ namespace Board
             newGemMono.m_RectTransform.anchorMax = Vector2.zero;
             newGemMono.m_RectTransform.sizeDelta = Vector2.zero;
 
-            newGemMono.m_RectTransform.anchoredPosition = Vector2.zero;
-
-            newGemMono.m_CurrentPosition = newGemMono.m_RectTransform.anchoredPosition;
-
             newGemMono.m_BackgroundImage = newGameObject.GetComponent<Image>();
             newGemMono.m_BackgroundImage.sprite = CombatManager.self.gemMonoInformation.backgroundImage;
             newGemMono.m_BackgroundImage.SetNativeSize();
@@ -313,7 +310,7 @@ namespace Board
             newGemMono.m_MidgroundImage.sprite = CombatManager.self.gemMonoInformation.midgroundImage;
             newGemMono.m_MidgroundImage.SetNativeSize();
 
-            midgroundGameObject.transform.SetParent(newGemMono.transform);
+            midgroundGameObject.transform.SetParent(newGemMono.transform, false);
 
             midgroundRectTransform.sizeDelta = newGemMono.m_RectTransform.sizeDelta;
 
@@ -324,7 +321,7 @@ namespace Board
             newGemMono.m_ForegroundImage.sprite = CombatManager.self.gemMonoInformation.foregroundImage;
             newGemMono.m_ForegroundImage.SetNativeSize();
 
-            foregroundGameObject.transform.SetParent(newGemMono.transform);
+            foregroundGameObject.transform.SetParent(newGemMono.transform, false);
 
             foregroundRectTransform.sizeDelta = newGemMono.m_RectTransform.sizeDelta;
 

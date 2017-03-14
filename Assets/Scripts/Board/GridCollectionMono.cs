@@ -81,7 +81,7 @@ namespace Board
         {
             CheckForSlide();
 
-            foreach (var gem in gridCollection.gems)
+            foreach (var gem in gridCollection.gems.Where(gem => gem != null))
             {
                 var gemMono = gem.GetComponent<GemMono>();
                 gemMono.UpdatePositionOffset();
@@ -112,7 +112,7 @@ namespace Board
 
                 CheckForSlide();
 
-                foreach (var gem in gridCollection.gems)
+                foreach (var gem in gridCollection.gems.Where(gem => gem != null))
                 {
                     var gemMono = gem.GetComponent<GemMono>();
                     gemMono.UpdatePositionOffset();
@@ -126,7 +126,7 @@ namespace Board
             m_PositionOffset = Vector2.zero;
             m_CurrentDirection = Vector2.zero;
 
-            foreach (var gem in gridCollection.gems)
+            foreach (var gem in gridCollection.gems.Where(gem => gem != null))
             {
                 var gemMono = gem.GetComponent<GemMono>();
                 gemMono.UpdatePositionOffset();
