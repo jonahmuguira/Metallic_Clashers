@@ -1,6 +1,5 @@
 ﻿namespace Combat
 {
-
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -69,9 +68,6 @@
         private VerticalLayoutGroup m_RowParent;
         [SerializeField]
         private HorizontalLayoutGroup m_ColumnParent;
-
-        [Space, SerializeField]
-        private Button m_ModeChangeButton;
 
         [Space, SerializeField]
         private CombatUiInformation m_CombatUiInformation;
@@ -145,8 +141,6 @@
             m_GridMono = newGrid.GetComponent<GridMono>();
 
             m_GridMono.grid.onSlide.AddListener(OnSlide);
-
-            m_ModeChangeButton.onClick.AddListener(OnModeChangeButtonClick);
         }
 
         private void Update()
@@ -179,6 +173,24 @@
         {
             if (!m_IsPaused)
                 m_OnCombatLateUpdate.Invoke();
+        }
+
+        public void ToggleCombatMode()
+        {
+            switch (m_CombatMode)
+            {
+            case CombatMode.Attack:
+                m_CombatMode = CombatMode.Defense;
+                break;
+            case CombatMode.Defense:
+                m_CombatMode = CombatMode.Attack;
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+            }
+
+            m_OnCombatModeChange.Invoke();
         }
 
         private void OnSlide(SlideInformation slideInfo)
@@ -258,24 +270,6 @@
                         hit => hit.gameObject.GetComponent<GridCollectionMono>() != null).
                     Select(
                         hit => hit.gameObject.GetComponent<GridCollectionMono>());
-        }
-
-        private void OnModeChangeButtonClick()
-        {
-            switch (m_CombatMode)
-            {
-            case CombatMode.Attack:
-                m_CombatMode = CombatMode.Defense;
-                break;
-            case CombatMode.Defense:
-                m_CombatMode = CombatMode.Attack;
-                break;
-
-            default:
-                throw new ArgumentOutOfRangeException();
-            }
-
-            m_OnCombatModeChange.Invoke();
         }
 
         [CanBeNull]
