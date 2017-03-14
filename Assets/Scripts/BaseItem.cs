@@ -13,10 +13,15 @@ using UnityEngine;
 [Serializable]
 public class BaseItem
 {
-    private float m_age; //current durabilities max value.
+    private float m_Age; //current durabilities max value.
+    public float age
+    {
+        get { return m_Age; }
+        set { m_Age = value; }
+    }
 
     public float durability; //how long the item will last.
-    public uint modifier; //value that will "modify" player attribute(s).
+    public float modifier; //value that will "modify" player attribute(s).
 
     public virtual void UseItem()
     {
@@ -35,11 +40,14 @@ public class InstantItem : BaseItem
     //will attack the enemy for a set amount of damage.
     //effect will be instant, no lasting/timed effect.
 
-    //no attributes
+    //no "own" attributes, no age, no durability.
+    //just modifier.
 
     public override void UseItem()
     {
-        
+        modifier = GameManager.self.playerData.health.value / 100;
+
+        GameManager.self.playerData.health.value += modifier;
     }
 }
 
@@ -48,11 +56,12 @@ public class TurnBased : BaseItem
 {
     //these items are based on the amount of turns the player makes during play.
 
-    //no attributes
+    //no "own" attributes, no modifier, no durability.
+    //just age.
 
-    public void UpdateSelf()
+    public void UpdateSelf() //increment age.
     {
-        
+        age++;
     }
 }
 
@@ -67,7 +76,8 @@ public class TurnItem : TurnBased
     //will raise the player's defense value.
     //effect will have a lasting/timed effect (based off turns).
 
-    //no attributes
+    //no "own" attributes
+    //will need age, durability and modifier
 
     public override void UseItem()
     {
@@ -85,11 +95,13 @@ public class TimeBased : BaseItem
 {
     //these items are based on a timer when activated by player during play.
 
-    //no attributes
+    //no "own" attributes, no modifier, no durability.
+    //just age.
 
     public void UpdateSelf(float value)
     {
-
+        //modify age with float value.
+        age += value;
     }
 }
 
