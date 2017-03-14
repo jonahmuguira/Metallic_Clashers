@@ -16,6 +16,8 @@
     using Board;
     using Board.Information;
 
+    using UnityEngine.Serialization;
+
     public class CombatManager : SubManager<CombatManager>
     {
         public enum CombatMode
@@ -23,6 +25,9 @@
             Attack,
             Defense,
         }
+
+        [Serializable]
+        public class UnityBoolEvent : UnityEvent<bool> { }
 
         [Serializable]
         public class CombatUiInformation
@@ -40,7 +45,20 @@
             public ModeUiInformation m_AttackModeUiInformation;
             public ModeUiInformation m_DefenseModeUiInformation;
 
-            public List<Color> gemColors = new List<Color>();
+            [Space]
+            public List<Color> standardGemColors = new List<Color>();
+            public List<Color> alternativeGemColors = new List<Color>();
+
+            [Space, SerializeField]
+            private bool m_UseAlternativeColors;
+
+            [Space, SerializeField]
+            private UnityBoolEvent m_OnUseAlternativeColorsChange = new UnityBoolEvent();
+
+            public List<Color> gemColors
+            {
+                get { return m_UseAlternativeColors ? alternativeGemColors : standardGemColors; }
+            }
 
             public ModeUiInformation currentModeUiInformation
             {
@@ -57,6 +75,17 @@
                         throw new ArgumentOutOfRangeException();
                     }
                 }
+            }
+
+            public bool useAlternativeColors
+            {
+                get { return m_UseAlternativeColors; }
+                set { m_UseAlternativeColors = value; m_OnUseAlternativeColorsChange.Invoke(value); }
+            }
+
+            public UnityBoolEvent onUseAlternativeColorsChange
+            {
+                get { return m_OnUseAlternativeColorsChange; }
             }
         }
 
@@ -86,6 +115,9 @@
 
         [Space, SerializeField]
         private UnityEvent m_OnCombatModeChange = new UnityEvent();
+
+        [Space, SerializeField]
+        private UnityBoolEvent m_OnCombatPauseChange = new UnityBoolEvent();
 
         [SerializeField]
         private UnityEvent m_OnPlayerTurn = new UnityEvent();
@@ -117,6 +149,14 @@
         public UnityEvent onCombatEnd { get { return m_OnCombatEnd; } }
 
         public UnityEvent onCombatModeChange { get { return m_OnCombatModeChange; } }
+
+        public bool isPaused
+        {
+            get { return m_IsPaused; }
+            set { m_IsPaused = value; m_OnCombatPauseChange.Invoke(value); }
+        }
+        public UnityBoolEvent onCombatPauseChange { get { return m_OnCombatPauseChange; } }
+
 
         public UnityEvent onPlayerTurn { get { return m_OnPlayerTurn; } }
 
