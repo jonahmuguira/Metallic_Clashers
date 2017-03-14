@@ -27,6 +27,7 @@
         Green,
         Yellow,
         Purple,
+        Orange,
     }
 
     public enum Direction

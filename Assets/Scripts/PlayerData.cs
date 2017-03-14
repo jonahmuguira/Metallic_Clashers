@@ -24,6 +24,8 @@ public class PlayerData
 
     public LevelSystem playerLevelSystem;
 
+    //public List<BaseItems> itemInventory = new List<BaseItems>();
+
     public void TakeDamage(float damage, GemType gemType)
     {
         var percentage = damage / defense.totalValue;
