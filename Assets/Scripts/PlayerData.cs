@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Board;
+
+using Combat.Board;
+
 using UnityEngine;
 
 using Tree = StageSelection.Tree;
