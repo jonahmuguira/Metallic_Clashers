@@ -121,6 +121,7 @@
             public Gem gem;
 
             public MatchNode parent;
+            public List<MatchNode> children = new List<MatchNode>();
 
             public Dictionary<Direction, MatchNode> adjacents = new Dictionary<Direction, MatchNode>();
 
@@ -128,14 +129,11 @@
             {
                 get
                 {
-                    var totalChildren = new List<MatchNode> { this };
-                    foreach (var adjacent in adjacents.Values)
-                        if (adjacent != parent)
-                            foreach (var nestedAdjacent in adjacent.nestedChildren)
-                                if (!totalChildren.Contains(nestedAdjacent))
-                                    totalChildren.Add(nestedAdjacent);
+                    yield return this;
 
-                    return totalChildren;
+                    foreach (var child in children)
+                        foreach (var nestedChild in child.nestedChildren)
+                            yield return nestedChild;
                 }
             }
 
@@ -149,7 +147,7 @@
             public Direction directionFromCurrent;
         }
 
-        public void CheckMatch()
+        public bool CheckMatch()
         {
             var searchSpace =
                 gemLists.Select(
@@ -215,6 +213,7 @@
                         openList.Insert(0, adjacentNode.node);
 
                         adjacentNode.node.parent = currentNode;
+                        currentNode.children.Add(adjacentNode.node);
 
                         currentNode.adjacents[adjacentNode.directionFromCurrent] = adjacentNode.node;
                         adjacentNode.node.adjacents[adjacentNode.directionFromCurrent.Reverse()] =
@@ -252,6 +251,8 @@
                 foreach (var matchGem in matchGems)
                     m_GemLists[(int)matchGem.position.y][(int)matchGem.position.x] = null;
             }
+
+            return matches.Count != 0;
         }
 
         public void ApplyGravity()
@@ -271,6 +272,23 @@
                         if (m_GemLists[y][x] != null)
                             m_GemLists[y][x].position = new Vector2(x, y);
                     }
+                }
+            }
+        }
+
+        public void Fill()
+        {
+            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
+
+            for (var y = 0; y < m_GemLists.Count; ++y)
+            {
+                for (var x = 0; x < m_GemLists[y].gems.Count; ++x)
+                {
+                    if (m_GemLists[y][x] != null)
+                        continue;
+
+                    var gemType = (GemType)Random.Range(0, numGemTypes);
+                    m_GemLists[y][x] = new Gem(this, new Vector2(x, y), gemType);
                 }
             }
         }

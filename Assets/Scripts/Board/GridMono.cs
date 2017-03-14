@@ -64,10 +64,18 @@ namespace Board
             }
             else if (m_GemsAreAnimating)
             {
-                m_GemsAreAnimating = false;
-
                 m_Grid.ApplyGravity();
+                m_Grid.Fill();
+
+                m_Grid.CheckMatch();
+
+                m_GemsAreAnimating = false;
             }
+        }
+
+        private void OnPlayerTurn()
+        {
+            m_Grid.CheckMatch();
         }
 
         public Vector2 CalculateSpacing()
@@ -105,6 +113,7 @@ namespace Board
             newGridMono.m_RectTransform.anchoredPosition = Vector2.zero;
 
             CombatManager.self.onCombatUpdate.AddListener(newGridMono.OnCombatUpdate);
+            CombatManager.self.onPlayerTurn.AddListener(newGridMono.OnPlayerTurn);
         }
     }
 }
