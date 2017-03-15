@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Combat;
 using Combat.Board;
 
 using UnityEngine;
 
+[Serializable]
 public class Enemy
 {
     public Attribute health = new Attribute();
@@ -23,11 +25,6 @@ public class Enemy
 
     public Enemy()
     {
-        CombatManager.self.onCombatBegin.AddListener(OnCombatBegin);
-        CombatManager.self.onPlayerTurn.AddListener(OnPlayerTurn);
-        CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
-        CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
-
         health.value = 10;
         health.coefficient = 1;
 
@@ -45,11 +42,6 @@ public class Enemy
 
     public Enemy(float pHealth, float pAttack, float pDefense, float pattackSpeed, int pmovesUntilAttack)
     {
-        CombatManager.self.onCombatBegin.AddListener(OnCombatBegin);
-        CombatManager.self.onPlayerTurn.AddListener(OnPlayerTurn);
-        CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
-        CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
-
         health.value = pHealth;
         health.coefficient = 1;
 
@@ -66,8 +58,11 @@ public class Enemy
 
     }
 
-    private void OnCombatBegin()
+    public void OnCombatBegin()
     {
+        CombatManager.self.onPlayerTurn.AddListener(OnPlayerTurn);
+        CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
+        CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
     }
 
     private void OnCombatUpdate()

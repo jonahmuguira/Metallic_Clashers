@@ -141,7 +141,7 @@
 
         public CombatMode combatMode { get { return m_CombatMode; } }
 
-        //TODO: public List<Enemy> enemies = new List<>;
+        public List<Enemy> enemies = new List<Enemy>();
 
         public UnityEvent onCombatBegin { get { return m_OnCombatBegin; } }
         public UnityEvent onCombatUpdate { get { return m_OnCombatUpdate; } }
@@ -168,6 +168,11 @@
                 m_Canvas = FindObjectOfType<Canvas>();
 
             //TODO: Initialize Combat
+            foreach (var em in FindObjectsOfType<EnemyMono>())
+            {
+                m_OnCombatBegin.AddListener(em.enemy.OnCombatBegin);
+            }
+
             if (m_GridParentRectTransform == null)
                 m_GridParentRectTransform = m_Canvas.GetComponent<RectTransform>();
 
