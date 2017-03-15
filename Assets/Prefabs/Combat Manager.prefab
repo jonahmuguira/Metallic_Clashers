@@ -53,12 +53,39 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Canvas: {fileID: 0}
   m_GridParentRectTransform: {fileID: 0}
-  m_GemSprites:
-  - {fileID: 21300000, guid: e57f79abee13a0440897147034156eec, type: 3}
-  - {fileID: 21300000, guid: 16d56509b24b96d4c965cc62f23e81ea, type: 3}
-  - {fileID: 21300000, guid: 205fed01f0dec8649a8c7fd717d2d572, type: 3}
-  - {fileID: 21300000, guid: 3dfe42ff08ad5ff4a85c2fdf4596a5fb, type: 3}
-  - {fileID: 21300000, guid: 931eaea3528340b4f97ceee7dfcd177e, type: 3}
+  m_RowParent: {fileID: 0}
+  m_ColumnParent: {fileID: 0}
+  m_CombatUiInformation:
+    m_AttackModeUiInformation:
+      backgroundImage: {fileID: 21300000, guid: f27f418978af40445947c24a93e55e83,
+        type: 3}
+      midgroundImage: {fileID: 21300000, guid: 79961ba19514166448f8bda8f3da7c18, type: 3}
+      foregroundImage: {fileID: 21300000, guid: 46a9baf9d5c7e2044a938a08a58c35db,
+        type: 3}
+      modeColor: {r: 0.92156863, g: 0.5882353, b: 0.5882353, a: 1}
+    m_DefenseModeUiInformation:
+      backgroundImage: {fileID: 21300000, guid: f27f418978af40445947c24a93e55e83,
+        type: 3}
+      midgroundImage: {fileID: 21300000, guid: 02616dde365a258418482e0eb05ac098, type: 3}
+      foregroundImage: {fileID: 21300000, guid: 6f2503bee1ea0064a840a61f73b030ba,
+        type: 3}
+      modeColor: {r: 0.45490196, g: 0.6156863, b: 0.9137255, a: 1}
+    standardGemColors:
+    - {r: 1, g: 0.1882353, b: 0.15686275, a: 1}
+    - {r: 1, g: 0.58431375, b: 0, a: 1}
+    - {r: 0.99607843, g: 1, b: 0, a: 1}
+    - {r: 0, g: 0.84313726, b: 0.03529412, a: 1}
+    - {r: 0, g: 0.49019608, b: 1, a: 1}
+    - {r: 0.6784314, g: 0, b: 1, a: 1}
+    alternativeGemColors:
+    - {r: 0.8352941, g: 0.36862746, b: 0, a: 1}
+    - {r: 0.9019608, g: 0.62352943, b: 0, a: 1}
+    - {r: 0.9411765, g: 0.89411765, b: 0.25882354, a: 1}
+    - {r: 0, g: 0.61960787, b: 0.4509804, a: 1}
+    - {r: 0, g: 0.44705883, b: 0.69803923, a: 1}
+    - {r: 0.8, g: 0.4745098, b: 0.654902, a: 1}
+  m_UseAlternativeColors: 0
+  m_CombatMode: 0
   m_OnCombatBegin:
     m_PersistentCalls:
       m_Calls: []
@@ -69,11 +96,31 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  m_OnCombatLateUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
   m_OnCombatEnd:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  m_OnCombatModeChange:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  m_OnCombatPauseChange:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Combat.CombatManager+UnityBoolEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  m_OnUseAlternativeColorsChange:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Combat.CombatManager+UnityBoolEvent, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   m_OnPlayerTurn:
     m_PersistentCalls:
       m_Calls: []

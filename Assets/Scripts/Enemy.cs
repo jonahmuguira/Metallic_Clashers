@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Board;
+﻿using System.Collections.Generic;
+
+using Combat;
+using Combat.Board;
 
 using UnityEngine;
 
