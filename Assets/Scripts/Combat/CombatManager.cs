@@ -162,15 +162,22 @@
 
         public GridMono gridMono { get { return m_GridMono; } }
 
+        public GameObject enemyPrefab;
+
         protected override void Init()
         {
             if (m_Canvas == null)
                 m_Canvas = FindObjectOfType<Canvas>();
 
             //TODO: Initialize Combat
-            foreach (var em in FindObjectsOfType<EnemyMono>())
+
+            for (var i = 0; i < 3; i++)
             {
-                m_OnCombatBegin.AddListener(em.enemy.OnCombatBegin);
+                var enemyObject = Instantiate(enemyPrefab, new Vector3(i - 1, .5f, 0), enemyPrefab.transform.rotation);
+                var enemyMono = enemyObject.GetComponent<EnemyMono>();
+                enemyMono.enemy = new Enemy();
+                enemies.Add(enemyMono.enemy);
+                m_OnCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
             }
 
             if (m_GridParentRectTransform == null)
