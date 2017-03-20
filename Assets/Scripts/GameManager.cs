@@ -12,6 +12,7 @@ using Library;
 using StageSelection;
 
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -78,6 +79,14 @@ public class GameManager : MonoSingleton<GameManager>
                 CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
                 CombatManager.self.onPlayerTurn.AddListener(AudioManager.self.PlayDragSound);
                 gameState = GameState.Combat;
+                // Toggle Music Button
+                GameObject.Find("Menu Button").transform.FindChild("Icon Layout Group")
+                    .FindChild("Music Button").gameObject.GetComponent<Button>
+                    ().onClick.AddListener(AudioManager.self.MuteMusicToggle);
+                // Toggle SoundEffect Button
+                GameObject.Find("Menu Button").transform.FindChild("Icon Layout Group")
+                    .FindChild("Sound Effects Button").gameObject.GetComponent<Button>
+                    ().onClick.AddListener(AudioManager.self.MuteSoundsToggle);
                 break;
 
             case 1:     // Stage Selection
