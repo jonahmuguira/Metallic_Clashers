@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using System.Xml.Serialization;
@@ -27,6 +28,8 @@ public class GameManager : MonoSingleton<GameManager>
     public GameState gameState;
 
     public PlayerData playerData;
+
+    public List<int> enemyIndexes = new List<int>();
 
     private int currentScene = 0;
 

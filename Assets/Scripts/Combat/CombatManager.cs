@@ -16,8 +16,6 @@
     using Board;
     using Board.Information;
 
-    using UnityEngine.Serialization;
-
     public class CombatManager : SubManager<CombatManager>
     {
         public enum CombatMode
@@ -162,7 +160,7 @@
 
         public GridMono gridMono { get { return m_GridMono; } }
 
-        public GameObject enemyPrefab;
+        public List<GameObject> enemyPrefabList = new List<GameObject>();
 
         protected override void Init()
         {
@@ -171,14 +169,20 @@
 
             //TODO: Initialize Combat
 
-            for (var i = 0; i < 3; i++)
+            var managerEnemies = GameManager.self.enemyIndexes;
+
+            for (var i = 0; i < managerEnemies.Count; i++)
             {
-                var enemyObject = Instantiate(enemyPrefab, new Vector3(i - 1, .5f, 0), enemyPrefab.transform.rotation);
+                var enemyPrefab = enemyPrefabList[managerEnemies[i]];
+                var enemyObject = Instantiate(enemyPrefab, new Vector3(managerEnemies.Count / 2 - i, .5f, 0), enemyPrefab.transform.rotation);
+
                 var enemyMono = enemyObject.GetComponent<EnemyMono>();
                 enemyMono.enemy = new Enemy();
                 enemies.Add(enemyMono.enemy);
                 m_OnCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
             }
+
+            GameManager.self.enemyIndexes = new List<int>();
 
             if (m_GridParentRectTransform == null)
                 m_GridParentRectTransform = m_Canvas.GetComponent<RectTransform>();
