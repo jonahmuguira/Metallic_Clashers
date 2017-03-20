@@ -78,6 +78,7 @@ public class GameManager : MonoSingleton<GameManager>
         switch (currentScene)
         {
             case 2:     // Combat
+                playerData.health.modifier = 0;
                 CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
                 CombatManager.self.onPlayerTurn.AddListener(AudioManager.self.PlayDragSound);
                 gameState = GameState.Combat;

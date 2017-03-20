@@ -138,7 +138,7 @@
 
         public CombatMode combatMode { get { return m_CombatMode; } }
 
-        public List<Enemy> enemies = new List<Enemy>();
+        public List<EnemyMono> enemies = new List<EnemyMono>();
 
         public UnityEvent onCombatBegin { get { return m_OnCombatBegin; } }
         public UnityEvent onCombatUpdate { get { return m_OnCombatUpdate; } }
@@ -160,7 +160,6 @@
         public GridMono gridMono { get { return m_GridMono; } }
 
         public List<GameObject> enemyPrefabList = new List<GameObject>();
-        private Enemy currenEnemy;
 
         protected override void Init()
         {
@@ -180,10 +179,9 @@
 
                 var enemyMono = enemyObject.GetComponent<EnemyMono>();
                 enemyMono.enemy = new Enemy();
-                enemies.Add(enemyMono.enemy);
+                enemies.Add(enemyMono);
                 m_OnCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
             }
-            currenEnemy = enemies.First();
             GameManager.self.enemyIndexes = new List<int>();
 
             if (m_GridParentRectTransform == null)
@@ -201,6 +199,7 @@
 
             m_GridMono.grid.onSlide.AddListener(OnSlide);
             m_GridMono.grid.onMatch.AddListener(OnMatch);
+            onCombatUpdate.AddListener(OnCombatUpdate);
         }
 
         private void Update()
@@ -261,8 +260,37 @@
         private void OnMatch(MatchInformation matchInfo)
         {
             var dam = GameManager.self.playerData.attack.totalValue*(1 + (matchInfo.gems.Count - 3)*.25f);
-            
-            currenEnemy.TakeDamage(dam, matchInfo.type);
+
+            enemies[0].enemy.TakeDamage(dam, matchInfo.type);
+        }
+
+        private void OnCombatUpdate()
+        {
+            // Win
+            if (enemies.Count == 0)
+            {
+                onCombatEnd.Invoke();
+                
+                return;
+            }
+
+            // Lose
+            if(GameManager.self.playerData.health.totalValue <= 0)
+            {
+                onCombatEnd.Invoke();
+                return;
+            }
+
+            var destroyList = enemies.Where(e => e.enemy.health.totalValue <= 0).ToList();
+
+            var finalList = enemies.Where(e => !destroyList.Contains(e)).ToList();
+
+            foreach (var d in destroyList)
+            {
+                Destroy(d.gameObject);
+            }
+
+            enemies = finalList;
         }
 
         protected override void OnBeginDrag(DragInformation dragInfo)
