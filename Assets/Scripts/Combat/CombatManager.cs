@@ -160,13 +160,12 @@
         public GridMono gridMono { get { return m_GridMono; } }
 
         public List<GameObject> enemyPrefabList = new List<GameObject>();
+        private Enemy currenEnemy;
 
         protected override void Init()
         {
             if (m_Canvas == null)
                 m_Canvas = FindObjectOfType<Canvas>();
-
-            //TODO: Initialize Combat
 
             var managerEnemies = GameManager.self.enemyIndexes;
 
@@ -184,7 +183,7 @@
                 enemies.Add(enemyMono.enemy);
                 m_OnCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
             }
-
+            currenEnemy = enemies.First();
             GameManager.self.enemyIndexes = new List<int>();
 
             if (m_GridParentRectTransform == null)
@@ -201,6 +200,7 @@
             m_GridMono = newGrid.GetComponent<GridMono>();
 
             m_GridMono.grid.onSlide.AddListener(OnSlide);
+            m_GridMono.grid.onMatch.AddListener(OnMatch);
         }
 
         private void Update()
@@ -256,6 +256,13 @@
         private void OnSlide(SlideInformation slideInfo)
         {
             m_HasSlid = true;
+        }
+
+        private void OnMatch(MatchInformation matchInfo)
+        {
+            var dam = GameManager.self.playerData.attack.totalValue*(1 + (matchInfo.gems.Count - 3)*.25f);
+            
+            currenEnemy.TakeDamage(dam, matchInfo.type);
         }
 
         protected override void OnBeginDrag(DragInformation dragInfo)
