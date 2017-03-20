@@ -1666,6 +1666,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114479076340579032, guid: bda3e5cb26f6deb48a0cfefb8f121f1f,
+        type: 2}
+      propertyPath: enemies.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4024941165589956, guid: bda3e5cb26f6deb48a0cfefb8f121f1f, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1718,6 +1723,12 @@ Prefab:
       propertyPath: m_ColumnParent
       value: 
       objectReference: {fileID: 1450378782}
+    - target: {fileID: 114479076340579032, guid: bda3e5cb26f6deb48a0cfefb8f121f1f,
+        type: 2}
+      propertyPath: enemyPrefab
+      value: 
+      objectReference: {fileID: 1978000353783988, guid: 05fc6f9ca8e594e429fdc6e7984fd2c6,
+        type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: bda3e5cb26f6deb48a0cfefb8f121f1f, type: 2}
   m_IsPrefabParent: 0
@@ -2873,7 +2884,7 @@ Canvas:
   serializedVersion: 2
   m_RenderMode: 1
   m_Camera: {fileID: 1138016863}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 8
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -3026,6 +3037,24 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
+--- !u!1 &2061327819 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1521421769480502, guid: 6c86cf7b4241d5445bbc9591032f5e9a,
+    type: 2}
+  m_PrefabInternal: {fileID: 400925146}
+--- !u!114 &2061327822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2061327819}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 065596f938a014a4fa08a64d6a7d00e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ParticleSystemPrefab: {fileID: 198466412730982008, guid: cb973d049a1b57a4c92f3b8094292d84,
+    type: 2}
 --- !u!1 &2086411882
 GameObject:
   m_ObjectHideFlags: 0
