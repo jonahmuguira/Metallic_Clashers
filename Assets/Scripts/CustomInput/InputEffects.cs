@@ -1,5 +1,7 @@
 ﻿namespace CustomInput
 {
+    using CustomParticleSystem;
+
     using UnityEngine;
 
     public class InputEffects : MonoBehaviour
@@ -13,7 +15,7 @@
 
         private void Awake()
         {
-            m_ParticleSystem2D = new GameObject().AddComponent<ParticleSystem2D>();
+            m_ParticleSystem2D = Instantiate(m_ParticleSystem2DPrefab);
             m_ParticleSystem2D.transform.SetParent(m_OverlayCanvs.transform, false);
         }
 
