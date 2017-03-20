@@ -4,7 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
 
-    using Input.Information;
+    using CustomInput.Information;
 
     using UnityEngine;
     using UnityEngine.Events;
@@ -98,7 +98,7 @@
             {
                 var nodeGameObjects = new List<GameObject>();
                 foreach (var n in tree.nodes)
-                { 
+                {
 
                     var nodeObject = Instantiate(nodePrefab);
 

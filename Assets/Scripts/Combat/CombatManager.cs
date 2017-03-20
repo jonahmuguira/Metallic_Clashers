@@ -4,8 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Input.Information;
-
     using JetBrains.Annotations;
 
     using UnityEngine;
@@ -15,6 +13,7 @@
 
     using Board;
     using Board.Information;
+    using CustomInput.Information;
 
     public class CombatManager : SubManager<CombatManager>
     {
@@ -174,7 +173,11 @@
             for (var i = 0; i < managerEnemies.Count; i++)
             {
                 var enemyPrefab = enemyPrefabList[managerEnemies[i]];
-                var enemyObject = Instantiate(enemyPrefab, new Vector3(managerEnemies.Count / 2 - i, .5f, 0), enemyPrefab.transform.rotation);
+                var enemyObject =
+                    Instantiate(
+                        enemyPrefab,
+                        new Vector3(managerEnemies.Count / 2 - i, .5f, 0),
+                        enemyPrefab.transform.rotation);
 
                 var enemyMono = enemyObject.GetComponent<EnemyMono>();
                 enemyMono.enemy = new Enemy();
@@ -260,7 +263,7 @@
             var hitMonos = RayCastToGridCollectionMono(dragInfo.origin).ToList();
 
             // If we didn't hit a GemMono first
-            if (hitMonos.Count == 0)
+            if (!hitMonos.Any())
             {
                 m_LockedGridCollectionMono = null;
                 return;
@@ -312,8 +315,8 @@
             EventSystem.current.RaycastAll(pointerEventData, hits);
 
             // If nothing was hit
-            if (hits.Count <= 0)
-                return null;
+            if (!hits.Any())
+                return new List<GridCollectionMono>();
 
             // Return the first hit object's GridCollectionMono component
             // Will be null if one was not found on the game object

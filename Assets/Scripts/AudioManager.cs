@@ -1,7 +1,8 @@
-﻿using Input.Information;
-
-using StageSelection;
+﻿using StageSelection;
 using System.Collections.Generic;
+
+using CustomInput.Information;
+
 using UnityEngine;
 using UnityEngine.EventSystems;
 
