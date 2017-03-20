@@ -316,7 +316,7 @@
 
             // If nothing was hit
             if (!hits.Any())
-                return new List<GridCollectionMono>();
+                return new GridCollectionMono[] { };
 
             // Return the first hit object's GridCollectionMono component
             // Will be null if one was not found on the game object
