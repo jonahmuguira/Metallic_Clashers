@@ -266,9 +266,21 @@
         {
             if (!doCombat)
                 return;
-            var dam = GameManager.self.playerData.attack.totalValue * (1 + (matchInfo.gems.Count - 3) * .25f);
 
-            enemies[0].enemy.TakeDamage(dam, matchInfo.type);
+            switch (combatMode)
+            {
+                case CombatMode.Attack:
+                    var dam = GameManager.self.playerData.attack.totalValue *
+                        (1 + (matchInfo.gems.Count - 3) * .25f);
+
+                    enemies[0].enemy.TakeDamage(dam, matchInfo.type);
+                    break;
+
+                case CombatMode.Defense:
+                    GameManager.self.playerData.defense.modifier += matchInfo.gems.Count*5;
+                    break;
+            }
+            
         }
 
         private void OnCombatUpdate()
@@ -301,6 +313,8 @@
             }
 
             enemies = finalList;
+
+            GameManager.self.playerData.DecaySheild();
         }
 
         protected override void OnBeginDrag(DragInformation dragInfo)

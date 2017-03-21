@@ -98,14 +98,14 @@ public class GameManager : MonoSingleton<GameManager>
                 break;
 
             case 1:     // Stage Selection
-                StageSelectionManager.self.onStageSelectionEnd.AddListener(OnStageSelectionEnd);
+                StageSelectionManager.self.onStageSelectionEnd.AddListener
+                    (OnStageSelectionEnd);
                 gameState = GameState.StageSelection;
                 break;
 
             default:
                 break;
         }
-        //InputManager.self.gameObject.GetComponent<InputEffects>().overlayCanvs = FindObjectOfType<Canvas>();
         AudioManager.self.ChangeMusic(currentScene);
     }
 
@@ -157,4 +157,5 @@ public class GameManager : MonoSingleton<GameManager>
 
         m_OnSceneLoaded.Invoke();
     }
+
 }
