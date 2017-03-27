@@ -23,6 +23,9 @@ public class PlayerData
         health.coefficient = 1;
         defense.coefficient = 1;
         attack.coefficient = 1;
+
+        resistances = new List<GemType>();
+        weaknesses = new List<GemType>();
     }
 
     public PlayerData(float hel, float att, float def)
@@ -38,6 +41,9 @@ public class PlayerData
         health.coefficient = 1;
         defense.coefficient = 1;
         attack.coefficient = 1;
+
+        resistances = new List<GemType>();
+        weaknesses = new List<GemType>();
     }
 
     public Attribute health;
