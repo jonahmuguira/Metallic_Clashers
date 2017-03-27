@@ -91,17 +91,19 @@
             if (totalValue < maxValue)
             {
                 m_HealthImage.fillAmount =
-                    GameManager.self.playerData.health.totalValue / GameManager.self.playerData.health.value;
+                    GameManager.self.playerData.health.totalValue / maxValue;
 
                 m_ShieldImage.rectTransform.anchorMin =
                     new Vector2(
                         m_HealthImage.fillAmount,
                         m_ShieldImage.rectTransform.anchorMin.y);
+                m_ShieldImage.rectTransform.anchorMax =
+                    new Vector2(
+                        m_ShieldImage.rectTransform.anchorMin.x + 1f,
+                        m_ShieldImage.rectTransform.anchorMax.y);
 
                 m_ShieldImage.fillAmount =
-                    GameManager.self.playerData.defense.totalValue
-                    / (GameManager.self.playerData.health.value
-                        - GameManager.self.playerData.health.totalValue);
+                    GameManager.self.playerData.defense.totalValue / maxValue;
             }
             else
             {
@@ -112,14 +114,24 @@
                     new Vector2(
                         m_HealthImage.fillAmount,
                         m_ShieldImage.rectTransform.anchorMin.y);
+                m_ShieldImage.rectTransform.anchorMax =
+                    new Vector2(
+                        m_ShieldImage.rectTransform.anchorMin.x + 1f,
+                        m_ShieldImage.rectTransform.anchorMax.y);
 
-                m_ShieldImage.fillAmount = 1f;
+                m_ShieldImage.fillAmount =
+                    GameManager.self.playerData.defense.totalValue / totalValue;
             }
 
             m_HealthText.rectTransform.anchorMax =
-                    new Vector2(
-                        m_HealthImage.fillAmount,
-                        m_HealthText.rectTransform.anchorMax.y);
+                new Vector2(
+                    m_HealthImage.fillAmount,
+                    m_HealthText.rectTransform.anchorMax.y);
+
+            m_ShieldText.rectTransform.anchorMax =
+                new Vector2(
+                    m_ShieldImage.fillAmount,
+                    m_ShieldImage.rectTransform.anchorMax.y);
         }
     }
 }
