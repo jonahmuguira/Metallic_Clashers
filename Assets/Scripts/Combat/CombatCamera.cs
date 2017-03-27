@@ -16,11 +16,16 @@
         private List<TransformAnimation> m_Animations = new List<TransformAnimation>();
 
         private IEnumerator m_AnimationEnumerator;
+        private Transform m_OriginalTransform;
+
+        public static bool isAnimating;
 
         public List<TransformAnimation> animations { get { return m_Animations; } }
 
         private void Start()
         {
+            m_OriginalTransform = transform;
+
             m_AnimationEnumerator = Animate();
 
             CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
@@ -28,6 +33,14 @@
 
         private void OnCombatUpdate()
         {
+            if (!isAnimating)
+            {
+                StopCoroutine(m_AnimationEnumerator);
+                transform.position = m_OriginalTransform.position;
+                transform.rotation = m_OriginalTransform.rotation;
+                return;
+            }
+
             if (m_AnimationEnumerator.MoveNext()) { }
         }
 

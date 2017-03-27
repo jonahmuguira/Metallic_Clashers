@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
 
     using JetBrains.Annotations;
 
@@ -176,19 +177,36 @@
             {
                 var managerEnemies = GameManager.self.enemyIndexes;
 
-                var spacing = 2f;
+                //Something wrong here.
+                //var spacing = 1f;
+                //float totalSpace = 0;
 
-                var pos = -(managerEnemies.Count*spacing)/2f + spacing / 2;
+                //foreach (var enemy in managerEnemies)
+                //{
+                //    totalSpace += enemyPrefabList[enemy].GetComponent<MeshRenderer>()
+                //        .bounds.size.x;
+
+                //    totalSpace += spacing;
+                //}
+                //totalSpace -= spacing;
+                //var halfSpace = totalSpace/2f - spacing / 2;
+
+                //var pos = -halfSpace;
                 
                 for (var i = 0; i < managerEnemies.Count; i++)
                 {
                     var enemyPrefab = enemyPrefabList[managerEnemies[i]];
+                    var enemyMeshBounds = enemyPrefab.GetComponent<MeshRenderer>().bounds;
+                    pos += enemyMeshBounds.extents.x;
+
                     var enemyObject =
                         Instantiate(
                             enemyPrefab,
-                            new Vector3(pos + (i*spacing), .5f, 0),
+                            new Vector3(pos, .5f, 0),
                             enemyPrefab.transform.rotation);
-               
+
+                    if(i < managerEnemies.Count - 1)
+                        pos += spacing;
                     enemyObject.name += i;
                     var enemyMono = enemyObject.GetComponent<EnemyMono>();
                     enemies.Add(enemyMono);
