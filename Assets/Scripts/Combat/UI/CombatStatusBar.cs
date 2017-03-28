@@ -73,7 +73,10 @@
             if (m_ShieldText != null)
             {
                 var playerDefense = GameManager.self.playerData.defense;
+                if(playerDefense.totalValue > 0f)
                 m_ShieldText.text = Math.Ceiling(playerDefense.totalValue).ToString();
+                else
+                    m_ShieldText.text = string.Empty;
             }
 
             OnStatusModifierChanged();
