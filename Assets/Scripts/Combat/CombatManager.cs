@@ -132,11 +132,27 @@
 
         private bool m_HasSlid;
 
-        public EnemyMono currentEnemy;
+        private List<EnemyMono> m_Enemies = new List<EnemyMono>();
+
+        [SerializeField]
+        private EnemyMono m_CurrentEnemy;
         public bool doCombat;
-        public List<EnemyMono> enemies = new List<EnemyMono>();
+        public List<EnemyMono> enemies
+        {
+            get { return m_Enemies; }
+        }
 
         public float enemyPadding = 1f;
+
+        public EnemyMono currentEnemy
+        {
+            get { return m_CurrentEnemy; }
+            set
+            {
+                if (value != null)
+                    m_CurrentEnemy = value;
+            }
+        }
 
         public Canvas canvas { get { return m_Canvas; } }
         public RectTransform gridParentRectTransform { get { return m_GridParentRectTransform; } }
@@ -146,8 +162,6 @@
         public CombatUiInformation combatUiInformation { get { return m_CombatUiInformation; } }
 
         public CombatMode combatMode { get { return m_CombatMode; } }
-
-
 
         public UnityEvent onCombatBegin { get { return m_OnCombatBegin; } }
         public UnityEvent onCombatUpdate { get { return m_OnCombatUpdate; } }
@@ -210,7 +224,7 @@
                     m_OnCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
                 }
                 GameManager.self.enemyIndexes = new List<int>();
-                currentEnemy = enemies[0];
+                m_CurrentEnemy = enemies[0];
             }
 
             if (m_GridParentRectTransform == null)
@@ -299,7 +313,7 @@
                     var dam = playerData.attack.totalValue *
                         (1 + (matchInfo.gems.Count - 3) * .25f);
 
-                    currentEnemy.enemy.TakeDamage(dam, matchInfo.type);
+                    m_CurrentEnemy.enemy.TakeDamage(dam, matchInfo.type);
                     break;
 
                 case CombatMode.Defense:
@@ -337,8 +351,7 @@
                 Destroy(d.gameObject);
             }
 
-            enemies = finalList;
-            currentEnemy = enemies[0];
+            m_Enemies = finalList;
 
             GameManager.self.playerData.DecayShield();
         }
