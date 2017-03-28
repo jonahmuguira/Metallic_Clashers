@@ -32,10 +32,7 @@ namespace Items
     //for instant items, just remove them. do not destroy them.
 
     [Serializable]
-    public class TurnBased : BaseItem
-    {
-        public virtual void UpdateSelf() { m_Age++; }
-    }
+    public class TurnBased : BaseItem { public virtual void UpdateSelf() { m_Age++; } }
 
     [Serializable]
     public class TurnBuff : TurnBased
@@ -83,10 +80,7 @@ namespace Items
     }
 
     [Serializable]
-    public class TimeBased : BaseItem 
-    {
-        public virtual void UpdateSelf(float value) { m_Age += value; }
-    }
+    public class TimeBased : BaseItem { public virtual void UpdateSelf(float value) { m_Age += value; } }
 
     [Serializable]
     public class TimeBuff : TimeBased
