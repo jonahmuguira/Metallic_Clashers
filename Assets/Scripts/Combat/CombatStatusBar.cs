@@ -18,6 +18,9 @@
         [SerializeField]
         private Text m_ShieldText;
 
+        [SerializeField]
+        private Image m_ShieldIcon;
+
         // Use this for initialization
         private void Awake()
         {
@@ -49,7 +52,7 @@
             float h, s, v;
             Color.RGBToHSV(m_HealthImage.color, out h, out s, out v);
 
-            m_HealthBackgroundImage.color = Color.HSVToRGB(h, s - 0.2f, v);
+            m_HealthBackgroundImage.color = Color.HSVToRGB(h, s - 0.25f, v);
         }
 
         private void OnHealthModifierChanged()
@@ -91,17 +94,19 @@
             if (totalValue < maxValue)
             {
                 m_HealthImage.fillAmount =
-                    GameManager.self.playerData.health.totalValue / GameManager.self.playerData.health.value;
+                    GameManager.self.playerData.health.totalValue / maxValue;
 
                 m_ShieldImage.rectTransform.anchorMin =
                     new Vector2(
                         m_HealthImage.fillAmount,
                         m_ShieldImage.rectTransform.anchorMin.y);
+                m_ShieldImage.rectTransform.anchorMax =
+                    new Vector2(
+                        m_ShieldImage.rectTransform.anchorMin.x + 1f,
+                        m_ShieldImage.rectTransform.anchorMax.y);
 
                 m_ShieldImage.fillAmount =
-                    GameManager.self.playerData.defense.totalValue
-                    / (GameManager.self.playerData.health.value
-                        - GameManager.self.playerData.health.totalValue);
+                    GameManager.self.playerData.defense.totalValue / maxValue;
             }
             else
             {
@@ -112,14 +117,29 @@
                     new Vector2(
                         m_HealthImage.fillAmount,
                         m_ShieldImage.rectTransform.anchorMin.y);
+                m_ShieldImage.rectTransform.anchorMax =
+                    new Vector2(
+                        m_ShieldImage.rectTransform.anchorMin.x + 1f,
+                        m_ShieldImage.rectTransform.anchorMax.y);
 
-                m_ShieldImage.fillAmount = 1f;
+                m_ShieldImage.fillAmount =
+                    GameManager.self.playerData.defense.totalValue / totalValue;
             }
 
             m_HealthText.rectTransform.anchorMax =
-                    new Vector2(
-                        m_HealthImage.fillAmount,
-                        m_HealthText.rectTransform.anchorMax.y);
+                new Vector2(
+                    m_HealthImage.fillAmount,
+                    m_HealthText.rectTransform.anchorMax.y);
+
+            m_ShieldText.rectTransform.anchorMax =
+                new Vector2(
+                    m_ShieldImage.fillAmount,
+                    m_ShieldImage.rectTransform.anchorMax.y);
+
+            m_ShieldIcon.rectTransform.anchoredPosition =
+                new Vector2(
+                    -m_ShieldText.preferredWidth / 2f - 10f,
+                    m_ShieldIcon.rectTransform.anchoredPosition.y);
         }
     }
 }
