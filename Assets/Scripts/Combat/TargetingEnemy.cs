@@ -11,36 +11,34 @@ namespace Combat
     {
         private EnemyMono m_CurrentEnemyMono;
         private IEnumerator m_AnimateCorutine;
-        private Vector3 originalPosition;
-        private bool rising = true;
+        private Vector3 m_OriginalPosition;
+        private bool m_Rising = true;
 
         public Transform marker;
 
         private void Start ()
         {
-            m_AnimateCorutine = Animate();
-            originalPosition = marker.position;
-            m_CurrentEnemyMono = CombatManager.self.currentEnemy;
-		    CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
-            InputManager.self.onPress.AddListener(OnPress);
+            m_AnimateCorutine = Animate();                  // Set up Corutine
+            m_OriginalPosition = marker.position;           // Set Markers original position
+            m_CurrentEnemyMono = CombatManager.self.currentEnemy;           // Get current enemy
+            InputManager.self.onPress.AddListener(OnPress); // Set Listener for input
+           
+            // Set Marker Position
+            var currenyEnemyBounds = m_CurrentEnemyMono.GetComponent<MeshRenderer>().bounds;
+            marker.position = currenyEnemyBounds.center +
+                new Vector3(0, currenyEnemyBounds.extents.y + .5f, 0);
+
+            // Start Animateing marker
             StartCoroutine(m_AnimateCorutine);
         }
-	
-        private void OnCombatUpdate()
-        {
-            if (CombatCamera.isAnimating)
-                return;
 
-            var center = m_CurrentEnemyMono.GetComponent<MeshRenderer>().bounds.center;
-
-            transform.position = center;
-        }
 
         private void OnPress(TouchInformation touchInfo)
         {
-            if (CombatCamera.isAnimating)
+            if (CombatCamera.isAnimating)   // if the camera is animating, do nothing
                 return;
 
+            // Else shoot ray from touch
             var ray = Camera.main.ScreenPointToRay(touchInfo.position);
             var hit = new RaycastHit();
 
@@ -50,23 +48,48 @@ namespace Combat
             }
             catch { }
 
-            if (hit.transform == null)
+            if (hit.transform == null)  // Did the ray hit something
                 return;
 
-            var gameOb = hit.transform.gameObject;
+            var tempObject = hit.transform.gameObject;  //Store gameobject temperarily.
+            var gameOb = tempObject;    // This will be the final result.
+
+            // Keep going until EnemyMono if found or if none were found.
+            while(true)
+            {
+                if (tempObject.GetComponent<EnemyMono>())   // Does it have an EnemyMono
+                {
+                    gameOb = tempObject;
+                    break;
+                }
+                // If Not, set temp to its parent
+                if (tempObject.transform.parent != null 
+                    && !tempObject.GetComponent<EnemyMono>())
+                    tempObject = tempObject.transform.parent.gameObject;
+
+                // If no parent, reached end, return function.
+                else
+                {
+                    return;
+                }
+            }
+            
+            // EnemyMono same as the current target
             if (gameOb == m_CurrentEnemyMono.gameObject)
             {
+                // Set position of marker
                 var currenyEnemyBounds = m_CurrentEnemyMono.GetComponent<MeshRenderer>().bounds;
                 marker.position = currenyEnemyBounds.center +
                     new Vector3(0, currenyEnemyBounds.extents.y + .5f, 0);
 
+                // Set CombatManger current enemy
                 CombatManager.self.currentEnemy = m_CurrentEnemyMono;
-                CombatCamera.isAnimating = true;
-                StartCoroutine(m_AnimateCorutine);
+                CombatCamera.isAnimating = true;            // Turn combat Camera back on
             }
+            // Clicked a different EnemyMono than the current.
             else if (gameOb.GetComponent<EnemyMono>() != m_CurrentEnemyMono)
             {
-                StopCoroutine(m_AnimateCorutine);
+                Camera.main.transform.localPosition = new Vector3(0, 0, -5f);
                 m_CurrentEnemyMono = gameOb.GetComponent<EnemyMono>();
                 marker.position = m_CurrentEnemyMono.transform.position + new Vector3(0, 1f, 0);
             }
@@ -80,7 +103,7 @@ namespace Combat
         {
             while (true)
             {
-                if (rising)
+                if (m_Rising)
                 {
                     marker.position += new Vector3(0, 2 *Time.deltaTime, 0);
                 }
@@ -90,15 +113,14 @@ namespace Combat
                     marker.position -= new Vector3(0, Time.deltaTime, 0);
                 }
 
-                if (marker.position.y > originalPosition.y + .5f)
+                if (marker.position.y > m_OriginalPosition.y + .5f)
                 {
-                    rising = false;
-                }
-                    
+                    m_Rising = false;
+                }                   
 
-                if (marker.position.y < originalPosition.y - .5f)
+                if (marker.position.y < m_OriginalPosition.y - .5f)
                 {
-                    rising = true;
+                    m_Rising = true;
                 }
 
                 yield return null;
