@@ -1,8 +1,9 @@
-﻿namespace Combat
+﻿namespace Combat.UI
 {
+    using System;
+
     using UnityEngine;
     using UnityEngine.UI;
-    using System;
 
     public class CombatStatusBar : MonoBehaviour
     {
@@ -72,7 +73,10 @@
             if (m_ShieldText != null)
             {
                 var playerDefense = GameManager.self.playerData.defense;
+                if(playerDefense.totalValue > 0f)
                 m_ShieldText.text = Math.Ceiling(playerDefense.totalValue).ToString();
+                else
+                    m_ShieldText.text = string.Empty;
             }
 
             OnStatusModifierChanged();

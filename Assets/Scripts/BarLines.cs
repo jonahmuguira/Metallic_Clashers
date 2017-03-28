@@ -28,6 +28,8 @@ public class BarLines : Graphic
 
         GameManager.self.playerData.health.onTotalValueChanged.AddListener(OnTotalValueChanged);
         GameManager.self.playerData.defense.onTotalValueChanged.AddListener(OnTotalValueChanged);
+
+        OnTotalValueChanged();
     }
 
     private void OnTotalValueChanged()
@@ -37,13 +39,13 @@ public class BarLines : Graphic
                 m_ParentImage.fillAmount,
                 rectTransform.anchorMax.y);
 
-        SetAllDirty();
+        SetVerticesDirty();
     }
     protected override void OnPopulateMesh(VertexHelper vh)
     {
         vh.Clear();
 
-        if (!Application.isPlaying || m_ParentImage == null)
+        if (!Application.isPlaying || m_ParentImage == null || m_ParentImage.fillAmount <= 0f)
             return;
 
         var vertex = UIVertex.simpleVert;
