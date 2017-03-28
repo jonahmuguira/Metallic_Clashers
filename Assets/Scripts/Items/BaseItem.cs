@@ -11,8 +11,8 @@ namespace Items
         protected float m_Age;   //current durabilities max value.
         public float durability; //how long the item will last.
         public float modifier;   //value that will "modify" player attribute(s).
-
         public bool Alive { get { return m_Alive; } }
+
         public virtual void UseItem() {}
     }
 
@@ -28,9 +28,8 @@ namespace Items
             if (GameManager.self.playerData.health.modifier > 0) { GameManager.self.playerData.health.modifier = 0; }
             m_Alive = false;
         }
-
-        //for instant items, just remove them. do not destroy them.
     }
+    //for instant items, just remove them. do not destroy them.
 
     [Serializable]
     public class TurnBased : BaseItem
