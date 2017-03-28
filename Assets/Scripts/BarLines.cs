@@ -7,6 +7,8 @@ public class BarLines : Graphic
     private Image m_ParentImage;
     [SerializeField]
     private float m_LineWidth = 1f;
+    [SerializeField]
+    private int m_SegmentValue = 50;
 
     protected override void Start()
     {
@@ -43,13 +45,19 @@ public class BarLines : Graphic
         startingPoint -= new Vector2(m_LineWidth / 2f, 0f);
 
         var parentWidth = m_ParentImage.rectTransform.rect.width;
+        var lineCount = GameManager.self.playerData.health.totalValue / m_SegmentValue;
+
         if (GameManager.self.playerData.health.totalValue + GameManager.self.playerData.defense.totalValue
             > GameManager.self.playerData.health.value)
+        {
             parentWidth = m_ParentImage.rectTransform.rect.width * m_ParentImage.fillAmount;
+            lineCount = GameManager.self.playerData.health.value / m_SegmentValue;
+        }
 
-        var spacing = 10f / GameManager.self.playerData.health.value * parentWidth;
+        var spacing = m_SegmentValue / GameManager.self.playerData.health.value * parentWidth;
 
-        for (var i = 0; i < GameManager.self.playerData.health.totalValue / 10; ++i)
+
+        for (var i = 0; i < lineCount; ++i)
         {
             var currentPosition = startingPoint + i * new Vector2(spacing, 0f);
 
