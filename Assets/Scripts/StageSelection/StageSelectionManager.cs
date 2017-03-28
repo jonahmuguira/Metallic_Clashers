@@ -39,14 +39,22 @@
                     {
                         nodes = new List<Node>
                         {
-                            new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0), worldIndex = 1, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1), worldIndex = 1, enemyInts = new List<int> {1,1,1}},
-                            new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2), worldIndex = 1, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "Boss", normalizedPosition = new Vector2(0, 3), worldIndex = 1, enemyInts = new List<int> {0}},
-                            new Node {stageNumber = "1A", normalizedPosition = new Vector2(1, 0), worldIndex = 1, enemyInts = new List<int> {0}},
-                            new Node {stageNumber = "2A", normalizedPosition = new Vector2(-1, 1), worldIndex = 1, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "2B", normalizedPosition = new Vector2(-2, 1), worldIndex = 1, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "3A", normalizedPosition = new Vector2(1, 2), worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0),
+                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1),
+                                worldIndex = 1, enemyInts = new List<int> {1,1,1}},
+                            new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2),
+                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "Boss", normalizedPosition = new Vector2(0, 3),
+                                worldIndex = 1, enemyInts = new List<int> {0}},
+                            new Node {stageNumber = "1A", normalizedPosition = new Vector2(1, 0),
+                                worldIndex = 1, enemyInts = new List<int> {0}},
+                            new Node {stageNumber = "2A", normalizedPosition = new Vector2(-1, 1),
+                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "2B", normalizedPosition = new Vector2(-2, 1),
+                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "3A", normalizedPosition = new Vector2(1, 2),
+                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
                         }
                     }
                     ,
@@ -55,14 +63,22 @@
                     {
                         nodes = new List<Node>
                         {
-                            new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0), worldIndex = 2, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1), worldIndex = 2, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2), worldIndex = 2, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "Boss", normalizedPosition = new Vector2(0, 3), worldIndex = 2, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "2A", normalizedPosition = new Vector2(-1, 1), worldIndex = 2, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "3A", normalizedPosition = new Vector2(-1, 2), worldIndex = 2, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "2B", normalizedPosition = new Vector2(1, 1), worldIndex = 2, enemyInts = new List<int> {0,0,0}},
-                            new Node {stageNumber = "3B", normalizedPosition = new Vector2(1, 2), worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0),
+                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1),
+                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2),
+                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "Boss", normalizedPosition = new Vector2(0, 3),
+                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "2A", normalizedPosition = new Vector2(-1, 1),
+                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "3A", normalizedPosition = new Vector2(-1, 2),
+                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "2B", normalizedPosition = new Vector2(1, 1),
+                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                            new Node {stageNumber = "3B", normalizedPosition = new Vector2(1, 2),
+                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
                         }
                     }
                 };
@@ -109,7 +125,8 @@
 
                     var nodeTransform = nodeObject.GetComponent<RectTransform>();
                     nodeTransform.anchoredPosition =
-                        new Vector2(n.normalizedPosition.x*spacingMagnitude, n.normalizedPosition.y*spacingMagnitude) +
+                        new Vector2(n.normalizedPosition.x*spacingMagnitude, 
+                        n.normalizedPosition.y*spacingMagnitude) +
                         treePos;
 
                     var button = nodeObject.GetComponent<Button>();
@@ -187,7 +204,8 @@
                         ? new Vector2(differance.magnitude, 10)
                         : new Vector2(10, differance.magnitude);
 
-                    lineObject.GetComponent<Image>().color = (monoNode.node.isComplete) ? Color.blue : Color.red;
+                    lineObject.GetComponent<Image>().color = (monoNode.node.isComplete) 
+                        ? Color.blue : Color.red;
                         // Set Material Color
 
                     lineTransform.position = linePosition;
@@ -249,7 +267,8 @@
                     if (child.GetComponent<MonoNode>() || child.name.Contains("Line"))
                     {
                         StartCoroutine(
-                            MoveObject(child, child.anchoredPosition, child.anchoredPosition + slideMag, .2f));
+                            MoveObject(child, child.anchoredPosition, 
+                            child.anchoredPosition + slideMag, .2f));
                     }
                 }
             }
