@@ -1,8 +1,9 @@
-﻿namespace Combat
+﻿namespace Combat.UI
 {
+    using System;
+
     using UnityEngine;
     using UnityEngine.UI;
-    using System;
 
     public class CombatStatusBar : MonoBehaviour
     {
