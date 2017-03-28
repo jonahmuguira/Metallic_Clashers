@@ -3,6 +3,7 @@
 namespace Combat
 {
     using System.Collections;
+    using System.Linq;
 
     using CustomInput;
     using CustomInput.Information;
@@ -21,6 +22,7 @@ namespace Combat
             m_AnimateCorutine = Animate();                  // Set up Corutine
             m_OriginalPosition = marker.position;           // Set Markers original position
             m_CurrentEnemyMono = CombatManager.self.currentEnemy;           // Get current enemy
+            CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
             InputManager.self.onPress.AddListener(OnPress); // Set Listener for input
            
             // Set Marker Position
@@ -32,6 +34,24 @@ namespace Combat
             StartCoroutine(m_AnimateCorutine);
         }
 
+        private void OnCombatUpdate()
+        {
+            // If the enemy is not null or there are no enemies, return
+            if (m_CurrentEnemyMono != null || CombatManager.self.enemies.Count == 0)
+                return;
+
+            // If current enemy is null and there are enemies
+
+            m_CurrentEnemyMono = CombatManager.self.enemies.First();    // Find the first guy
+
+            // Set Marker
+            var currenyEnemyBounds = m_CurrentEnemyMono.GetComponent<MeshRenderer>().bounds;
+            marker.position = currenyEnemyBounds.center +
+                new Vector3(0, currenyEnemyBounds.extents.y + .5f, 0);
+
+            // Set new enemy
+            CombatManager.self.currentEnemy = m_CurrentEnemyMono;
+        }
 
         private void OnPress(TouchInformation touchInfo)
         {
@@ -82,8 +102,8 @@ namespace Combat
                 marker.position = currenyEnemyBounds.center +
                     new Vector3(0, currenyEnemyBounds.extents.y + .5f, 0);
 
-                // Set CombatManger current enemy
-                CombatManager.self.currentEnemy = m_CurrentEnemyMono;
+                CombatManager.self.currentEnemy = m_CurrentEnemyMono;   // Set enemy
+
                 CombatCamera.isAnimating = true;            // Turn combat Camera back on
             }
             // Clicked a different EnemyMono than the current.
@@ -92,10 +112,6 @@ namespace Combat
                 Camera.main.transform.localPosition = new Vector3(0, 0, -5f);
                 m_CurrentEnemyMono = gameOb.GetComponent<EnemyMono>();
                 marker.position = m_CurrentEnemyMono.transform.position + new Vector3(0, 1f, 0);
-            }
-            else
-            {
-                return;
             }
         }
 
