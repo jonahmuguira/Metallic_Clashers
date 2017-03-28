@@ -16,15 +16,17 @@
         private List<TransformAnimation> m_Animations = new List<TransformAnimation>();
 
         private IEnumerator m_AnimationEnumerator;
-        private Transform m_OriginalTransform;
+        private Vector3 m_OriginalPosition;
+        private Quaternion m_OriginalQuaternion;
 
-        public static bool isAnimating;
+        public static bool isAnimating = true;
 
         public List<TransformAnimation> animations { get { return m_Animations; } }
 
         private void Start()
         {
-            m_OriginalTransform = transform;
+            m_OriginalPosition = transform.position;
+            m_OriginalQuaternion = transform.rotation;
 
             m_AnimationEnumerator = Animate();
 
@@ -36,8 +38,8 @@
             if (!isAnimating)
             {
                 StopCoroutine(m_AnimationEnumerator);
-                transform.position = m_OriginalTransform.position;
-                transform.rotation = m_OriginalTransform.rotation;
+                transform.position = m_OriginalPosition;
+                transform.rotation = m_OriginalQuaternion;
                 return;
             }
 
