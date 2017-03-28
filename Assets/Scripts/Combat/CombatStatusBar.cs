@@ -18,6 +18,9 @@
         [SerializeField]
         private Text m_ShieldText;
 
+        [SerializeField]
+        private Image m_ShieldIcon;
+
         // Use this for initialization
         private void Awake()
         {
@@ -49,7 +52,7 @@
             float h, s, v;
             Color.RGBToHSV(m_HealthImage.color, out h, out s, out v);
 
-            m_HealthBackgroundImage.color = Color.HSVToRGB(h, s - 0.2f, v);
+            m_HealthBackgroundImage.color = Color.HSVToRGB(h, s - 0.25f, v);
         }
 
         private void OnHealthModifierChanged()
@@ -132,6 +135,11 @@
                 new Vector2(
                     m_ShieldImage.fillAmount,
                     m_ShieldImage.rectTransform.anchorMax.y);
+
+            m_ShieldIcon.rectTransform.anchoredPosition =
+                new Vector2(
+                    -m_ShieldText.preferredWidth / 2f - 10f,
+                    m_ShieldIcon.rectTransform.anchoredPosition.y);
         }
     }
 }
