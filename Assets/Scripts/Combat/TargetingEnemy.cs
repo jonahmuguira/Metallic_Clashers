@@ -114,7 +114,6 @@ namespace Combat
             if (!gameOb.GetComponent<EnemyMono>())
                 return;
 
-            CombatCamera.isAnimating = false;
             m_Selecting = true;
 
             Camera.main.transform.localPosition = new Vector3(0, 0, -5f);
@@ -123,8 +122,6 @@ namespace Combat
             m_Marker.position = SetMarkerToCurrent();   // Set position of marker
 
             EnemyManager.self.currentEnemy = m_CurrentEnemyMono;   // Set enemy
-
-            CombatCamera.isAnimating = true;            // Turn combat Camera back on
         }
 
         private Vector3 SetMarkerToCurrent()
