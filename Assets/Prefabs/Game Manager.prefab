@@ -27,7 +27,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &4902044863395634
 Transform:
@@ -76,21 +76,24 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+  m_EnemyPrefabList:
+  - {fileID: 1978000353783988, guid: 05fc6f9ca8e594e429fdc6e7984fd2c6, type: 2}
+  - {fileID: 1978000353783988, guid: e4e6db6db2938154692b0ece784cb965, type: 2}
   gameState: 0
   playerData:
     health:
+      m_Modifier: 0
+      m_Coefficient: 1
       value: 100
-      modifier: 0
-      coefficient: 1
     attack:
+      m_Modifier: 0
+      m_Coefficient: 1
       value: 10
-      modifier: 0
-      coefficient: 1
     defense:
-      value: 10
-      modifier: 0
-      coefficient: 1
-    decayRate: 0
+      m_Modifier: 0
+      m_Coefficient: 1
+      value: 100
+    decayRate: 0.1
     resistances: 
     weaknesses: 
     gemSkills: []
@@ -145,7 +148,7 @@ MonoBehaviour:
         level: 0
         currentExperience: 0
         experienceRequired: 0
-  enemyIndexes: 
+  enemyIndexes: 0000000000000000
 --- !u!114 &114796631700178808
 MonoBehaviour:
   m_ObjectHideFlags: 1
