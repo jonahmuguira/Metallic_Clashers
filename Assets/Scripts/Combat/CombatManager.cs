@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.InteropServices;
 
     using JetBrains.Annotations;
 
@@ -15,7 +14,6 @@
     using Board;
     using Board.Information;
 
-    using CustomInput;
     using CustomInput.Information;
 
     using Library;
@@ -73,28 +71,6 @@
 
         private bool m_HasSlid;
 
-        private List<EnemyMono> m_Enemies = new List<EnemyMono>();
-
-        [SerializeField]
-        private EnemyMono m_CurrentEnemy;
-        public bool doCombat;
-        public List<EnemyMono> enemies
-        {
-            get { return m_Enemies; }
-        }
-
-        public float enemyPadding = 1f;
-
-        public EnemyMono currentEnemy
-        {
-            get { return m_CurrentEnemy; }
-            set
-            {
-                if (value != null)
-                    m_CurrentEnemy = value;
-            }
-        }
-
         public Canvas canvas { get { return m_Canvas; } }
         public RectTransform gridParentRectTransform { get { return m_GridParentRectTransform; } }
         public VerticalLayoutGroup rowParent { get { return m_RowParent; } }
@@ -130,45 +106,6 @@
             if (m_Canvas == null)
                 m_Canvas = FindObjectOfType<Canvas>();
 
-            if (doCombat)
-            {
-                var managerEnemies = GameManager.self.enemyIndexes;
-                var enemyPrefabList = GameManager.self.enemyPrefabList;
-
-                //Something wrong here.
-
-                var totalSpace = managerEnemies.Sum(enemy => enemyPrefabList
-                [enemy].GetComponent<MeshRenderer>().bounds.size.x);
-
-                totalSpace += enemyPadding * (managerEnemies.Count - 1);
-
-                var pos = -totalSpace / 2f;
-
-                for (var i = 0; i < managerEnemies.Count; i++)
-                {
-                    var enemyPrefab = enemyPrefabList[managerEnemies[i]];
-                    var enemyMeshBounds = enemyPrefab.GetComponent<MeshRenderer>().bounds;
-                    pos += enemyMeshBounds.extents.x;
-
-                    var enemyObject =
-                        Instantiate(
-                            enemyPrefab,
-                            new Vector3(pos, .5f, 0),
-                            enemyPrefab.transform.rotation);
-
-
-                    pos += enemyMeshBounds.extents.x;
-                    pos += enemyPadding;
-
-                    enemyObject.name += i;
-                    var enemyMono = enemyObject.GetComponent<EnemyMono>();
-                    enemies.Add(enemyMono);
-                    m_OnCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
-                }
-                GameManager.self.enemyIndexes = new List<int>();
-                m_CurrentEnemy = enemies[0];
-            }
-
             if (m_GridParentRectTransform == null)
                 m_GridParentRectTransform = m_Canvas.GetComponent<RectTransform>();
 
@@ -183,8 +120,6 @@
             m_GridMono = newGrid.GetComponent<GridMono>();
 
             m_GridMono.grid.onSlide.AddListener(OnSlide);
-            m_GridMono.grid.onMatch.AddListener(OnMatch);
-            onCombatUpdate.AddListener(OnCombatUpdate);
         }
 
         private void Update()
@@ -240,62 +175,6 @@
         private void OnSlide(SlideInformation slideInfo)
         {
             m_HasSlid = true;
-        }
-
-        private void OnMatch(MatchInformation matchInfo)
-        {
-            if (!doCombat)
-                return;
-
-            var playerData = GameManager.self.playerData;
-
-            switch (combatMode)
-            {
-            case CombatMode.Attack:
-                var dam = playerData.attack.totalValue *
-                    (1 + (matchInfo.gems.Count - 3) * .25f);
-
-                m_CurrentEnemy.enemy.TakeDamage(dam, matchInfo.type);
-                break;
-
-            case CombatMode.Defense:
-                GameManager.self.playerData.defense.modifier += matchInfo.gems.Count * (playerData.defense.value * .5F);
-                break;
-            }
-
-        }
-
-        private void OnCombatUpdate()
-        {
-            if (!doCombat)
-                return;
-
-            // Win
-            if (enemies.Count == 0)
-            {
-                onCombatEnd.Invoke();
-                return;
-            }
-
-            // Lose
-            if (GameManager.self.playerData.health.totalValue <= 0)
-            {
-                onCombatEnd.Invoke();
-                return;
-            }
-
-            var destroyList = enemies.Where(e => e.enemy.health.totalValue <= 0).ToList();
-
-            var finalList = enemies.Where(e => !destroyList.Contains(e)).ToList();
-
-            foreach (var d in destroyList)
-            {
-                Destroy(d.gameObject);
-            }
-
-            m_Enemies = finalList;
-
-            GameManager.self.playerData.DecayShield();
         }
 
         protected override void OnBeginDrag(DragInformation dragInfo)
