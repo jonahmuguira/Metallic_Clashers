@@ -25,6 +25,8 @@
         [SerializeField]
         private Text m_StageNameText;
         [SerializeField]
+        private Text m_EnemyText;
+        [SerializeField]
         private Button m_StartComabtButton;
 
         public UnityEvent onStageSelectionEnd = new UnityEvent();
@@ -234,6 +236,7 @@
 
             //Set Up UI
             m_StageNameText.text = "";
+            m_EnemyText.text = "";
             m_StartComabtButton.onClick.AddListener(OnStageSelectionEnd);
             m_StartComabtButton.interactable = false;
         }
@@ -323,6 +326,24 @@
             {
                 m_StageNameText.text = "Stage: " + m_CurrentNode.stageName + " - Playable";
             }
+
+            // Enemy Display - Text
+            m_EnemyText.text = "";
+
+            var enemyInstances = new Dictionary<string, int>();
+            foreach (var index in m_CurrentNode.enemyInts)
+            {
+                var name = GameManager.self.enemyPrefabList[index].name;
+                if(!enemyInstances.ContainsKey(name))
+                    enemyInstances.Add(name, 0);
+                enemyInstances[name] += 1;
+            }
+
+            foreach (var key in enemyInstances)
+            {
+                m_EnemyText.text += key.Key + " x" + key.Value;
+            }
+
             m_StartComabtButton.interactable = true;
         }
     }
