@@ -93,12 +93,9 @@
         }
         public UnityBoolEvent onCombatPauseChange { get { return m_OnCombatPauseChange; } }
 
-
         public UnityEvent onPlayerTurn { get { return m_OnPlayerTurn; } }
 
         public GridMono gridMono { get { return m_GridMono; } }
-
-
 
         protected override void Init()
         {
@@ -115,10 +112,9 @@
             GemMonoDuplicate.Init();
 
             var newGrid = new Grid(new Vector2(5f, 5f));
+            newGrid.onSlide.AddListener(OnSlide);
 
             m_GridMono = newGrid.GetComponent<GridMono>();
-
-            m_GridMono.grid.onSlide.AddListener(OnSlide);
         }
 
         private void Update()
@@ -196,7 +192,7 @@
 
         protected override void OnDrag(DragInformation dragInfo)
         {
-            if (gridMono.gemsAreAnimating)
+            if (m_GridMono.gemsAreAnimating)
                 return;
 
             // If we didn't hit a GridCollectionMono at the start of the drag
@@ -227,15 +223,9 @@
         protected override void OnPress(TouchInformation touchInfo)
         {
             var ray = Camera.main.ScreenPointToRay(touchInfo.position);
-            var hit = new RaycastHit();
+            RaycastHit hit;
 
-            try
-            {
-                Physics.Raycast(ray.origin, ray.direction, out hit);
-            }
-            catch { }
-
-            if (hit.transform == null)
+            if (!Physics.Raycast(ray.origin, ray.direction, out hit))
                 return;
 
             var gameOb = hit.transform.gameObject;
