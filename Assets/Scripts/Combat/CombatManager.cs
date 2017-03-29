@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
 
     using JetBrains.Annotations;
 
@@ -13,6 +14,8 @@
 
     using Board;
     using Board.Information;
+
+    using CustomInput;
     using CustomInput.Information;
 
     public class CombatManager : SubManager<CombatManager>
@@ -129,7 +132,27 @@
 
         private bool m_HasSlid;
 
+        private List<EnemyMono> m_Enemies = new List<EnemyMono>();
+
+        [SerializeField]
+        private EnemyMono m_CurrentEnemy;
         public bool doCombat;
+        public List<EnemyMono> enemies
+        {
+            get { return m_Enemies; }
+        }
+
+        public float enemyPadding = 1f;
+
+        public EnemyMono currentEnemy
+        {
+            get { return m_CurrentEnemy; }
+            set
+            {
+                if (value != null)
+                    m_CurrentEnemy = value;
+            }
+        }
 
         public Canvas canvas { get { return m_Canvas; } }
         public RectTransform gridParentRectTransform { get { return m_GridParentRectTransform; } }
@@ -139,8 +162,6 @@
         public CombatUiInformation combatUiInformation { get { return m_CombatUiInformation; } }
 
         public CombatMode combatMode { get { return m_CombatMode; } }
-
-        public List<EnemyMono> enemies = new List<EnemyMono>();
 
         public UnityEvent onCombatBegin { get { return m_OnCombatBegin; } }
         public UnityEvent onCombatUpdate { get { return m_OnCombatUpdate; } }
@@ -172,20 +193,38 @@
             {
                 var managerEnemies = GameManager.self.enemyIndexes;
 
+                //Something wrong here.
+
+                var totalSpace = managerEnemies.Sum(enemy => enemyPrefabList
+                [enemy].GetComponent<MeshRenderer>().bounds.size.x);
+
+                totalSpace += enemyPadding * (managerEnemies.Count - 1);
+
+                var pos = -totalSpace / 2f;
+
                 for (var i = 0; i < managerEnemies.Count; i++)
                 {
                     var enemyPrefab = enemyPrefabList[managerEnemies[i]];
+                    var enemyMeshBounds = enemyPrefab.GetComponent<MeshRenderer>().bounds;
+                    pos += enemyMeshBounds.extents.x;
+
                     var enemyObject =
                         Instantiate(
                             enemyPrefab,
-                            new Vector3(managerEnemies.Count / 2 - i, .5f, 0),
+                            new Vector3(pos, .5f, 0),
                             enemyPrefab.transform.rotation);
 
+
+                    pos += enemyMeshBounds.extents.x;
+                    pos += enemyPadding;
+
+                    enemyObject.name += i;
                     var enemyMono = enemyObject.GetComponent<EnemyMono>();
                     enemies.Add(enemyMono);
                     m_OnCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
                 }
                 GameManager.self.enemyIndexes = new List<int>();
+                m_CurrentEnemy = enemies[0];
             }
 
             if (m_GridParentRectTransform == null)
@@ -270,18 +309,18 @@
 
             switch (combatMode)
             {
-                case CombatMode.Attack:
-                    var dam = playerData.attack.totalValue *
-                        (1 + (matchInfo.gems.Count - 3) * .25f);
+            case CombatMode.Attack:
+                var dam = playerData.attack.totalValue *
+                    (1 + (matchInfo.gems.Count - 3) * .25f);
 
-                    enemies[0].enemy.TakeDamage(dam, matchInfo.type);
-                    break;
+                m_CurrentEnemy.enemy.TakeDamage(dam, matchInfo.type);
+                break;
 
-                case CombatMode.Defense:
-                    GameManager.self.playerData.defense.modifier += matchInfo.gems.Count*(playerData.defense.value * .5F);
-                    break;
+            case CombatMode.Defense:
+                GameManager.self.playerData.defense.modifier += matchInfo.gems.Count * (playerData.defense.value * .5F);
+                break;
             }
-            
+
         }
 
         private void OnCombatUpdate()
@@ -297,7 +336,7 @@
             }
 
             // Lose
-            if(GameManager.self.playerData.health.totalValue <= 0)
+            if (GameManager.self.playerData.health.totalValue <= 0)
             {
                 onCombatEnd.Invoke();
                 return;
@@ -312,7 +351,7 @@
                 Destroy(d.gameObject);
             }
 
-            enemies = finalList;
+            m_Enemies = finalList;
 
             GameManager.self.playerData.DecayShield();
         }
@@ -363,6 +402,27 @@
             onPlayerTurn.Invoke();
 
             m_HasSlid = false;
+        }
+
+        protected override void OnPress(TouchInformation touchInfo)
+        {
+            var ray = Camera.main.ScreenPointToRay(touchInfo.position);
+            var hit = new RaycastHit();
+
+            try
+            {
+                Physics.Raycast(ray.origin, ray.direction, out hit);
+            }
+            catch { }
+
+            if (hit.transform == null)
+                return;
+
+            var gameOb = hit.transform.gameObject;
+            if (gameOb.GetComponent<EnemyMono>() && CombatCamera.isAnimating)
+            {
+                CombatCamera.isAnimating = false;
+            }
         }
 
         private static IEnumerable<GridCollectionMono> RayCastToGridCollectionMono(Vector2 origin)
