@@ -85,13 +85,7 @@ namespace Combat
             var ray = Camera.main.ScreenPointToRay(touchInfo.position);
             var hit = new RaycastHit();
 
-            try
-            {
-                Physics.Raycast(ray.origin, ray.direction, out hit);
-            }
-            catch { }
-
-            if (hit.transform == null)                  // Did the ray hit something
+            if (!Physics.Raycast(ray.origin, ray.direction, out hit))                  // Did the ray hit something
                 return;
 
             var tempObject = hit.transform.gameObject;  //Store gameobject temperarily.
