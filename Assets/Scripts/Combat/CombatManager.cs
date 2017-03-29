@@ -198,9 +198,9 @@
                 var totalSpace = managerEnemies.Sum(enemy => enemyPrefabList
                 [enemy].GetComponent<MeshRenderer>().bounds.size.x);
 
-                totalSpace += enemyPadding*(managerEnemies.Count - 1);
+                totalSpace += enemyPadding * (managerEnemies.Count - 1);
 
-                var pos = -totalSpace/2f;
+                var pos = -totalSpace / 2f;
 
                 for (var i = 0; i < managerEnemies.Count; i++)
                 {
@@ -309,18 +309,18 @@
 
             switch (combatMode)
             {
-                case CombatMode.Attack:
-                    var dam = playerData.attack.totalValue *
-                        (1 + (matchInfo.gems.Count - 3) * .25f);
+            case CombatMode.Attack:
+                var dam = playerData.attack.totalValue *
+                    (1 + (matchInfo.gems.Count - 3) * .25f);
 
-                    m_CurrentEnemy.enemy.TakeDamage(dam, matchInfo.type);
-                    break;
+                m_CurrentEnemy.enemy.TakeDamage(dam, matchInfo.type);
+                break;
 
-                case CombatMode.Defense:
-                    GameManager.self.playerData.defense.modifier += matchInfo.gems.Count*(playerData.defense.value * .5F);
-                    break;
+            case CombatMode.Defense:
+                GameManager.self.playerData.defense.modifier += matchInfo.gems.Count * (playerData.defense.value * .5F);
+                break;
             }
-            
+
         }
 
         private void OnCombatUpdate()
@@ -336,7 +336,7 @@
             }
 
             // Lose
-            if(GameManager.self.playerData.health.totalValue <= 0)
+            if (GameManager.self.playerData.health.totalValue <= 0)
             {
                 onCombatEnd.Invoke();
                 return;
