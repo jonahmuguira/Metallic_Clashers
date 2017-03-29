@@ -19,7 +19,7 @@ namespace Combat
 
         private void Start ()
         {
-            m_CurrentEnemyMono = CombatManager.self.currentEnemy;           // Get current enemy
+            m_CurrentEnemyMono = EnemyManager.self.currentEnemy;           // Get current enemy
 
             m_Marker = Instantiate(markerPrefab, SetMarkerToCurrent(),
                 markerPrefab.transform.rotation).transform;
@@ -47,16 +47,16 @@ namespace Combat
                 m_Rising = false;
 
             // If the enemy is not null or there are no enemies, return
-            if (m_CurrentEnemyMono != null || CombatManager.self.enemies.Count == 0)
+            if (m_CurrentEnemyMono != null || EnemyManager.self.enemies.Count == 0)
                 return;
 
             // If current enemy is null and there are enemies
 
-            m_CurrentEnemyMono = CombatManager.self.enemies.First();    // Find the first guy
+            m_CurrentEnemyMono = EnemyManager.self.enemies.First();    // Find the first guy
 
             m_Marker.position = SetMarkerToCurrent();
 
-            CombatManager.self.currentEnemy = m_CurrentEnemyMono;
+            EnemyManager.self.currentEnemy = m_CurrentEnemyMono;
         }
 
         private void OnPress(TouchInformation touchInfo)
@@ -105,7 +105,7 @@ namespace Combat
             
                 m_Marker.position = SetMarkerToCurrent();   // Set position of marker
 
-                CombatManager.self.currentEnemy = m_CurrentEnemyMono;   // Set enemy
+                EnemyManager.self.currentEnemy = m_CurrentEnemyMono;   // Set enemy
 
                 CombatCamera.isAnimating = true;            // Turn combat Camera back on
             }
