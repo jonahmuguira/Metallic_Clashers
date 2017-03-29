@@ -18,6 +18,10 @@
     using CustomInput;
     using CustomInput.Information;
 
+    using Library;
+
+    using UI;
+
     public class CombatManager : SubManager<CombatManager>
     {
         public enum CombatMode
@@ -25,70 +29,7 @@
             Attack,
             Defense,
         }
-
-        [Serializable]
-        public class UnityBoolEvent : UnityEvent<bool> { }
-
-        [Serializable]
-        public class CombatUiInformation
-        {
-            [Serializable]
-            public class ModeUiInformation
-            {
-                public Sprite backgroundImage;
-                public Sprite midgroundImage;
-                public Sprite foregroundImage;
-
-                public Color modeColor;
-            }
-
-            public ModeUiInformation m_AttackModeUiInformation;
-            public ModeUiInformation m_DefenseModeUiInformation;
-
-            [Space]
-            public List<Color> standardGemColors = new List<Color>();
-            public List<Color> alternativeGemColors = new List<Color>();
-
-            [Space, SerializeField]
-            private bool m_UseAlternativeColors;
-
-            [Space, SerializeField]
-            private UnityBoolEvent m_OnUseAlternativeColorsChange = new UnityBoolEvent();
-
-            public List<Color> gemColors
-            {
-                get { return m_UseAlternativeColors ? alternativeGemColors : standardGemColors; }
-            }
-
-            public ModeUiInformation currentModeUiInformation
-            {
-                get
-                {
-                    switch (self.combatMode)
-                    {
-                    case CombatMode.Attack:
-                        return m_AttackModeUiInformation;
-                    case CombatMode.Defense:
-                        return m_DefenseModeUiInformation;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                    }
-                }
-            }
-
-            public bool useAlternativeColors
-            {
-                get { return m_UseAlternativeColors; }
-                set { m_UseAlternativeColors = value; m_OnUseAlternativeColorsChange.Invoke(value); }
-            }
-
-            public UnityBoolEvent onUseAlternativeColorsChange
-            {
-                get { return m_OnUseAlternativeColorsChange; }
-            }
-        }
-
+        
         [SerializeField]
         private Canvas m_Canvas;
         [SerializeField]
