@@ -182,7 +182,7 @@
 
         public GridMono gridMono { get { return m_GridMono; } }
 
-        public List<GameObject> enemyPrefabList = new List<GameObject>();
+        
 
         protected override void Init()
         {
@@ -192,6 +192,7 @@
             if (doCombat)
             {
                 var managerEnemies = GameManager.self.enemyIndexes;
+                var enemyPrefabList = GameManager.self.enemyPrefabList;
 
                 //Something wrong here.
 

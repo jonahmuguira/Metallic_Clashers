@@ -8,7 +8,6 @@
 
     using UnityEngine;
     using UnityEngine.Events;
-    using UnityEngine.EventSystems;
     using UnityEngine.UI;
 
     [Serializable]
@@ -25,8 +24,6 @@
         private Node m_CurrentNode;
         [SerializeField]
         private Text m_StageNameText;
-        [SerializeField]
-        private Text m_CompletedText;
         [SerializeField]
         private Button m_StartComabtButton;
 
@@ -237,7 +234,6 @@
 
             //Set Up UI
             m_StageNameText.text = "";
-            m_CompletedText.text = "";
             m_StartComabtButton.onClick.AddListener(OnStageSelectionEnd);
             m_StartComabtButton.interactable = false;
         }
@@ -321,15 +317,11 @@
         {
             if (m_CurrentNode.isComplete)
             {
-                m_CompletedText.color = Color.green;
-                m_CompletedText.text = "Completed";
-                m_StageNameText.text = "Stage: " + m_CurrentNode.stageName;
+                m_StageNameText.text = "Stage: " + m_CurrentNode.stageName + " - Completed";
             }
             else
             {
-                m_CompletedText.color = Color.blue;
-                m_CompletedText.text = "Playable";
-                m_StageNameText.text = "Stage: " + m_CurrentNode.stageName;
+                m_StageNameText.text = "Stage: " + m_CurrentNode.stageName + " - Playable";
             }
             m_StartComabtButton.interactable = true;
         }
