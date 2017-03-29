@@ -11,14 +11,19 @@ namespace Combat
     {
         private EnemyMono m_CurrentEnemyMono;
         private bool m_Rising = true;
+        private bool m_Selecting;
         private float m_MaxY;
         private float m_MinY;
         private Transform m_Marker;
+        [SerializeField]
+        private float m_MaxTime;
+        private float m_CurrentTime;
 
         public GameObject markerPrefab;
 
         private void Start ()
         {
+            m_CurrentTime = m_MaxTime;
             m_CurrentEnemyMono = EnemyManager.self.currentEnemy;           // Get current enemy
 
             m_Marker = Instantiate(markerPrefab, SetMarkerToCurrent(),
@@ -30,6 +35,18 @@ namespace Combat
 
         private void OnCombatUpdate()
         {
+            if (m_Selecting)
+            {
+                CombatCamera.isAnimating = false;
+                m_CurrentTime -= Time.deltaTime;
+                if (m_CurrentTime <= 0f)
+                {
+                    m_CurrentTime = m_MaxTime;
+                    m_Selecting = false;
+                    CombatCamera.isAnimating = true;
+                }
+            }
+
             if (m_Rising)
             {
                 m_Marker.position += new Vector3(0, Time.deltaTime, 0);
@@ -100,23 +117,20 @@ namespace Combat
             }
             
             // EnemyMono same as the current target
-            if (gameOb == m_CurrentEnemyMono.gameObject)
-            {
-            
-                m_Marker.position = SetMarkerToCurrent();   // Set position of marker
+            if (!gameOb.GetComponent<EnemyMono>())
+                return;
 
-                EnemyManager.self.currentEnemy = m_CurrentEnemyMono;   // Set enemy
+            CombatCamera.isAnimating = false;
+            m_Selecting = true;
 
-                CombatCamera.isAnimating = true;            // Turn combat Camera back on
-            }
+            Camera.main.transform.localPosition = new Vector3(0, 0, -5f);
+            m_CurrentEnemyMono = gameOb.GetComponent<EnemyMono>();
 
-            // Clicked a different EnemyMono than the current.
-            else if (gameOb.GetComponent<EnemyMono>() != m_CurrentEnemyMono)
-            {
-                Camera.main.transform.localPosition = new Vector3(0, 0, -5f);
-                m_CurrentEnemyMono = gameOb.GetComponent<EnemyMono>();
-                m_Marker.position = m_CurrentEnemyMono.transform.position + new Vector3(0, 1f, 0);
-            }
+            m_Marker.position = SetMarkerToCurrent();   // Set position of marker
+
+            EnemyManager.self.currentEnemy = m_CurrentEnemyMono;   // Set enemy
+
+            CombatCamera.isAnimating = true;            // Turn combat Camera back on
         }
 
         private Vector3 SetMarkerToCurrent()
