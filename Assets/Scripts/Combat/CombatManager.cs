@@ -27,7 +27,7 @@
             Attack,
             Defense,
         }
-        
+
         [SerializeField]
         private Canvas m_Canvas;
         [SerializeField]
@@ -61,7 +61,6 @@
         [SerializeField]
         private UnityEvent m_OnPlayerTurn = new UnityEvent();
 
-        [SerializeField]
         private GridMono m_GridMono;
 
         private GridCollectionMono m_LockedGridCollectionMono;
@@ -99,7 +98,7 @@
 
         public GridMono gridMono { get { return m_GridMono; } }
 
-        
+
 
         protected override void Init()
         {
