@@ -21,7 +21,7 @@
         public Vector2 normalizedPosition;
         public bool isComplete = false;
         [XmlIgnore]
-        public string stageName {get { return worldIndex + "-" + stageNumber; } }
+        public string stageName {get { return worldIndex + " - " + stageNumber; } }
         [XmlIgnore]
         public string stageNumber;
         [XmlIgnore]
@@ -54,7 +54,7 @@
             // Node is not playable
             else
             {
-                GetComponent<Button>().interactable = false;
+                mat.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
             }
         }
     }
