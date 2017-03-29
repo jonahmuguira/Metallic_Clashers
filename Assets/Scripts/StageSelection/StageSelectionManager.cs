@@ -1,4 +1,6 @@
-﻿namespace StageSelection
+﻿using System.Linq;
+
+namespace StageSelection
 {
     using System;
     using System.Collections;
@@ -213,7 +215,7 @@
                         : new Vector2(10, differance.magnitude);
 
                     lineObject.GetComponent<Image>().color = (monoNode.node.isComplete) 
-                        ? Color.blue : Color.red;
+                        ? Color.blue : new Color(1, 1, 1, 0.5f);
                         // Set Material Color
 
                     lineTransform.position = linePosition;
@@ -318,14 +320,8 @@
 
         private void DisplayInformation()
         {
-            if (m_CurrentNode.isComplete)
-            {
-                m_StageNameText.text = "Stage: " + m_CurrentNode.stageName + " - Completed";
-            }
-            else
-            {
-                m_StageNameText.text = "Stage: " + m_CurrentNode.stageName + " - Playable";
-            }
+            m_StageNameText.text = "Stage: " + m_CurrentNode.stageName;
+
 
             // Enemy Display - Text
             m_EnemyText.text = "";
@@ -344,7 +340,16 @@
                 m_EnemyText.text += key.Key + " x" + key.Value;
             }
 
-            m_StartComabtButton.interactable = true;
+            if (m_CurrentNode.isComplete || m_CurrentNode.prevNodes.Any(n => n.isComplete))
+            {
+                m_StartComabtButton.interactable = true;
+                m_StartComabtButton.gameObject.GetComponentInChildren<Text>().text = "Engage";
+            }
+            else
+            {
+                m_StartComabtButton.interactable = false;
+                m_StartComabtButton.gameObject.GetComponentInChildren<Text>().text = "Locked";
+            }
         }
     }
 }

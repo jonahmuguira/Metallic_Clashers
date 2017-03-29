@@ -748,6 +748,11 @@ Prefab:
       propertyPath: markerMoveDistance
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
+        type: 2}
+      propertyPath: m_MaxTime
+      value: 2.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9e3d9b44e6a37de4196fef420fc8950e, type: 2}
   m_IsPrefabParent: 0

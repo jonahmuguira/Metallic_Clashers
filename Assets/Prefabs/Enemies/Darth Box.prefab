@@ -276,11 +276,11 @@ MonoBehaviour:
     m_Attack:
       m_Modifier: 0
       m_Coefficient: 1
-      value: 10
+      value: 5
     m_Defense:
       m_Modifier: 0
       m_Coefficient: 1
-      value: 10
+      value: 5
     attackSpeed: 5
     movesUntilAttack: 3
     damageType: 0
