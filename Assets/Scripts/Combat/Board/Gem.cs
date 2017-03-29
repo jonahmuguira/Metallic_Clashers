@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     using Information;
 
@@ -10,13 +9,6 @@
 
     using UnityEngine;
     using UnityEngine.Events;
-
-    [Serializable]
-    public class PositionChangeEvent : UnityEvent<PositionChangeInformation> { }
-    [Serializable]
-    public class TypeChangeEvent : UnityEvent<TypeChangeInformation> { }
-    [Serializable]
-    public class CreateGemEvent : UnityEvent<Gem> { }
 
     public enum GemType
     {
@@ -39,6 +31,13 @@
     [Serializable]
     public class Gem : IAttachable
     {
+        [Serializable]
+        public class PositionChangeEvent : UnityEvent<PositionChangeInformation> { }
+        [Serializable]
+        public class TypeChangeEvent : UnityEvent<TypeChangeInformation> { }
+        [Serializable]
+        public class CreateGemEvent : UnityEvent<Gem> { }
+
         #region SERIALIZED_FIELDS
 
         [SerializeField]

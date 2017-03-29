@@ -272,7 +272,7 @@ MonoBehaviour:
     m_Health:
       m_Modifier: 0
       m_Coefficient: 1
-      value: 10
+      value: 50
     m_Attack:
       m_Modifier: 0
       m_Coefficient: 1
