@@ -186,7 +186,7 @@
 
         protected IEnumerator MatchAnimation()
         {
-            var gemImages = GetComponentsInParent<GemImage>();
+            var gemImages = gem.GetComponents<GemImage>().ToArray();
 
             var backgroundImage = gemImages.FirstOrDefault(
                 gemImage => gemImage.imageType == GemImage.ImageType.Background);
