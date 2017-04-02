@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Combat.Board.Information;
-
-using UnityEngine;
-
-namespace Combat
+﻿namespace Combat
 {
-    using Library;
-    public class EnemyManager : SubManager<EnemyManager> {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Board.Information;
+
+    using UnityEngine;
+
+    public class EnemyManager : SubManager<EnemyManager>
+    {
+        [SerializeField]
+        private GameObject m_EnemyHealthBarPrefab;
 
         private List<EnemyMono> m_Enemies = new List<EnemyMono>();
 
@@ -16,6 +18,9 @@ namespace Combat
 
         public float enemyPadding = 1f;
         public bool doCombat;
+
+        public GameObject enemyHealthBarPrefab { get { return m_EnemyHealthBarPrefab; } }
+
         public EnemyMono currentEnemy
         {
             get { return m_CurrentEnemy; }
@@ -32,7 +37,8 @@ namespace Combat
         }
 
         // Use this for initialization
-        protected override void Init() {
+        protected override void Init()
+        {
             if (!doCombat)
                 return;
 

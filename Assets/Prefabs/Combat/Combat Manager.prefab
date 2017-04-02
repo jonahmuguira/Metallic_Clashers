@@ -94,7 +94,6 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
-  m_GridMono: {fileID: 0}
 --- !u!114 &114747481958685648
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -106,5 +105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 993fc86c1861de943853adc63c2b23c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_EnemyHealthBarPrefab: {fileID: 1233565346064384, guid: 29b1171a7461db54399b513b28da2066,
+    type: 2}
   enemyPadding: 1
   doCombat: 1
