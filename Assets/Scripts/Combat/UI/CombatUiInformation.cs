@@ -1,5 +1,4 @@
-﻿
-namespace Combat.UI
+﻿namespace Combat.UI
 {
     using System;
     using System.Collections.Generic;
