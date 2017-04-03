@@ -114,8 +114,6 @@ public class GameManager : MonoSingleton<GameManager>
                     (OnStageSelectionEnd);
 
                 GameObject.Find("Title").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(0); });
-
-                GameObject.Find("Combat").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(2); });
                 break;
 
             case GameState.Title:
