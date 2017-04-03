@@ -15,7 +15,7 @@
             base.Start();
 
             m_Enemy.health.onTotalValueChanged.AddListener(UpdateFillAmount);
-
+            m_Enemy.onDestroy.AddListener(EnemyDestroyed);
             UpdateFillAmount();
         }
 
@@ -31,6 +31,11 @@
         {
             fillAmount = enemy.health.totalValue / enemy.health.value;
             color = Color.Lerp(Color.red, Color.green, fillAmount);
+        }
+
+        private void EnemyDestroyed()
+        {
+            Destroy(gameObject);
         }
     }
 }
