@@ -98,7 +98,7 @@
 
             case CombatManager.CombatMode.Defense:
                 GameManager.self.playerData.defense.modifier += matchInfo.gems.Count
-                                                                * (playerData.defense.value * .5F);
+                * (playerData.defense.value * .5F);
                 break;
             }
 
@@ -126,11 +126,6 @@
             var destroyList = m_Enemies.Where(e => e.enemy.health.totalValue <= 0).ToList();
 
             var finalList = m_Enemies.Where(e => !destroyList.Contains(e)).ToList();
-
-            foreach (var d in destroyList)
-            {
-                Destroy(d.gameObject);
-            }
 
             m_Enemies = finalList;
 
