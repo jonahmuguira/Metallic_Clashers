@@ -112,6 +112,10 @@ public class GameManager : MonoSingleton<GameManager>
             case GameState.StateSelection:     // Stage Selection
                 StageSelectionManager.self.onStageSelectionEnd.AddListener
                     (OnStageSelectionEnd);
+
+                GameObject.Find("Title").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(0); });
+
+                GameObject.Find("Combat").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(2); });
                 break;
 
             case GameState.Title:
