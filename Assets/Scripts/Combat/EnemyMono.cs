@@ -32,11 +32,17 @@
             m_Enemy.components.Add(newEnemyHealthBar);
 
             m_Enemy.health.onTotalValueChanged.AddListener(OnTotalValueChanged);
+            m_Enemy.onDestroy.AddListener(OnDestroy);
         }
 
         private void OnTotalValueChanged()
         {
 
+        }
+
+        private void OnDestroy()
+        {
+            Destroy(gameObject);
         }
     }
 }

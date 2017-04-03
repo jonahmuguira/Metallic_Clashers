@@ -19,12 +19,15 @@ namespace Combat
         private Attribute m_Attack = new Attribute { value = 10f };
         [SerializeField]
         private Attribute m_Defense = new Attribute { value = 10f };
+        private UnityEvent m_OnDestroy = new UnityEvent();
 
         public Attribute health { get { return m_Health; } }
         public Attribute attack { get { return m_Attack; } }
         public Attribute defense { get { return m_Defense; } }
+        public UnityEvent onDestroy { get { return m_OnDestroy;} }
 
-        public float attackSpeed; public int movesUntilAttack;
+        public float attackSpeed;
+        public int movesUntilAttack;
         public GemType damageType;
 
         public List<GemType> resistances;
@@ -69,7 +72,6 @@ namespace Combat
         public void OnCombatBegin()
         {
             CombatManager.self.onPlayerTurn.AddListener(OnPlayerTurn);
-            //CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
             CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
         }
 
