@@ -127,11 +127,6 @@
 
             var finalList = m_Enemies.Where(e => !destroyList.Contains(e)).ToList();
 
-            foreach (var d in destroyList)
-            {
-                d.GetComponent<EnemyMono>().enemy.onDestroy.Invoke();
-            }
-
             m_Enemies = finalList;
 
             GameManager.self.playerData.DecayShield();

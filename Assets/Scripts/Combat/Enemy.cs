@@ -77,6 +77,9 @@ namespace Combat
 
         private void OnCombatUpdate()
         {
+            if(health.totalValue <= 0)
+                m_OnDestroy.Invoke();
+
             attackCountdown -= Time.deltaTime;
 
             if (attackCountdown > 0) return;
