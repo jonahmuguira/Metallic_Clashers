@@ -21,10 +21,10 @@ public class GameManager : MonoSingleton<GameManager>
 {
     public enum GameState
     {
-        Combat = 2,
-        MainMenu = 0,
-        StageSelection = 1,
-        //StagePreparation,
+        Title,
+        StateSelection,
+        Combat,
+        Credits,
     }
 
     [SerializeField]
@@ -41,7 +41,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public List<int> enemyIndexes = new List<int>();
 
-    public List<GameObject> enemyPrefabList { get { return m_EnemyPrefabList;} }
+    public List<GameObject> enemyPrefabList { get { return m_EnemyPrefabList; } }
     public UnityEvent onSceneLoaded { get { return m_OnSceneLoaded; } }
 
     protected override void OnAwake()
@@ -59,7 +59,7 @@ public class GameManager : MonoSingleton<GameManager>
             };
             Save();
         }
-        gameState = GameState.MainMenu;
+        gameState = GameState.Title;
         AddSceneListeners();
         //onSceneLoaded.AddListener(AddSceneListeners);
     }
@@ -74,40 +74,50 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnCombatEnd()
     {
-        LoadScene(1);
+        LoadScene((int)GameState.StateSelection);
     }
 
     private void OnStageSelectionEnd()
     {
-        LoadScene(2);
+        LoadScene((int)GameState.Combat);
     }
 
     private void AddSceneListeners()
     {
-        switch (m_CurrentScene)
+        switch ((GameState)m_CurrentScene)
         {
-            case 2:     // Combat
+            case GameState.Credits:
+                var button = FindObjectOfType<Button>();
+                button.onClick.AddListener(() => { LoadScene(0); });
+                break;
+
+            case GameState.Combat:     // Combat
                 playerData.health.modifier = 0;
                 playerData.defense.modifier = 0;
                 CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
                 CombatManager.self.onPlayerTurn.AddListener(AudioManager.self.PlayDragSound);
                 gameState = GameState.Combat;
-                
+
                 // Toggle Music Button
                 GameObject.Find("Menu Button").transform.FindChild("Icon Layout Group")
                     .FindChild("Music Button").gameObject.GetComponent<Button>
                     ().onClick.AddListener(AudioManager.self.MuteMusicToggle);
-               
+
                 // Toggle SoundEffect Button
                 GameObject.Find("Menu Button").transform.FindChild("Icon Layout Group")
                     .FindChild("Sound Effects Button").gameObject.GetComponent<Button>
                     ().onClick.AddListener(AudioManager.self.MuteSoundsToggle);
                 break;
 
-            case 1:     // Stage Selection
+            case GameState.StateSelection:     // Stage Selection
                 StageSelectionManager.self.onStageSelectionEnd.AddListener
                     (OnStageSelectionEnd);
-                gameState = GameState.StageSelection;
+                break;
+
+            case GameState.Title:
+                GameObject.Find("Play").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(1); });
+
+                GameObject.Find("Credits").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(3); });
                 break;
         }
         AudioManager.self.ChangeMusic(m_CurrentScene);
@@ -141,7 +151,7 @@ public class GameManager : MonoSingleton<GameManager>
         {
             StartCoroutine(LoadSceneCoroutine(sceneIndex));
         }
-                
+
     }
 
     private IEnumerator LoadSceneCoroutine(int sceneIndex)
