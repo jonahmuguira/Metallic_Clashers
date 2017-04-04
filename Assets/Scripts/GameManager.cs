@@ -21,6 +21,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         Title,
         StateSelection,
+        Preparation,
         Combat,
         Credits,
     }
@@ -107,17 +108,23 @@ public class GameManager : MonoSingleton<GameManager>
                     ().onClick.AddListener(AudioManager.self.MuteSoundsToggle);
                 break;
 
+            case GameState.Preparation: //this is where you select items/gem types before combat
+                GameObject.Find("Accept").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(1); });
+                break;
+
             case GameState.StateSelection:     // Stage Selection
                 StageSelectionManager.self.onStageSelectionEnd.AddListener
                     (OnStageSelectionEnd);
 
                 GameObject.Find("Title").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(0); });
+
+                GameObject.Find("Setup").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(2); });
                 break;
 
             case GameState.Title:
                 GameObject.Find("Play").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(1); });
 
-                GameObject.Find("Credits").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(3); });
+                GameObject.Find("Credits").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(4); });
                 break;
         }
         AudioManager.self.ChangeMusic((int)gameState);
