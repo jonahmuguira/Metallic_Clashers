@@ -126,21 +126,8 @@
                 m_CombatHasBegun = true;
             }
 
-            //if (UnityEngine.Input.GetKeyDown(KeyCode.P))
-            //   m_IsPaused = !m_IsPaused;
-
             if (!m_IsPaused)
                 m_OnCombatUpdate.Invoke();
-
-            //if (m_LockedGridCollectionMono == null)
-            //    return;
-
-            //foreach (var gem in m_LockedGridCollectionMono.gridCollection.gems)
-            //{
-            //    var gemMono = gem.GetComponent<GemMono>();
-
-            //    gemMono.positionOffset += new Vector2(0.5f, 0f);
-            //}
         }
 
         private void LateUpdate()
@@ -220,21 +207,6 @@
             m_HasSlid = false;
         }
 
-        protected override void OnPress(TouchInformation touchInfo)
-        {
-            var ray = Camera.main.ScreenPointToRay(touchInfo.position);
-            RaycastHit hit;
-
-            if (!Physics.Raycast(ray.origin, ray.direction, out hit))
-                return;
-
-            var gameOb = hit.transform.gameObject;
-            if (gameOb.GetComponent<EnemyMono>() && CombatCamera.isAnimating)
-            {
-                CombatCamera.isAnimating = false;
-            }
-        }
-
         private static IEnumerable<GridCollectionMono> RayCastToGridCollectionMono(Vector2 origin)
         {
             var pointerEventData =
@@ -255,41 +227,6 @@
                         hit => hit.gameObject.GetComponent<GridCollectionMono>() != null).
                     Select(
                         hit => hit.gameObject.GetComponent<GridCollectionMono>());
-        }
-
-        [CanBeNull]
-        private static GemMono RaycastToGemMono(Vector2 origin)
-        {
-            var pointerEventData =
-                new PointerEventData(EventSystem.current) { position = origin };
-
-            var hits = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerEventData, hits);
-
-            // If nothing was hit
-            if (hits.Count <= 0)
-                return null;
-
-            var firstHit = hits.First();
-
-            // Return the first hit object's GemMono component
-            // Will be null if one was not found on the game object
-            return firstHit.gameObject.GetComponent<GemMono>();
-        }
-
-        [CanBeNull]
-        private static Gem RaycastToGem(Vector2 origin)
-        {
-            var gemMono = RaycastToGemMono(origin);
-
-            // If we didn't hit a GemMono first
-            return gemMono ? gemMono.gem : null;
-        }
-
-        [ContextMenu("Test Match")]
-        public void TestMatch()
-        {
-            m_GridMono.grid.CheckMatch();
         }
     }
 }
