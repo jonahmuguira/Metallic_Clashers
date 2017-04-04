@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 using Combat;
 
-using CustomInput;
+using Items;
 
 using Library;
 
@@ -31,7 +31,6 @@ public class GameManager : MonoSingleton<GameManager>
     private UnityEvent m_OnSceneLoaded = new UnityEvent();
 
     private const string savePath = "/PlayerData.xml";
-    private int m_CurrentScene = 0;
     [SerializeField]
     private List<GameObject> m_EnemyPrefabList = new List<GameObject>();
 
@@ -48,7 +47,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         DontDestroyOnLoad(gameObject);
         if (File.Exists(Environment.CurrentDirectory + savePath))
-            Load();
+            LoadPlayer();
         else
         {
             playerData = new PlayerData(200, 10, 10);
@@ -57,9 +56,10 @@ public class GameManager : MonoSingleton<GameManager>
                 value = 0,
                 timeLastPlayed = DateTime.Now.ToString()
             };
-            Save();
+            SavePlayer();
         }
-        gameState = GameState.Title;
+
+        gameState = (GameState)SceneManager.GetActiveScene().buildIndex;
         AddSceneListeners();
         //onSceneLoaded.AddListener(AddSceneListeners);
     }
@@ -69,7 +69,7 @@ public class GameManager : MonoSingleton<GameManager>
     //    playerData.staminaInformation.maxValue = StaminaManager.self.maxValue;
     //    playerData.staminaInformation.value = StaminaManager.self.value;
     //    playerData.staminaInformation.timeLastPlayed = DateTime.Now.ToString();
-    //    Save();
+    //    SavePlayer();
     //}
 
     private void OnCombatEnd()
@@ -84,7 +84,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void AddSceneListeners()
     {
-        switch ((GameState)m_CurrentScene)
+        switch (gameState)
         {
             case GameState.Credits:
                 var button = FindObjectOfType<Button>();
@@ -122,11 +122,11 @@ public class GameManager : MonoSingleton<GameManager>
                 GameObject.Find("Credits").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(3); });
                 break;
         }
-        AudioManager.self.ChangeMusic(m_CurrentScene);
+        AudioManager.self.ChangeMusic((int)gameState);
     }
 
     [ContextMenu("Save Player")]
-    private void Save()
+    private void SavePlayer()
     {
         //Saving PlayerData
         var playerPath = Environment.CurrentDirectory + savePath;
@@ -138,7 +138,7 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
     [ContextMenu("Load Player")]
-    private void Load()
+    private void LoadPlayer()
     {
         var reader = new XmlSerializer(typeof(PlayerData));
         var file = new StreamReader(Environment.CurrentDirectory + savePath);
@@ -149,7 +149,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void LoadScene(int sceneIndex)
     {
-        if (m_CurrentScene != sceneIndex)
+        if ((int)gameState != sceneIndex)
         {
             StartCoroutine(LoadSceneCoroutine(sceneIndex));
         }
@@ -159,11 +159,10 @@ public class GameManager : MonoSingleton<GameManager>
     private IEnumerator LoadSceneCoroutine(int sceneIndex)
     {
         var asyncOperation = SceneManager.LoadSceneAsync(sceneIndex);
-        m_CurrentScene = sceneIndex;
 
         while (!asyncOperation.isDone) { yield return null; }
 
-        m_CurrentScene = sceneIndex;
+        gameState = (GameState)sceneIndex;
 
         AddSceneListeners();
         onSceneLoaded.Invoke();
