@@ -8,8 +8,6 @@ namespace Items
     using System.Xml.Serialization;
     using Combat;
 
-    using UnityEngine;
-
     public class ItemManager
     {
         [Serializable]
@@ -89,11 +87,6 @@ namespace Items
             var serializer = new XmlSerializer(typeof(SaveLists));
             serializer.Serialize(itemsStream, m_Lists);
             itemsStream.Close();
-
-            foreach (var i in m_Inventory)
-            {
-                Debug.Log(i.GetType().ToString());
-            }
         }
 
         public void LoadItems()
