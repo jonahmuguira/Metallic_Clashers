@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+
 using Combat.Board;
 using Items;
 using UnityEngine;
@@ -58,11 +60,11 @@ public class PlayerData
     public List<GemSkill> gemSkills = new List<GemSkill>();
 
     public List<Tree> worldData = new List<Tree>();
-    public StaminaInformation staminaInformation;
+    public StaminaInformation staminaInformation = new StaminaInformation();
 
-    public LevelSystem playerLevelSystem;
+    public LevelSystem playerLevelSystem = new LevelSystem();
 
-    public ItemManager itemManager;
+    [XmlIgnore]public ItemManager itemManager = new ItemManager();
 
     public void TakeDamage(float damage, GemType gemType)
     {

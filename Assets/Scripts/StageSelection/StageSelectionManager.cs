@@ -340,7 +340,8 @@ namespace StageSelection
                 m_EnemyText.text += key.Key + " x" + key.Value;
             }
 
-            if (m_CurrentNode.isComplete || m_CurrentNode.prevNodes.Any(n => n.isComplete))
+            if (m_CurrentNode.isComplete || m_CurrentNode.prevNodes.Any(n => n.isComplete) 
+                || m_CurrentNode.prevNodes.Count == 0)
             {
                 m_StartComabtButton.interactable = true;
                 m_StartComabtButton.gameObject.GetComponentInChildren<Text>().text = "Engage";
