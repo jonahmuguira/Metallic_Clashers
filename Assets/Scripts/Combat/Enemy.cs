@@ -5,21 +5,29 @@ using UnityEngine;
 
 namespace Combat
 {
+    using UnityEngine.Events;
+
     [Serializable]
     public class Enemy : IAttachable
     {
+        [Serializable]
+        public class CreateEnemyEvent : UnityEvent<Enemy> { }
+
         [SerializeField]
         private Attribute m_Health = new Attribute { value = 10f };
         [SerializeField]
         private Attribute m_Attack = new Attribute { value = 10f };
         [SerializeField]
         private Attribute m_Defense = new Attribute { value = 10f };
+        private UnityEvent m_OnDestroy = new UnityEvent();
 
         public Attribute health { get { return m_Health; } }
         public Attribute attack { get { return m_Attack; } }
-        public Attribute defense {get { return m_Defense; } }
+        public Attribute defense { get { return m_Defense; } }
+        public UnityEvent onDestroy { get { return m_OnDestroy;} }
 
-        public float attackSpeed;public int movesUntilAttack;
+        public float attackSpeed;
+        public int movesUntilAttack;
         public GemType damageType;
 
         public List<GemType> resistances;
@@ -27,7 +35,7 @@ namespace Combat
 
         private int movesCounter = 0;
         private float attackCountdown;
-
+        
         private readonly List<IComponent> m_Components = new List<IComponent>();
 
         public List<IComponent> components { get { return m_Components; } }
@@ -35,13 +43,8 @@ namespace Combat
         public Enemy()
         {
             health.value = 10;
-            health.coefficient = 1;
-
             attack.value = 10;
-            attack.coefficient = 1;
-
             defense.value = 10;
-            defense.coefficient = 1;
 
             attackSpeed = 5;
             attackCountdown = attackSpeed;
@@ -57,27 +60,26 @@ namespace Combat
             int newMovesUntilAttack)
         {
             health.value = newHealth;
-
             attack.value = newAttack;
-
             defense.value = newDefense;
 
             attackSpeed = newAttackSpeed;
             attackCountdown = attackSpeed;
 
             movesUntilAttack = newMovesUntilAttack;
-
         }
 
         public void OnCombatBegin()
         {
             CombatManager.self.onPlayerTurn.AddListener(OnPlayerTurn);
-            //CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
             CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
         }
 
         private void OnCombatUpdate()
         {
+            if(health.totalValue <= 0)
+                m_OnDestroy.Invoke();
+
             attackCountdown -= Time.deltaTime;
 
             if (attackCountdown > 0) return;

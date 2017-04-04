@@ -72,8 +72,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1978000353783988}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.5, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4387903028302688}
@@ -137,6 +137,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!23 &23205054188465402
 MeshRenderer:
@@ -168,6 +169,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!23 &23711056935052084
 MeshRenderer:
@@ -199,6 +201,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &33116616349220716
 MeshFilter:
@@ -272,16 +275,16 @@ MonoBehaviour:
     m_Health:
       m_Modifier: 0
       m_Coefficient: 1
-      value: 10
+      value: 25
     m_Attack:
       m_Modifier: 0
       m_Coefficient: 1
-      value: 10
+      value: 5
     m_Defense:
       m_Modifier: 0
       m_Coefficient: 1
-      value: 10
-    attackSpeed: 5
+      value: 5
+    attackSpeed: 10
     movesUntilAttack: 3
     damageType: 0
     resistances: 
