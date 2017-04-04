@@ -6,7 +6,7 @@ namespace Items
     using UnityEngine;
 
     [Serializable]
-    public class BaseItem
+    public abstract class BaseItem
     {
         protected bool m_Alive;  //states if the item can be destroied or not
         protected float m_Age;   //current durabilities max value.
@@ -21,6 +21,11 @@ namespace Items
     [Serializable]
     public class InstantItem : BaseItem
     {
+        public InstantItem()
+        {
+            
+        }
+
         public InstantItem(float mod) { modifier = mod; }
 
         public override void UseItem()
@@ -34,12 +39,17 @@ namespace Items
     //for instant items, just remove them. do not destroy them.
 
     [Serializable]
-    public class TurnBased : BaseItem { public override void UpdateSelf() { m_Age++; } }
+    public abstract class TurnBased : BaseItem { public override void UpdateSelf() { m_Age++; } }
 
     [Serializable]
     public class TurnBuff : TurnBased
     {
         public bool itemStatType;
+
+        public TurnBuff()
+        {
+            
+        }
 
         public TurnBuff(float dur, float mod, bool type) { durability = dur; modifier = mod; itemStatType = type; }
 
@@ -82,12 +92,17 @@ namespace Items
     }
 
     [Serializable]
-    public class TimeBased : BaseItem { public override void UpdateSelf() { m_Age += Time.deltaTime; } }
+    public abstract class TimeBased : BaseItem { public override void UpdateSelf() { m_Age += Time.deltaTime; } }
 
     [Serializable]
     public class TimeBuff : TimeBased
     {
         public bool itemStatType;
+
+        public TimeBuff()
+        {
+            
+        }
 
         public TimeBuff(float dur, float mod, bool type) { durability = dur; modifier = mod; itemStatType = type; }
 
