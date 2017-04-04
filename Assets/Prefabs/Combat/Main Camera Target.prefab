@@ -104,6 +104,8 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
+  m_AllowMSAA: 1
+  m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
@@ -133,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c6b8b13b03601343a0b9d5854c2066d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  markerPrefab: {fileID: 1414010284428244, guid: 98a4b08660dfdc947b72998388efcaff,
+  m_MarkerPrefab: {fileID: 1414010284428244, guid: 98a4b08660dfdc947b72998388efcaff,
     type: 2}
 --- !u!114 &114689919778191280
 MonoBehaviour:
@@ -255,6 +257,26 @@ MonoBehaviour:
     m_StartDelay: 0
     m_EndDelay: 0
     m_Magnitude: {x: 0, y: -90, z: 0}
+  m_ScreenShakeTime: 0.75
+  m_ScreenShakeCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 1
+      inSlope: -3.0883865
+      outSlope: -3.0883865
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
+  isAnimating: 1
 --- !u!124 &124841323023816480
 Behaviour:
   m_ObjectHideFlags: 1
