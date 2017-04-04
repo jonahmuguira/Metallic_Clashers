@@ -107,5 +107,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_EnemyHealthBarPrefab: {fileID: 1233565346064384, guid: 29b1171a7461db54399b513b28da2066,
     type: 2}
+  m_OnCurrentEnemyChange:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: Combat.UnityEnemyEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  m_PauseCameraTime: 2
   enemyPadding: 1
   doCombat: 1

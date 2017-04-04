@@ -15,11 +15,18 @@
         [SerializeField]
         private List<TransformAnimation> m_Animations = new List<TransformAnimation>();
 
+        [SerializeField]
+        private float m_ScreenShakeTime;
+        [SerializeField]
+        private AnimationCurve m_ScreenShakeCurve;
+
         private IEnumerator m_AnimationEnumerator;
+        private IEnumerator m_ScreenShakeEnumerator;
+
         private Vector3 m_OriginalPosition;
         private Quaternion m_OriginalQuaternion;
 
-        public static bool isAnimating = true;
+        public bool isAnimating = true;
 
         public List<TransformAnimation> animations { get { return m_Animations; } }
 
@@ -30,6 +37,7 @@
 
             m_AnimationEnumerator = Animate();
 
+            GameManager.self.playerData.onTakeDamage.AddListener(OnPlayerTakeDamage);
             CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
         }
 
@@ -37,13 +45,19 @@
         {
             if (!isAnimating)
             {
-                StopCoroutine(m_AnimationEnumerator);
                 transform.position = m_OriginalPosition;
                 transform.rotation = m_OriginalQuaternion;
-                return;
             }
+            else if (m_AnimationEnumerator != null)
+                m_AnimationEnumerator.MoveNext();
 
-            if (m_AnimationEnumerator.MoveNext()) { }
+            if (m_ScreenShakeEnumerator != null)
+                m_ScreenShakeEnumerator.MoveNext();
+        }
+
+        private void OnPlayerTakeDamage()
+        {
+            m_ScreenShakeEnumerator = ScreenShakEnumerator();
         }
 
         private IEnumerator Animate()
@@ -72,6 +86,26 @@
                 var currentEnumerator = currentAnimation.Animate(transform, null);
 
                 while (currentEnumerator.MoveNext()) { yield return null; }
+            }
+
+            m_AnimationEnumerator = null;
+        }
+
+        private IEnumerator ScreenShakEnumerator()
+        {
+            var deltaTime = 0f;
+            while (deltaTime < m_ScreenShakeTime)
+            {
+                var xOffset = transform.right * Random.Range(-0.2f, 0.2f);
+                var yOffset = transform.up * Random.Range(-0.2f, 0.2f);
+
+                transform.position =
+                    (transform.position + xOffset + yOffset) *
+                    m_ScreenShakeCurve.Evaluate(deltaTime / m_ScreenShakeTime);
+
+                deltaTime += Time.deltaTime;
+
+                yield return null;
             }
         }
     }
