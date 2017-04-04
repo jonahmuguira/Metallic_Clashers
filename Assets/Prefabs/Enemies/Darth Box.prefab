@@ -137,6 +137,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!23 &23205054188465402
 MeshRenderer:
@@ -168,6 +169,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!23 &23711056935052084
 MeshRenderer:
@@ -199,6 +201,7 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &33116616349220716
 MeshFilter:
@@ -281,7 +284,7 @@ MonoBehaviour:
       m_Modifier: 0
       m_Coefficient: 1
       value: 5
-    attackSpeed: 5
+    attackSpeed: 10
     movesUntilAttack: 3
     damageType: 0
     resistances: 
