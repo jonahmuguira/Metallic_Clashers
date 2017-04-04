@@ -1,6 +1,7 @@
 ﻿namespace Combat.UI
 {
     using System;
+    using System.Collections;
 
     using UnityEngine;
     using UnityEngine.UI;
@@ -9,6 +10,8 @@
     {
         [SerializeField]
         private Image m_HealthImage;
+        [SerializeField]
+        private Image m_HealthDelayedImage;
         [SerializeField]
         private Image m_HealthBackgroundImage;
         [SerializeField]
@@ -21,6 +24,9 @@
 
         [SerializeField]
         private Image m_ShieldIcon;
+
+        private Coroutine m_DelayedHealthCoroutine;
+        private float m_DelayedHealthValue;
 
         // Use this for initialization
         private void Awake()
@@ -53,6 +59,7 @@
             float h, s, v;
             Color.RGBToHSV(m_HealthImage.color, out h, out s, out v);
 
+            m_HealthDelayedImage.color = Color.HSVToRGB(h, s - 0.1f, v);
             m_HealthBackgroundImage.color = Color.HSVToRGB(h, s - 0.25f, v);
         }
 
@@ -65,7 +72,13 @@
                     Math.Ceiling(playerHeath.totalValue) + "/" + Mathf.Ceil(playerHeath.value);
             }
 
+            if (m_DelayedHealthValue == 0)
+                m_DelayedHealthValue = GameManager.self.playerData.health.totalValue;
+
             OnStatusModifierChanged();
+
+            if (m_DelayedHealthCoroutine == null)
+                m_DelayedHealthCoroutine = StartCoroutine(DelayedHealthEnumerator());
         }
 
         private void OnDefenseModifierChanged()
@@ -73,8 +86,8 @@
             if (m_ShieldText != null)
             {
                 var playerDefense = GameManager.self.playerData.defense;
-                if(playerDefense.totalValue > 0f)
-                m_ShieldText.text = Math.Ceiling(playerDefense.totalValue).ToString();
+                if (playerDefense.totalValue > 0f)
+                    m_ShieldText.text = Math.Ceiling(playerDefense.totalValue).ToString();
                 else
                     m_ShieldText.text = string.Empty;
             }
@@ -99,6 +112,18 @@
             {
                 m_HealthImage.fillAmount =
                     GameManager.self.playerData.health.totalValue / maxValue;
+
+                m_HealthDelayedImage.rectTransform.anchorMin =
+                    new Vector2(
+                        m_HealthImage.fillAmount,
+                        m_HealthDelayedImage.rectTransform.anchorMin.y);
+                m_HealthDelayedImage.rectTransform.anchorMax=
+                    new Vector2(
+                        m_HealthImage.fillAmount + 1f,
+                        m_HealthDelayedImage.rectTransform.anchorMax.y);
+
+                m_HealthDelayedImage.fillAmount =
+                    (m_DelayedHealthValue / maxValue) - m_HealthImage.fillAmount;
 
                 m_ShieldImage.rectTransform.anchorMin =
                     new Vector2(
@@ -144,6 +169,23 @@
                 new Vector2(
                     -m_ShieldText.preferredWidth / 2f - 10f,
                     m_ShieldIcon.rectTransform.anchoredPosition.y);
+        }
+
+        private IEnumerator DelayedHealthEnumerator()
+        {
+            while (m_DelayedHealthValue != GameManager.self.playerData.health.totalValue)
+            {
+                m_DelayedHealthValue =
+                    Mathf.MoveTowards(
+                        m_DelayedHealthValue,
+                        GameManager.self.playerData.health.totalValue,
+                        7f * Time.deltaTime);
+
+                OnStatusModifierChanged();
+                yield return null;
+            }
+
+            m_DelayedHealthCoroutine = null;
         }
     }
 }
