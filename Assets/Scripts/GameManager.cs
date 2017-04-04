@@ -7,8 +7,6 @@ using System.Xml.Serialization;
 
 using Combat;
 
-using Items;
-
 using Library;
 
 using StageSelection;
@@ -135,6 +133,8 @@ public class GameManager : MonoSingleton<GameManager>
         var serializer = new XmlSerializer(typeof(PlayerData));
         serializer.Serialize(playerStream, playerData);
         playerStream.Close();
+
+        playerData.itemManager.SaveItems();
     }
 
     [ContextMenu("Load Player")]
@@ -145,6 +145,8 @@ public class GameManager : MonoSingleton<GameManager>
 
         playerData = (PlayerData)reader.Deserialize(file);
         file.Close();
+
+        playerData.itemManager.LoadItems();
     }
 
     public void LoadScene(int sceneIndex)
