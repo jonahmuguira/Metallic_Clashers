@@ -12,18 +12,22 @@ public class StaminaInformation
 }
 
 public class StaminaManager : MonoSingleton<StaminaManager>
-{     
-    public uint value;
-    public uint maxValue;
-    public float staminaRate;
+{
+    [SerializeField]
+    private uint m_Value = 0;
+    public uint maxValue = 100;
+    [SerializeField]
+    private float m_StaminaRate = 2.5f;
 
     private float m_Timer;
+
+    public uint value { get { return m_Value; } }
 
 	public void Start()
 	{
 	    var playerStaminaInfo = GameManager.self.playerData.staminaInformation; // Get the Stamina Info
 
-	    value = playerStaminaInfo.value;    // Set value to StaminaInfo value
+	    m_Value = playerStaminaInfo.value;    // Set m_Value to StaminaInfo m_Value
 	    maxValue = playerStaminaInfo.maxValue;
 
         var timeLastPlayed = DateTime.Parse(playerStaminaInfo.timeLastPlayed);   // Get Last Time the app was open 
@@ -37,21 +41,21 @@ public class StaminaManager : MonoSingleton<StaminaManager>
         secondsPassed += ts.Seconds;
 
         // Add the time that was passed
-        value += (uint)(secondsPassed / staminaRate);
+        m_Value += (uint)(secondsPassed / m_StaminaRate);
 
-        // Limit the value
-	    if (value > maxValue)
+        // Limit the m_Value
+	    if (m_Value > maxValue)
 	    {
-	        value = maxValue;
+	        m_Value = maxValue;
 	    }
     }	
 
 	private void Update()
 	{
-        // If value is at maxValue, don't allow to add time
-        if (value >= maxValue)
+        // If m_Value is at maxValue, don't allow to add time
+        if (m_Value >= maxValue)
 	    {
-            m_Timer = staminaRate;
+            m_Timer = m_StaminaRate;
             return;
         }
 
@@ -59,7 +63,7 @@ public class StaminaManager : MonoSingleton<StaminaManager>
 	    if (!(m_Timer <= 0))  // As long as timer isn't less than or equal to 0, stop process here
             return;
 
-	    value++;
-        m_Timer = staminaRate;
+	    m_Value++;
+        m_Timer = m_StaminaRate;
 	}
 }
