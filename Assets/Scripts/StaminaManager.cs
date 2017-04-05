@@ -14,8 +14,8 @@ public class StaminaInformation
 public class StaminaManager : MonoSingleton<StaminaManager>
 {
     [SerializeField]
-    private uint m_Value;
-    public uint maxValue;
+    private uint m_Value = 0;
+    public uint maxValue = 100;
     [SerializeField]
     private float m_StaminaRate = 2.5f;
 

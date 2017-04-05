@@ -36,7 +36,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public GameState gameState;
 
-    public PlayerData playerData;
+    public PlayerData playerData = new PlayerData();
 
     public List<int> enemyIndexes = new List<int>();
 
