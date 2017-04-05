@@ -57,6 +57,7 @@ public class GameManager : MonoSingleton<GameManager>
             playerData.staminaInformation = new StaminaInformation
             {
                 value = 0,
+                maxValue = 100,
                 timeLastPlayed = DateTime.Now.ToString()
             };
             SavePlayer();
@@ -135,8 +136,15 @@ public class GameManager : MonoSingleton<GameManager>
     }
 
     [ContextMenu("Save Player")]
-    private void SavePlayer()
+    public void SavePlayer()
     {
+        playerData.staminaInformation = new StaminaInformation
+        {
+            value = StaminaManager.self.value,
+            maxValue = StaminaManager.self.maxValue,
+            timeLastPlayed = DateTime.Now.ToString(),
+        };
+
         //Saving PlayerData
         var playerPath = m_PlayerSavePath;
         var playerStream = File.Create(playerPath);
