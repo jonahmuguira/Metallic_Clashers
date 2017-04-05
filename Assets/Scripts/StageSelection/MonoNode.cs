@@ -28,6 +28,8 @@
         public int worldIndex;
         [XmlIgnore]
         public List<int> enemyInts = new List<int>();
+        [XmlIgnore]
+        public int staminaCost = 2;
     }
 
     public class MonoNode : MonoBehaviour

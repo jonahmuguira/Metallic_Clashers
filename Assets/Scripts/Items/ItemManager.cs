@@ -8,6 +8,8 @@ namespace Items
     using System.Xml.Serialization;
     using Combat;
 
+    using UnityEngine;
+
     public class ItemManager
     {
         [Serializable]
@@ -23,9 +25,7 @@ namespace Items
         private List<BaseItem> m_ActiveList = new List<BaseItem>();  //list of item(s) being used
         private List<BaseItem> m_CombatInventory = new List<BaseItem>(); //list of item(s) being taken in to combat
 
-        private SaveLists m_Lists = new SaveLists(); 
-
-        private string m_SavePath = Environment.CurrentDirectory + "/Inventory.xml";
+        private SaveLists m_Lists = new SaveLists();
 
         public List<BaseItem> inventory { get { return m_Inventory; } }
         [XmlIgnore] public List<BaseItem> activeList { get { return m_ActiveList; } }
@@ -65,7 +65,7 @@ namespace Items
             if (combatInventory.Contains(item)) { inventory.Add(item); combatInventory.Remove(item); }
         }
 
-        public void SaveItems()
+        public void SaveItems(string path)
         {
             m_Lists.instantItems = new List<InstantItem>();
             m_Lists.timeBuffs = new List<TimeBuff>();
@@ -82,19 +82,19 @@ namespace Items
                     m_Lists.turnBuffs.Add(bi as TurnBuff);
             }
 
-            var itemsStream = File.Create(m_SavePath);
+            var itemsStream = File.Create(path);
 
             var serializer = new XmlSerializer(typeof(SaveLists));
             serializer.Serialize(itemsStream, m_Lists);
             itemsStream.Close();
         }
 
-        public void LoadItems()
+        public void LoadItems(string path)
         {
-            if(!File.Exists(m_SavePath))
-                SaveItems();
+            if(!File.Exists(path))
+                SaveItems(path);
 
-            var stream = new StreamReader(m_SavePath);
+            var stream = new StreamReader(path);
 
             var reader = new XmlSerializer(typeof(SaveLists));
             m_Lists = (SaveLists)reader.Deserialize(stream);
