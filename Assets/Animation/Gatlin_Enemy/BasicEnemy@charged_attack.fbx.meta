@@ -1,0 +1,176 @@
+fileFormatVersion: 2
+guid: 6a8a26b5b9c675945b4a2bf7c9027c48
+timeCreated: 1491402124
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: basic_enemy_1_head_01_01SHJnt
+    100002: basic_enemy_1_head_01_02SHJnt
+    100004: basic_enemy_1_l_arm_ClavicleSHJnt
+    100006: basic_enemy_1_l_arm_ElbowSHJnt
+    100008: basic_enemy_1_l_arm_ShoulderSHJnt
+    100010: basic_enemy_1_l_arm_WristSHJnt
+    100012: basic_enemy_1_l_barrel_flash_AuxSHJnt
+    100014: basic_enemy_1_l_gatlin_rotation_AuxSHJnt
+    100016: basic_enemy_1_r_arm_ClavicleSHJnt
+    100018: basic_enemy_1_r_arm_ElbowSHJnt
+    100020: basic_enemy_1_r_arm_ShoulderSHJnt
+    100022: basic_enemy_1_r_arm_WristSHJnt
+    100024: basic_enemy_1_r_barrel_flash_AuxSHJnt
+    100026: basic_enemy_1_r_gatlin_rotation_AuxSHJnt
+    100028: basic_enemy_1_ROOTSHJnt
+    100030: basic_enemy_1_SHJntGrp
+    100032: //RootNode
+    400000: basic_enemy_1_head_01_01SHJnt
+    400002: basic_enemy_1_head_01_02SHJnt
+    400004: basic_enemy_1_l_arm_ClavicleSHJnt
+    400006: basic_enemy_1_l_arm_ElbowSHJnt
+    400008: basic_enemy_1_l_arm_ShoulderSHJnt
+    400010: basic_enemy_1_l_arm_WristSHJnt
+    400012: basic_enemy_1_l_barrel_flash_AuxSHJnt
+    400014: basic_enemy_1_l_gatlin_rotation_AuxSHJnt
+    400016: basic_enemy_1_r_arm_ClavicleSHJnt
+    400018: basic_enemy_1_r_arm_ElbowSHJnt
+    400020: basic_enemy_1_r_arm_ShoulderSHJnt
+    400022: basic_enemy_1_r_arm_WristSHJnt
+    400024: basic_enemy_1_r_barrel_flash_AuxSHJnt
+    400026: basic_enemy_1_r_gatlin_rotation_AuxSHJnt
+    400028: basic_enemy_1_ROOTSHJnt
+    400030: basic_enemy_1_SHJntGrp
+    400032: //RootNode
+    7400000: charged_attack
+    9500000: //RootNode
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: charged_attack
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 32
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_head_01_01SHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_head_01_01SHJnt/basic_enemy_1_head_01_02SHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_l_arm_ClavicleSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_l_arm_ClavicleSHJnt/basic_enemy_1_l_arm_ShoulderSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_l_arm_ClavicleSHJnt/basic_enemy_1_l_arm_ShoulderSHJnt/basic_enemy_1_l_arm_ElbowSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_l_arm_ClavicleSHJnt/basic_enemy_1_l_arm_ShoulderSHJnt/basic_enemy_1_l_arm_ElbowSHJnt/basic_enemy_1_l_arm_WristSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_l_arm_ClavicleSHJnt/basic_enemy_1_l_arm_ShoulderSHJnt/basic_enemy_1_l_arm_ElbowSHJnt/basic_enemy_1_l_arm_WristSHJnt/basic_enemy_1_l_barrel_flash_AuxSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_l_arm_ClavicleSHJnt/basic_enemy_1_l_arm_ShoulderSHJnt/basic_enemy_1_l_arm_ElbowSHJnt/basic_enemy_1_l_arm_WristSHJnt/basic_enemy_1_l_gatlin_rotation_AuxSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_r_arm_ClavicleSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_r_arm_ClavicleSHJnt/basic_enemy_1_r_arm_ShoulderSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_r_arm_ClavicleSHJnt/basic_enemy_1_r_arm_ShoulderSHJnt/basic_enemy_1_r_arm_ElbowSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_r_arm_ClavicleSHJnt/basic_enemy_1_r_arm_ShoulderSHJnt/basic_enemy_1_r_arm_ElbowSHJnt/basic_enemy_1_r_arm_WristSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_r_arm_ClavicleSHJnt/basic_enemy_1_r_arm_ShoulderSHJnt/basic_enemy_1_r_arm_ElbowSHJnt/basic_enemy_1_r_arm_WristSHJnt/basic_enemy_1_r_barrel_flash_AuxSHJnt
+        weight: 1
+      - path: basic_enemy_1_ROOTSHJnt/basic_enemy_1_r_arm_ClavicleSHJnt/basic_enemy_1_r_arm_ShoulderSHJnt/basic_enemy_1_r_arm_ElbowSHJnt/basic_enemy_1_r_arm_WristSHJnt/basic_enemy_1_r_gatlin_rotation_AuxSHJnt
+        weight: 1
+      - path: basic_enemy_1_SHJntGrp
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 1
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: b68f13035075cce46ba0818b7d54ae3f,
+    type: 3}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

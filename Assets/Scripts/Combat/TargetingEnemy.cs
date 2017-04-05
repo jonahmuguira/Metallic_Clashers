@@ -1,138 +1,98 @@
-﻿using UnityEngine;
+﻿
 
 namespace Combat
 {
-    using System.Linq;
+    using System.Collections;
 
-    using CustomInput;
-    using CustomInput.Information;
+    using UnityEngine;
 
     public class TargetingEnemy : MonoBehaviour
     {
-        private EnemyMono m_CurrentEnemyMono;
-        private bool m_Rising = true;
-        private bool m_Selecting;
-        private float m_MaxY;
-        private float m_MinY;
-        private Transform m_Marker;
+        [SerializeField,]
+        private GameObject m_MarkerPrefab;
+
         [SerializeField]
-        private float m_MaxTime;
-        private float m_CurrentTime;
+        private Vector3 m_MaxPositionOffset;
+        [SerializeField]
+        private Vector3 m_MinPositionOffset;
+        [SerializeField]
+        private AnimationCurve m_AnimationCurve;
+        [SerializeField]
+        private float m_AnimationTime;
 
-        public GameObject markerPrefab;
+        private bool m_Rising = true;
 
-        private void Start ()
+        private Transform m_Marker;
+        private Vector3 m_CurrentPosition;
+        private IEnumerator m_MarkerMovementEnumerator;
+
+        private void Start()
         {
-            m_CurrentTime = m_MaxTime;
-            m_CurrentEnemyMono = EnemyManager.self.currentEnemy;           // Get current enemy
+            m_Marker = Instantiate(m_MarkerPrefab).transform;
 
-            m_Marker = Instantiate(markerPrefab, SetMarkerToCurrent(),
-                markerPrefab.transform.rotation).transform;
-            
             CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
-            InputManager.self.onPress.AddListener(OnPress); // Set Listener for input
+            EnemyManager.self.onCurrentEnemyChange.AddListener(OnCurrentEnemyChange);
+
+            OnCurrentEnemyChange(EnemyManager.self.currentEnemy.enemy);
+            m_MarkerMovementEnumerator = MarkerMovementEnumerator();
         }
 
         private void OnCombatUpdate()
         {
-            if (m_Selecting)
-            {
-                CombatCamera.isAnimating = false;
-                m_CurrentTime -= Time.deltaTime;
-                if (m_CurrentTime <= 0f)
-                {
-                    m_CurrentTime = m_MaxTime;
-                    m_Selecting = false;
-                    CombatCamera.isAnimating = true;
-                }
-            }
-
-            if (m_Rising)
-            {
-                m_Marker.position += new Vector3(0, Time.deltaTime, 0);
-            }
-
-            else
-            {
-                m_Marker.position -= new Vector3(0, Time.deltaTime, 0);
-            }
-
-            if (m_Marker.position.y < m_MinY)
-                m_Rising = true;
-
-            if (m_Marker.position.y > m_MaxY)
-                m_Rising = false;
-
-            // If the enemy is not null or there are no enemies, return
-            if (m_CurrentEnemyMono != null || EnemyManager.self.enemies.Count == 0)
-                return;
-
-            // If current enemy is null and there are enemies
-
-            m_CurrentEnemyMono = EnemyManager.self.enemies.First();    // Find the first guy
-
-            m_Marker.position = SetMarkerToCurrent();
-
-            EnemyManager.self.currentEnemy = m_CurrentEnemyMono;
+            if (m_MarkerMovementEnumerator != null)
+                m_MarkerMovementEnumerator.MoveNext();
         }
 
-        private void OnPress(TouchInformation touchInfo)
+        private void OnCurrentEnemyChange(Enemy enemy)
         {
-            if (CombatCamera.isAnimating)   // if the camera is animating, do nothing
-                return;
-
-            // Else shoot ray from touch
-            var ray = Camera.main.ScreenPointToRay(touchInfo.position);
-            var hit = new RaycastHit();
-
-            if (!Physics.Raycast(ray.origin, ray.direction, out hit))                  // Did the ray hit something
-                return;
-
-            var tempObject = hit.transform.gameObject;  //Store gameobject temperarily.
-            var gameOb = tempObject;                    // This will be the final result.
-
-
-            while(true)
-            {
-                if (tempObject.GetComponent<EnemyMono>())   // Does it have an EnemyMono
-                {
-                    gameOb = tempObject;
-                    break;
-                }
-                if (tempObject.transform.parent != null 
-                    && !tempObject.GetComponent<EnemyMono>())
-                    tempObject = tempObject.transform.parent.gameObject;
-
-                // If no parent, reached end, return function.
-                else
-                {
-                    return;
-                }
-            }
-            
-            // EnemyMono same as the current target
-            if (!gameOb.GetComponent<EnemyMono>())
-                return;
-
-            m_Selecting = true;
-
-            Camera.main.transform.localPosition = new Vector3(0, 0, -5f);
-            m_CurrentEnemyMono = gameOb.GetComponent<EnemyMono>();
-
-            m_Marker.position = SetMarkerToCurrent();   // Set position of marker
-
-            EnemyManager.self.currentEnemy = m_CurrentEnemyMono;   // Set enemy
+            SetMarkerToCurrent(enemy.GetComponent<EnemyMono>());
         }
 
-        private Vector3 SetMarkerToCurrent()
+        private void SetMarkerToCurrent(EnemyMono enemyMono)
         {
-            var currenyEnemyBounds = m_CurrentEnemyMono.GetComponent<MeshRenderer>().bounds;
-            m_MinY = currenyEnemyBounds.center.y + currenyEnemyBounds.extents.y;
-            m_MaxY = m_MinY + 1;
+            var currentEnemyBounds = enemyMono.GetComponent<MeshRenderer>().bounds;
 
-            var newPosition = currenyEnemyBounds.center +
-                new Vector3(0, currenyEnemyBounds.extents.y + .5f, 0);
-            return newPosition;
+            m_Marker.SetParent(enemyMono.transform.root, false);
+            m_CurrentPosition = currentEnemyBounds.center +
+                new Vector3(0, currentEnemyBounds.extents.y + .5f, 0) + m_MinPositionOffset;
+            m_Marker.position = m_CurrentPosition;
+        }
+
+        private IEnumerator MarkerMovementEnumerator()
+        {
+            var deltaTime = 0f;
+            while (true)
+            {
+                // If the enemy is not null or there are no enemies, return
+                if (EnemyManager.self.enemies.Count == 0)
+                {
+                    Destroy(m_Marker.gameObject);
+                    Destroy(this);
+                    yield break;
+                }
+
+                if (EnemyManager.self.currentEnemy != null && m_AnimationTime != 0f)
+                {
+                    if (m_Rising)
+                        m_Marker.position =
+                            m_CurrentPosition + m_MaxPositionOffset *
+                            m_AnimationCurve.Evaluate(deltaTime / m_AnimationTime);
+                    else
+                        m_Marker.position =
+                            m_CurrentPosition + m_MaxPositionOffset *
+                            m_AnimationCurve.Evaluate(1f - deltaTime / m_AnimationTime);
+
+                    if (deltaTime > m_AnimationTime)
+                    {
+                        m_Rising = !m_Rising;
+                        deltaTime = 0f;
+                    }
+
+                    deltaTime += Time.deltaTime;
+                }
+
+                yield return null;
+            }
         }
     }
 }

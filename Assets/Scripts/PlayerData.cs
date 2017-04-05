@@ -5,6 +5,8 @@ using System.Xml.Serialization;
 using Combat.Board;
 using Items;
 using UnityEngine;
+using UnityEngine.Events;
+
 using Tree = StageSelection.Tree;
 
 [Serializable]
@@ -46,6 +48,8 @@ public class PlayerData
         weaknesses = new List<GemType>();
     }
 
+    private UnityEvent m_OnTakeDamage = new UnityEvent();
+
     public Attribute health;
 
     public Attribute attack;
@@ -64,7 +68,10 @@ public class PlayerData
 
     public LevelSystem playerLevelSystem = new LevelSystem();
 
-    [XmlIgnore]public ItemManager itemManager = new ItemManager();
+    public UnityEvent onTakeDamage { get { return m_OnTakeDamage; } }
+
+    [XmlIgnore]
+    public ItemManager itemManager = new ItemManager();
 
     public void TakeDamage(float damage, GemType gemType)
     {
@@ -79,12 +86,14 @@ public class PlayerData
         else if (weaknesses.Contains(gemType)) { finalDamage *= 1.25f; }
 
         health.modifier -= finalDamage;
+
+        m_OnTakeDamage.Invoke();
     }
 
     public void DecayShield()
     {
         if (defense.modifier > 0) { defense.modifier -= decayRate * Time.deltaTime; if (defense.modifier < 0) { defense.modifier = 0; } }
 
-        if (defense.modifier > defense.value*20 - defense.value) { defense.modifier = defense.value * 20 - defense.value; }
+        if (defense.modifier > defense.value * 20 - defense.value) { defense.modifier = defense.value * 20 - defense.value; }
     }
 }

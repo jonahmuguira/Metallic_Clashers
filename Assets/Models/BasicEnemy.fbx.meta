@@ -1,0 +1,180 @@
+fileFormatVersion: 2
+guid: b68f13035075cce46ba0818b7d54ae3f
+timeCreated: 1491401166
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: basic_enemy_1_head_01_01SHJnt
+    100002: basic_enemy_1_head_01_02SHJnt
+    100004: basic_enemy_1_l_arm_ClavicleSHJnt
+    100006: basic_enemy_1_l_arm_ElbowSHJnt
+    100008: basic_enemy_1_l_arm_ShoulderSHJnt
+    100010: basic_enemy_1_l_arm_WristSHJnt
+    100012: basic_enemy_1_l_barrel_flash_AuxSHJnt
+    100014: basic_enemy_1_l_gatlin_rotation_AuxSHJnt
+    100016: basic_enemy_1_r_arm_ClavicleSHJnt
+    100018: basic_enemy_1_r_arm_ElbowSHJnt
+    100020: basic_enemy_1_r_arm_ShoulderSHJnt
+    100022: basic_enemy_1_r_arm_WristSHJnt
+    100024: basic_enemy_1_r_barrel_flash_AuxSHJnt
+    100026: basic_enemy_1_r_gatlin_rotation_AuxSHJnt
+    100028: basic_enemy_1_ROOTSHJnt
+    100030: basic_enemy_1_SHJntGrp
+    100032: //RootNode
+    100034: body_top
+    100036: eye_glass
+    100038: gatlin_1
+    100040: gatlin_2
+    100042: L_arm_upper
+    100044: L_crossflash_1
+    100046: L_crossflash_2
+    100048: L_crossflash_3
+    100050: L_forearm
+    100052: L_handle
+    100054: lower_body
+    100056: R_arm_upper
+    100058: R_cross_flash_1
+    100060: R_crossflash_2
+    100062: R_crossflash_3
+    100064: R_forearm
+    100066: R_handle
+    400000: basic_enemy_1_head_01_01SHJnt
+    400002: basic_enemy_1_head_01_02SHJnt
+    400004: basic_enemy_1_l_arm_ClavicleSHJnt
+    400006: basic_enemy_1_l_arm_ElbowSHJnt
+    400008: basic_enemy_1_l_arm_ShoulderSHJnt
+    400010: basic_enemy_1_l_arm_WristSHJnt
+    400012: basic_enemy_1_l_barrel_flash_AuxSHJnt
+    400014: basic_enemy_1_l_gatlin_rotation_AuxSHJnt
+    400016: basic_enemy_1_r_arm_ClavicleSHJnt
+    400018: basic_enemy_1_r_arm_ElbowSHJnt
+    400020: basic_enemy_1_r_arm_ShoulderSHJnt
+    400022: basic_enemy_1_r_arm_WristSHJnt
+    400024: basic_enemy_1_r_barrel_flash_AuxSHJnt
+    400026: basic_enemy_1_r_gatlin_rotation_AuxSHJnt
+    400028: basic_enemy_1_ROOTSHJnt
+    400030: basic_enemy_1_SHJntGrp
+    400032: //RootNode
+    400034: body_top
+    400036: eye_glass
+    400038: gatlin_1
+    400040: gatlin_2
+    400042: L_arm_upper
+    400044: L_crossflash_1
+    400046: L_crossflash_2
+    400048: L_crossflash_3
+    400050: L_forearm
+    400052: L_handle
+    400054: lower_body
+    400056: R_arm_upper
+    400058: R_cross_flash_1
+    400060: R_crossflash_2
+    400062: R_crossflash_3
+    400064: R_forearm
+    400066: R_handle
+    4300000: eye_glass
+    4300002: body_top
+    4300004: R_handle
+    4300006: gatlin_1
+    4300008: L_handle
+    4300010: gatlin_2
+    4300012: R_forearm
+    4300014: L_forearm
+    4300016: L_arm_upper
+    4300018: R_arm_upper
+    4300020: lower_body
+    4300022: R_cross_flash_1
+    4300024: R_crossflash_2
+    4300026: R_crossflash_3
+    4300028: L_crossflash_3
+    4300030: L_crossflash_2
+    4300032: L_crossflash_1
+    9500000: //RootNode
+    13700000: body_top
+    13700002: eye_glass
+    13700004: gatlin_1
+    13700006: gatlin_2
+    13700008: L_arm_upper
+    13700010: L_crossflash_1
+    13700012: L_crossflash_2
+    13700014: L_crossflash_3
+    13700016: L_forearm
+    13700018: L_handle
+    13700020: lower_body
+    13700022: R_arm_upper
+    13700024: R_cross_flash_1
+    13700026: R_crossflash_2
+    13700028: R_crossflash_3
+    13700030: R_forearm
+    13700032: R_handle
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

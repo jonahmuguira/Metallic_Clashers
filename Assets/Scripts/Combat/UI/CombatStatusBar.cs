@@ -59,7 +59,7 @@
             float h, s, v;
             Color.RGBToHSV(m_HealthImage.color, out h, out s, out v);
 
-            m_HealthDelayedImage.color = Color.HSVToRGB(h, s - 0.1f, v);
+            m_HealthDelayedImage.color = Color.HSVToRGB(h, s + 0.2f, v);
             m_HealthBackgroundImage.color = Color.HSVToRGB(h, s - 0.25f, v);
         }
 
