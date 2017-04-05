@@ -8,11 +8,11 @@ namespace Combat
     using UnityEngine.Events;
 
     [Serializable]
+    public class UnityEnemyEvent : UnityEvent<Enemy> { }
+
+    [Serializable]
     public class Enemy : IAttachable
     {
-        [Serializable]
-        public class CreateEnemyEvent : UnityEvent<Enemy> { }
-
         [SerializeField]
         private Attribute m_Health = new Attribute { value = 10f };
         [SerializeField]
@@ -20,11 +20,16 @@ namespace Combat
         [SerializeField]
         private Attribute m_Defense = new Attribute { value = 10f };
 
+        private UnityEnemyEvent m_OnTakeDamage = new UnityEnemyEvent();
+        private UnityEvent m_OnAttack = new UnityEvent();
+        private UnityEvent m_OnDestroy = new UnityEvent();
+
         public Attribute health { get { return m_Health; } }
         public Attribute attack { get { return m_Attack; } }
         public Attribute defense { get { return m_Defense; } }
 
-        public float attackSpeed; public int movesUntilAttack;
+        public float attackSpeed;
+        public int movesUntilAttack;
         public GemType damageType;
 
         public List<GemType> resistances;
@@ -32,8 +37,12 @@ namespace Combat
 
         private int movesCounter = 0;
         private float attackCountdown;
-        
+
         private readonly List<IComponent> m_Components = new List<IComponent>();
+
+        public UnityEnemyEvent onTakeDamage { get { return m_OnTakeDamage; } }
+        public UnityEvent onAttack { get { return m_OnAttack; } }
+        public UnityEvent onDestroy { get { return m_OnDestroy; } }
 
         public List<IComponent> components { get { return m_Components; } }
 
@@ -69,12 +78,17 @@ namespace Combat
         public void OnCombatBegin()
         {
             CombatManager.self.onPlayerTurn.AddListener(OnPlayerTurn);
-            //CombatManager.self.onCombatEnd.AddListener(OnCombatEnd);
             CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
         }
 
         private void OnCombatUpdate()
         {
+            if (health.totalValue <= 0)
+            {
+                m_OnDestroy.Invoke();
+                CombatManager.self.onCombatUpdate.RemoveListener(OnCombatUpdate);
+            }
+
             attackCountdown -= Time.deltaTime;
 
             if (attackCountdown > 0) return;
@@ -94,6 +108,7 @@ namespace Combat
         private void Attack()
         {
             GameManager.self.playerData.TakeDamage(attack.totalValue, damageType);
+            m_OnAttack.Invoke();
         }
 
         public void TakeDamage(float damage, GemType gemType)
@@ -112,6 +127,8 @@ namespace Combat
             }
 
             health.modifier -= finalDamage;
+
+            m_OnTakeDamage.Invoke(this);
         }
     }
 }

@@ -56,6 +56,7 @@ MonoBehaviour:
   musicList:
   - {fileID: 8300000, guid: 725e352ffd58be344898ff920f12f30b, type: 3}
   - {fileID: 8300000, guid: 5444f2d6e96ee8c4986b7cc0d06125a4, type: 3}
+  - {fileID: 8300000, guid: 5444f2d6e96ee8c4986b7cc0d06125a4, type: 3}
   - {fileID: 8300000, guid: 5127d3e762faedc4d9a0b6983a2342f2, type: 3}
   - {fileID: 8300000, guid: bbfb07eb7f7a7604988765485887b5ea, type: 3}
   clickSound: {fileID: 8300000, guid: 6e8ec08970b513b4ebbf38f9c2fc4b9c, type: 3}
@@ -77,14 +78,14 @@ MonoBehaviour:
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   m_EnemyPrefabList:
-  - {fileID: 1978000353783988, guid: 05fc6f9ca8e594e429fdc6e7984fd2c6, type: 2}
-  - {fileID: 1978000353783988, guid: e4e6db6db2938154692b0ece784cb965, type: 2}
+  - {fileID: 1379557706857936, guid: 4de41c078512776439730da4c13313f4, type: 2}
+  - {fileID: 1956265506730912, guid: e4e6db6db2938154692b0ece784cb965, type: 2}
   gameState: 0
   playerData:
     health:
       m_Modifier: 0
       m_Coefficient: 1
-      value: 100
+      value: 200
     attack:
       m_Modifier: 0
       m_Coefficient: 1
@@ -92,10 +93,10 @@ MonoBehaviour:
     defense:
       m_Modifier: 0
       m_Coefficient: 1
-      value: 100
+      value: 10
     decayRate: 0.1
-    resistances: 
-    weaknesses: 
+    resistances: 00000000
+    weaknesses: 03000000
     gemSkills: []
     worldData:
     - nodes:
@@ -139,15 +140,66 @@ MonoBehaviour:
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
+    - nodes:
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 1
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 1
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
+      - normalizedPosition: {x: 0, y: 0}
+        isComplete: 0
+        stageNumber: 
+        worldIndex: 0
+        enemyInts: 
     staminaInformation:
-      value: 0
-      timeLastPlayed: 
-      maxValue: 0
+      value: 10
+      timeLastPlayed: 3/6/2017 4:33:21 PM
+      maxValue: 10
     playerLevelSystem:
       playerLevelInfo:
-        level: 0
-        currentExperience: 0
-        experienceRequired: 0
+        level: 5
+        currentExperience: 1000
+        experienceRequired: 9001
   enemyIndexes: 0000000000000000
 --- !u!114 &114796631700178808
 MonoBehaviour:
@@ -160,6 +212,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e8c37c7afbc404b837dee61e18ad1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 0
+  value: 5
   maxValue: 10
-  staminaRate: 5
+  staminaRate: 120

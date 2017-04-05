@@ -1,9 +1,12 @@
 ﻿namespace Combat
 {
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
     using Board.Information;
+
+    using CustomInput.Information;
 
     using UnityEngine;
 
@@ -16,6 +19,14 @@
 
         private EnemyMono m_CurrentEnemy;
 
+        [SerializeField]
+        private UnityEnemyEvent m_OnCurrentEnemyChange = new UnityEnemyEvent();
+
+        [SerializeField]
+        private float m_PauseCameraTime;
+        private float m_CurrentPauseCameraTime;
+        private IEnumerator m_PauseCameraEnumerator;
+
         public float enemyPadding = 1f;
         public bool doCombat;
 
@@ -24,17 +35,21 @@
         public EnemyMono currentEnemy
         {
             get { return m_CurrentEnemy; }
-            set
+            private set
             {
-                if (value != null)
-                    m_CurrentEnemy = value;
+                if (m_CurrentEnemy == value)
+                    return;
+
+                m_CurrentEnemy = value;
+
+                m_OnCurrentEnemyChange.Invoke(
+                    m_CurrentEnemy == null ? null : value.enemy);
             }
         }
 
-        public List<EnemyMono> enemies
-        {
-            get { return m_Enemies; }
-        }
+        public UnityEnemyEvent onCurrentEnemyChange { get { return m_OnCurrentEnemyChange; } }
+
+        public List<EnemyMono> enemies { get { return m_Enemies; } }
 
         // Use this for initialization
         protected override void Init()
@@ -45,8 +60,9 @@
             var managerEnemies = GameManager.self.enemyIndexes;
             var enemyPrefabList = GameManager.self.enemyPrefabList;
 
-            var totalSpace = managerEnemies.Sum(enemy => enemyPrefabList
-                [enemy].GetComponent<MeshRenderer>().bounds.size.x);
+            var totalSpace =
+                enemyPrefabList.Sum(
+                    enemy => enemy.transform.root.GetComponentInChildren<MeshRenderer>().bounds.size.x);
 
             totalSpace += enemyPadding * (managerEnemies.Count - 1);
 
@@ -55,7 +71,9 @@
             for (var i = 0; i < managerEnemies.Count; i++)
             {
                 var enemyPrefab = enemyPrefabList[managerEnemies[i]];
-                var enemyMeshBounds = enemyPrefab.GetComponent<MeshRenderer>().bounds;
+                var enemyMeshBounds =
+                    enemyPrefab.transform.root.GetComponentInChildren<MeshRenderer>().bounds;
+
                 pos += enemyMeshBounds.extents.x;
 
                 var enemyObject =
@@ -64,17 +82,16 @@
                         new Vector3(pos, .5f, 0),
                         enemyPrefab.transform.rotation);
 
-
                 pos += enemyMeshBounds.extents.x;
                 pos += enemyPadding;
 
                 enemyObject.name += i;
-                var enemyMono = enemyObject.GetComponent<EnemyMono>();
+                var enemyMono = enemyObject.transform.root.GetComponentInChildren<EnemyMono>();
                 m_Enemies.Add(enemyMono);
                 CombatManager.self.onCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
             }
             GameManager.self.enemyIndexes = new List<int>();
-            m_CurrentEnemy = m_Enemies[0];
+            currentEnemy = m_Enemies[0];
 
             CombatManager.self.onCombatUpdate.AddListener(OnCombatUpdate);
             CombatManager.self.gridMono.grid.onMatch.AddListener(OnMatch);
@@ -93,15 +110,20 @@
                 var dam = playerData.attack.totalValue *
                           (1 + (matchInfo.gems.Count - 3) * .25f);
 
-                m_CurrentEnemy.enemy.TakeDamage(dam, matchInfo.type);
+                currentEnemy.enemy.TakeDamage(dam, matchInfo.type);
+
+                if (currentEnemy.enemy.health.totalValue <= 0f)
+                {
+                    m_Enemies.Remove(currentEnemy);
+                    currentEnemy = m_Enemies.FirstOrDefault();
+                }
                 break;
 
             case CombatManager.CombatMode.Defense:
                 GameManager.self.playerData.defense.modifier += matchInfo.gems.Count
-                                                                * (playerData.defense.value * .5F);
+                * (playerData.defense.value * .5F);
                 break;
             }
-
         }
 
         private void OnCombatUpdate()
@@ -123,18 +145,53 @@
                 return;
             }
 
-            var destroyList = m_Enemies.Where(e => e.enemy.health.totalValue <= 0).ToList();
+            GameManager.self.playerData.DecayShield();
 
-            var finalList = m_Enemies.Where(e => !destroyList.Contains(e)).ToList();
+            if (m_PauseCameraEnumerator != null)
+                m_PauseCameraEnumerator.MoveNext();
+        }
 
-            foreach (var d in destroyList)
+
+        protected override void OnPress(TouchInformation touchInfo)
+        {
+            // Else shoot ray from touch
+            var ray = Camera.main.ScreenPointToRay(touchInfo.position);
+            RaycastHit raycastHit;
+
+            if (!Physics.Raycast(ray.origin, ray.direction, out raycastHit))   // Did the ray hit something
+                return;
+
+            var hitEnemyMono = raycastHit.transform.root.GetComponentInChildren<EnemyMono>();
+
+            if (hitEnemyMono == null)
+                return;
+
+            currentEnemy = hitEnemyMono;
+
+            m_CurrentPauseCameraTime = 0f;
+            if (m_PauseCameraEnumerator == null)
+                m_PauseCameraEnumerator = PauseCameraEnumerator();
+        }
+
+        private IEnumerator PauseCameraEnumerator()
+        {
+            var combatCamera = FindObjectOfType<CombatCamera>();
+            if (combatCamera == null)
+                yield break;
+
+            combatCamera.isAnimating = false;
+
+            // Wait until 'm_PauseCameraTime' time has passed
+            while (m_CurrentPauseCameraTime < m_PauseCameraTime)
             {
-                Destroy(d.gameObject);
+                m_CurrentPauseCameraTime += Time.deltaTime;
+
+                yield return null;
             }
 
-            m_Enemies = finalList;
+            combatCamera.isAnimating = true;
 
-            GameManager.self.playerData.DecayShield();
+            m_PauseCameraEnumerator = null;
         }
     }
 }

@@ -4,24 +4,47 @@ namespace Items
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Xml.Serialization;
     using Combat;
 
-    [Serializable]
+    using UnityEngine;
+
     public class ItemManager
     {
-        private List<BaseItem> m_Inventory;   //list of item(s)
-        private List<BaseItem> m_ActiveList;  //list of item(s) being used
-        private List<BaseItem> m_CombatInventory; //list of item(s) being taken in to combat
+        [Serializable]
+        public class SaveLists
+        {
+            // All different Types of Items
+            public List<InstantItem> instantItems = new List<InstantItem>();
+            public List<TimeBuff> timeBuffs = new List<TimeBuff>();
+            public List<TurnBuff> turnBuffs = new List<TurnBuff>();
+        }
+
+        private List<BaseItem> m_Inventory = new List<BaseItem>();   //list of item(s)
+        private List<BaseItem> m_ActiveList = new List<BaseItem>();  //list of item(s) being used
+        private List<BaseItem> m_CombatInventory = new List<BaseItem>(); //list of item(s) being taken in to combat
+
+        private SaveLists m_Lists = new SaveLists();
+
         public List<BaseItem> inventory { get { return m_Inventory; } }
         [XmlIgnore] public List<BaseItem> activeList { get { return m_ActiveList; } }
         [XmlIgnore] public List<BaseItem> combatInventory { get { return m_CombatInventory; } }
 
         public void ItemUpdate() { activeList.RemoveAll(i => i.Alive == false); } //needs to be called after using an item.
 
-        public void AddItem(BaseItem item)
+        public void AddCombatItem(BaseItem item)
         {
-            if (inventory.Contains(item)) { combatInventory.Add(item); inventory.Remove(item); }
+            if (!inventory.Contains(item))
+                return;
+            combatInventory.Add(item); inventory.Remove(item);
+        }
+
+        public void AddInventoryItem(BaseItem item)
+        {
+            if (item == null || inventory.Contains(item))
+                return;
+            inventory.Add(item);
         }
 
         public void SetItemActive(BaseItem item)
@@ -40,6 +63,53 @@ namespace Items
         {
             if (activeList.Contains(item)) { combatInventory.Add(item); activeList.Remove(item); }
             if (combatInventory.Contains(item)) { inventory.Add(item); combatInventory.Remove(item); }
+        }
+
+        public void SaveItems(string path)
+        {
+            m_Lists.instantItems = new List<InstantItem>();
+            m_Lists.timeBuffs = new List<TimeBuff>();
+            m_Lists.turnBuffs = new List<TurnBuff>();
+
+            foreach (var bi in inventory)
+            {
+                var t = bi.GetType();
+                if(t == typeof(InstantItem))
+                    m_Lists.instantItems.Add(bi as InstantItem);
+                if (t == typeof(TimeBuff))
+                    m_Lists.timeBuffs.Add(bi as TimeBuff);
+                if (t == typeof(TurnBuff))
+                    m_Lists.turnBuffs.Add(bi as TurnBuff);
+            }
+
+            var itemsStream = File.Create(path);
+
+            var serializer = new XmlSerializer(typeof(SaveLists));
+            serializer.Serialize(itemsStream, m_Lists);
+            itemsStream.Close();
+        }
+
+        public void LoadItems(string path)
+        {
+            if(!File.Exists(path))
+                SaveItems(path);
+
+            var stream = new StreamReader(path);
+
+            var reader = new XmlSerializer(typeof(SaveLists));
+            m_Lists = (SaveLists)reader.Deserialize(stream);
+
+            m_Inventory = new List<BaseItem>();
+
+            m_Lists.instantItems.ForEach(i => m_Inventory.Add(i));
+            m_Lists.turnBuffs.ForEach(i => m_Inventory.Add(i));
+            m_Lists.timeBuffs.ForEach(i => m_Inventory.Add(i));
+
+            m_Lists.instantItems = new List<InstantItem>();
+            m_Lists.timeBuffs = new List<TimeBuff>();
+            m_Lists.turnBuffs = new List<TurnBuff>();
+
+            stream.Close();
         }
     }
 }

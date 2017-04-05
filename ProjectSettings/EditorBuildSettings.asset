@@ -7,7 +7,16 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/_Scenes/Game/Title.unity
+    guid: e8bdd52aab2e7f64f9aca0fcfeb0a28f
   - enabled: 1
     path: Assets/_Scenes/Game/AreaSelection.unity
+    guid: ae730ee8a8f4aca45bf278e33fa67a3d
+  - enabled: 1
+    path: Assets/_Scenes/Game/StagePreparation.unity
+    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/_Scenes/Game/Combat.unity
+    guid: 3c9e606a3d8cb0d448fb7f50632c3f91
+  - enabled: 1
+    path: Assets/_Scenes/Game/Credits.unity
+    guid: 97d7cb8ece2096344bf4e5e6fa796037
