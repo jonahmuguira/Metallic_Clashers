@@ -1,24 +1,30 @@
-﻿using UnityEngine;
+﻿
 
 namespace Combat
 {
-    using System.Linq;
+    using System.Collections;
 
-    using CustomInput;
-    using CustomInput.Information;
-
-    using UnityEngine.Serialization;
+    using UnityEngine;
 
     public class TargetingEnemy : MonoBehaviour
     {
-        [SerializeField, FormerlySerializedAs("markerPrefab")]
+        [SerializeField,]
         private GameObject m_MarkerPrefab;
 
+        [SerializeField]
+        private Vector3 m_MaxPositionOffset;
+        [SerializeField]
+        private Vector3 m_MinPositionOffset;
+        [SerializeField]
+        private AnimationCurve m_AnimationCurve;
+        [SerializeField]
+        private float m_AnimationTime;
+
         private bool m_Rising = true;
-        private float m_MaxY;
-        private float m_MinY;
 
         private Transform m_Marker;
+        private Vector3 m_CurrentPosition;
+        private IEnumerator m_MarkerMovementEnumerator;
 
         private void Start()
         {
@@ -28,29 +34,13 @@ namespace Combat
             EnemyManager.self.onCurrentEnemyChange.AddListener(OnCurrentEnemyChange);
 
             OnCurrentEnemyChange(EnemyManager.self.currentEnemy.enemy);
+            m_MarkerMovementEnumerator = MarkerMovementEnumerator();
         }
 
         private void OnCombatUpdate()
         {
-            // If the enemy is not null or there are no enemies, return
-            if (EnemyManager.self.currentEnemy == null)
-                return;
-            if (EnemyManager.self.enemies.Count == 0)
-            {
-                Destroy(gameObject);
-                return;
-            }
-
-            if (m_Rising)
-                m_Marker.position += new Vector3(0, Time.deltaTime, 0);
-            else
-                m_Marker.position -= new Vector3(0, Time.deltaTime, 0);
-
-            if (m_Marker.position.y < m_MinY)
-                m_Rising = true;
-
-            if (m_Marker.position.y > m_MaxY)
-                m_Rising = false;
+            if (m_MarkerMovementEnumerator != null)
+                m_MarkerMovementEnumerator.MoveNext();
         }
 
         private void OnCurrentEnemyChange(Enemy enemy)
@@ -60,12 +50,49 @@ namespace Combat
 
         private void SetMarkerToCurrent(EnemyMono enemyMono)
         {
-            var currenyEnemyBounds = enemyMono.GetComponent<MeshRenderer>().bounds;
-            m_MinY = currenyEnemyBounds.center.y + currenyEnemyBounds.extents.y;
-            m_MaxY = m_MinY + 1;
+            var currentEnemyBounds = enemyMono.GetComponent<MeshRenderer>().bounds;
 
-            m_Marker.position = currenyEnemyBounds.center +
-                new Vector3(0, currenyEnemyBounds.extents.y + .5f, 0);
+            m_Marker.SetParent(enemyMono.transform.root, false);
+            m_CurrentPosition = currentEnemyBounds.center +
+                new Vector3(0, currentEnemyBounds.extents.y + .5f, 0) + m_MinPositionOffset;
+            m_Marker.position = m_CurrentPosition;
+        }
+
+        private IEnumerator MarkerMovementEnumerator()
+        {
+            var deltaTime = 0f;
+            while (true)
+            {
+                // If the enemy is not null or there are no enemies, return
+                if (EnemyManager.self.enemies.Count == 0)
+                {
+                    Destroy(m_Marker.gameObject);
+                    Destroy(gameObject);
+                    yield break;
+                }
+
+                if (EnemyManager.self.currentEnemy == null)
+                    yield return null;
+
+                if (m_Rising)
+                    m_Marker.position =
+                        m_CurrentPosition + m_MaxPositionOffset *
+                        m_AnimationCurve.Evaluate(deltaTime / m_AnimationTime);
+                else
+                    m_Marker.position =
+                        m_CurrentPosition + m_MaxPositionOffset *
+                        m_AnimationCurve.Evaluate(1f - deltaTime / m_AnimationTime);
+
+                if (deltaTime > m_AnimationTime)
+                {
+                    m_Rising = !m_Rising;
+                    deltaTime = 0f;
+                }
+
+                deltaTime += Time.deltaTime;
+
+                yield return null;
+            }
         }
     }
 }
