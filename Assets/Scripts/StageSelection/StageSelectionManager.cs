@@ -36,7 +36,7 @@ namespace StageSelection
         public GameObject nodePrefab;
         public GameObject linePrefab;
 
-        public float spacingMagnitude;
+        public float spacingMagnitude = 1;
 
         protected override void Init()
         {
