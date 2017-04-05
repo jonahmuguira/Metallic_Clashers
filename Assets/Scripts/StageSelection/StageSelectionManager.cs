@@ -30,6 +30,20 @@ namespace StageSelection
         private Text m_EnemyText;
         [SerializeField]
         private Button m_StartComabtButton;
+        [SerializeField]
+        private GameObject m_NodeAnchor;
+
+        [Space, SerializeField]
+        private Color m_NodeCompleted;
+        [SerializeField]
+        private Color m_NodeUnlocked;
+        [SerializeField]
+        private Color m_NodeLocked;
+
+        [Space, SerializeField]
+        private Color m_LineUnlocked;
+        [SerializeField]
+        private Color m_LineLocked;
 
         public UnityEvent onStageSelectionEnd = new UnityEvent();
 
@@ -37,6 +51,10 @@ namespace StageSelection
         public GameObject linePrefab;
 
         public float spacingMagnitude = 1;
+
+        public Color nodeCompleted { get { return m_NodeCompleted; } }
+        public Color nodeUnlocked { get { return m_NodeUnlocked; } }
+        public Color nodeLocked { get { return m_NodeLocked; } }
 
         protected override void Init()
         {
@@ -123,18 +141,17 @@ namespace StageSelection
                 var nodeGameObjects = new List<GameObject>();
                 foreach (var n in tree.nodes)
                 {
-
                     var nodeObject = Instantiate(nodePrefab);
 
                     var monoNode = nodeObject.AddComponent<MonoNode>();
                     monoNode.node = n;
 
-                    nodeObject.transform.SetParent(canvas.transform);
+                    nodeObject.transform.SetParent(m_NodeAnchor.transform);
 
                     var nodeTransform = nodeObject.GetComponent<RectTransform>();
                     nodeTransform.anchoredPosition =
-                        new Vector2(n.normalizedPosition.x*spacingMagnitude, 
-                        n.normalizedPosition.y*spacingMagnitude) +
+                        new Vector2(n.normalizedPosition.x * spacingMagnitude,
+                        n.normalizedPosition.y * spacingMagnitude) +
                         treePos;
 
                     var button = nodeObject.GetComponent<Button>();
@@ -151,7 +168,7 @@ namespace StageSelection
                     numOfObjects++;
                 }
 
-                var offset = sum/numOfObjects;
+                var offset = sum / numOfObjects;
 
                 foreach (var node in nodeGameObjects)
                 {
@@ -186,14 +203,17 @@ namespace StageSelection
             {
                 foreach (var n in monoNode.node.nextNodes)
                 {
-                    if(n.worldIndex != monoNode.node.worldIndex)
+                    if (n.worldIndex != monoNode.node.worldIndex)
                         continue;
 
                     var lineObject = Instantiate(linePrefab); //Create GameObject for LineRenderer
                     var lineTransform = lineObject.GetComponent<RectTransform>();
                     lineObject.name = "Line " + counter;
                     counter++;
-                    lineObject.transform.SetParent(canvas.transform);
+
+                    lineObject.transform.SetParent(m_NodeAnchor.transform);
+                    lineObject.transform.SetAsFirstSibling();
+
                     GameObject nextNodeGameObject = null;
                     foreach (var g in FindObjectsOfType<MonoNode>())
                     {
@@ -206,32 +226,18 @@ namespace StageSelection
 
                     var differance = nextNodeGameObject.transform.position - monoNode.transform.position;
 
-                    var linePosition = monoNode.transform.position + (differance/2f);
+                    var linePosition = monoNode.transform.position + (differance / 2f);
 
                     lineTransform.sizeDelta = Math.Abs(differance.x) > Math.Abs(differance.y)
                         ? new Vector2(differance.magnitude, 10)
                         : new Vector2(10, differance.magnitude);
 
-                    lineObject.GetComponent<Image>().color = (monoNode.node.isComplete) 
-                        ? Color.blue : new Color(1, 1, 1, 0.5f);
-                        // Set Material Color
+                    lineObject.GetComponent<Image>().color = (monoNode.node.isComplete)
+                        ? m_LineUnlocked : m_LineLocked;
+                    // Set Material Color
 
                     lineTransform.position = linePosition;
                 }
-            }
-
-            var startingIndex = GameObject.Find("Line " + (counter - 1)).transform.GetSiblingIndex();
-
-            counter = startingIndex + 1;
-
-            //Move Lines Behind Nodes
-            foreach (var m in FindObjectsOfType<RectTransform>())
-            {
-                if (!m.gameObject.GetComponent<MonoNode>())
-                    continue;
-
-                m.transform.SetSiblingIndex(counter);
-                counter++;
             }
 
             //Set Up UI
@@ -254,7 +260,7 @@ namespace StageSelection
             n2.prevNodes.Add(n1);
         }
 
-        protected override void OnEndDrag(DragInformation dragInfo)
+        protected override void OnDrag(DragInformation dragInfo)
         {
             // Which way was it dragged
             var direction = dragInfo.end - dragInfo.origin;
@@ -280,7 +286,7 @@ namespace StageSelection
                     if (child.GetComponent<MonoNode>() || child.name.Contains("Line"))
                     {
                         StartCoroutine(
-                            MoveObject(child, child.anchoredPosition, 
+                            MoveObject(child, child.anchoredPosition,
                             child.anchoredPosition + slideMag, .2f));
                     }
                 }
@@ -301,12 +307,12 @@ namespace StageSelection
 
         private IEnumerator MoveObject(RectTransform rt, Vector2 start, Vector2 end, float time)
         {
-            var i = 0.0;
-            var rate = 1.0/time;
-            while (i < 1.0)
+            var i = 0f;
+            var rate = 1f / time;
+            while (i < 1f)
             {
-                i += Time.deltaTime*rate;
-                rt.anchoredPosition = Vector3.Lerp(start, end, (float)i);
+                i += Time.deltaTime * rate;
+                rt.anchoredPosition = Vector3.Lerp(start, end, i);
                 yield return null;
             }
         }
@@ -328,7 +334,7 @@ namespace StageSelection
             foreach (var index in m_CurrentNode.enemyInts)
             {
                 var name = GameManager.self.enemyPrefabList[index].name;
-                if(!enemyInstances.ContainsKey(name))
+                if (!enemyInstances.ContainsKey(name))
                     enemyInstances.Add(name, 0);
                 enemyInstances[name] += 1;
             }
@@ -345,7 +351,7 @@ namespace StageSelection
                 m_StartComabtButton.gameObject.GetComponentInChildren<Text>().text = "Low\nPower";
             }
 
-            else if (m_CurrentNode.isComplete || m_CurrentNode.prevNodes.Any(n => n.isComplete) 
+            else if (m_CurrentNode.isComplete || m_CurrentNode.prevNodes.Any(n => n.isComplete)
                 || m_CurrentNode.prevNodes.Count == 0)
             {
                 m_StartComabtButton.interactable = true;

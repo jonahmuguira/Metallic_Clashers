@@ -21,7 +21,7 @@
         public Vector2 normalizedPosition;
         public bool isComplete = false;
         [XmlIgnore]
-        public string stageName {get { return worldIndex + " - " + stageNumber; } }
+        public string stageName { get { return worldIndex + " - " + stageNumber; } }
         [XmlIgnore]
         public string stageNumber;
         [XmlIgnore]
@@ -43,21 +43,15 @@
 
             // If the node is done and playable
             if (node.isComplete)
-            {
-                mat.color = Color.green;
-            }
+                mat.color = StageSelectionManager.self.nodeCompleted;
 
             // If the node is playable
             else if (node.prevNodes.Any(n => n.isComplete) || node.prevNodes.Count == 0)
-            {
-                mat.color = Color.blue;
-            }
+                mat.color = StageSelectionManager.self.nodeUnlocked;
 
             // Node is not playable
             else
-            {
-                mat.color = new Color(0.5f, 0.5f, 0.5f, 0.5f);
-            }
+                mat.color = StageSelectionManager.self.nodeLocked;
         }
     }
 }
