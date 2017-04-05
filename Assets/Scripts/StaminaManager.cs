@@ -66,4 +66,9 @@ public class StaminaManager : MonoSingleton<StaminaManager>
 	    m_Value++;
         m_Timer = m_StaminaRate;
 	}
+
+    public void DamageStamina(uint dam)
+    {
+        m_Value -= dam;
+    }
 }

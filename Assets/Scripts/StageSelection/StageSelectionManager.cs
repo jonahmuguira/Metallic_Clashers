@@ -244,6 +244,7 @@ namespace StageSelection
         private void OnStageSelectionEnd()
         {
             GameManager.self.enemyIndexes = m_CurrentNode.enemyInts;
+            StaminaManager.self.DamageStamina(m_CurrentNode.staminaCost);
             onStageSelectionEnd.Invoke();
         }
 
