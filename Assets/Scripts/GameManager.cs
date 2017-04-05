@@ -29,7 +29,8 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField]
     private UnityEvent m_OnSceneLoaded = new UnityEvent();
 
-    private const string savePath = "/PlayerData.xml";
+    private string m_PlayerSavePath;
+    private string m_InventorySavePath;
     [SerializeField]
     private List<GameObject> m_EnemyPrefabList = new List<GameObject>();
 
@@ -45,7 +46,10 @@ public class GameManager : MonoSingleton<GameManager>
     protected override void OnAwake()
     {
         DontDestroyOnLoad(gameObject);
-        if (File.Exists(Environment.CurrentDirectory + savePath))
+        m_InventorySavePath = Application.persistentDataPath + "/Inventory.xml";
+        m_PlayerSavePath = Application.persistentDataPath + "/PlayerData.xml";
+
+        if (File.Exists(m_PlayerSavePath))
             LoadPlayer();
         else
         {
@@ -134,26 +138,26 @@ public class GameManager : MonoSingleton<GameManager>
     private void SavePlayer()
     {
         //Saving PlayerData
-        var playerPath = Environment.CurrentDirectory + savePath;
+        var playerPath = m_PlayerSavePath;
         var playerStream = File.Create(playerPath);
 
         var serializer = new XmlSerializer(typeof(PlayerData));
         serializer.Serialize(playerStream, playerData);
         playerStream.Close();
 
-        playerData.itemManager.SaveItems();
+        playerData.itemManager.SaveItems(m_InventorySavePath);
     }
 
     [ContextMenu("Load Player")]
     private void LoadPlayer()
     {
         var reader = new XmlSerializer(typeof(PlayerData));
-        var file = new StreamReader(Environment.CurrentDirectory + savePath);
+        var file = new StreamReader(m_PlayerSavePath);
 
         playerData = (PlayerData)reader.Deserialize(file);
         file.Close();
 
-        playerData.itemManager.LoadItems();
+        playerData.itemManager.LoadItems(m_InventorySavePath);
     }
 
     public void LoadScene(int sceneIndex)
