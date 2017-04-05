@@ -178,11 +178,6 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_Curve.Array.size
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 4745914296020572, guid: 9e3d9b44e6a37de4196fef420fc8950e, type: 2}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -214,80 +209,6 @@ Prefab:
     - target: {fileID: 4745914296020572, guid: 9e3d9b44e6a37de4196fef420fc8950e, type: 2}
       propertyPath: m_RootOrder
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_Curve.Array.data[0].inSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_Curve.Array.data[0].outSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_Curve.Array.data[0].tangentMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_Curve.Array.data[1].time
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_Curve.Array.data[1].value
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_Curve.Array.data[1].inSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_Curve.Array.data[1].outSlope
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_Curve.Array.data[1].tangentMode
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_MaxPositionOffset.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 114133558229274486, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_AnimationTime
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 114689919778191280, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_Animations.Array.data[2].m_PositionOffset.y
-      value: -0.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 114689919778191280, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_Animations.Array.data[1].m_Magnitude.z
-      value: 15.75
-      objectReference: {fileID: 0}
-    - target: {fileID: 114689919778191280, guid: 9e3d9b44e6a37de4196fef420fc8950e,
-        type: 2}
-      propertyPath: m_Animations.Array.data[2].m_Magnitude.y
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4874417493274076, guid: 9e3d9b44e6a37de4196fef420fc8950e, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: -4.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9e3d9b44e6a37de4196fef420fc8950e, type: 2}
