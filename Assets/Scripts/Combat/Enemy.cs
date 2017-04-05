@@ -21,12 +21,12 @@ namespace Combat
         private Attribute m_Defense = new Attribute { value = 10f };
 
         private UnityEnemyEvent m_OnTakeDamage = new UnityEnemyEvent();
+        private UnityEvent m_OnAttack = new UnityEvent();
         private UnityEvent m_OnDestroy = new UnityEvent();
 
         public Attribute health { get { return m_Health; } }
         public Attribute attack { get { return m_Attack; } }
         public Attribute defense { get { return m_Defense; } }
-        public UnityEvent onDestroy { get { return m_OnDestroy; } }
 
         public float attackSpeed;
         public int movesUntilAttack;
@@ -41,6 +41,8 @@ namespace Combat
         private readonly List<IComponent> m_Components = new List<IComponent>();
 
         public UnityEnemyEvent onTakeDamage { get { return m_OnTakeDamage; } }
+        public UnityEvent onAttack { get { return m_OnAttack; } }
+        public UnityEvent onDestroy { get { return m_OnDestroy; } }
 
         public List<IComponent> components { get { return m_Components; } }
 
@@ -82,7 +84,10 @@ namespace Combat
         private void OnCombatUpdate()
         {
             if (health.totalValue <= 0)
+            {
                 m_OnDestroy.Invoke();
+                CombatManager.self.onCombatUpdate.RemoveListener(OnCombatUpdate);
+            }
 
             attackCountdown -= Time.deltaTime;
 
@@ -103,6 +108,7 @@ namespace Combat
         private void Attack()
         {
             GameManager.self.playerData.TakeDamage(attack.totalValue, damageType);
+            m_OnAttack.Invoke();
         }
 
         public void TakeDamage(float damage, GemType gemType)
