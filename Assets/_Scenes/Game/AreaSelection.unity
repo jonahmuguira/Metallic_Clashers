@@ -586,15 +586,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c920419d2d4134d41a58c92d071f6345, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_Canvas: {fileID: 1056734455}
   m_StageNameText: {fileID: 871908147}
   m_EnemyText: {fileID: 92270395}
   m_StartComabtButton: {fileID: 955527528}
-  m_NodeAnchor: {fileID: 1332775313}
+  m_NodeAnchor: {fileID: 1332775314}
   m_NodeCompleted: {r: 0, g: 0.77205884, b: 0, a: 1}
   m_NodeUnlocked: {r: 1, g: 1, b: 1, a: 1}
   m_NodeLocked: {r: 0.5808823, g: 0.5808823, b: 0.5808823, a: 1}
   m_LineUnlocked: {r: 1, g: 1, b: 1, a: 0.5019608}
   m_LineLocked: {r: 0.5803922, g: 0.5803922, b: 0.5803922, a: 0.5019608}
+  m_WorldSpacing: 550
+  m_MaxAnchorPosition: {x: 50, y: 0}
+  m_MaxAnchorRubberbandPosition: {x: 2000, y: 0}
+  m_LerpTime: 0.25
+  m_RubberbandAnimationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 2
+      time: 0
+      value: 0
+      inSlope: 0.14839728
+      outSlope: 0.14839728
+      tangentMode: 0
+    - serializedVersion: 2
+      time: 1
+      value: 0.05027246
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 0
   onStageSelectionEnd:
     m_PersistentCalls:
       m_Calls: []
