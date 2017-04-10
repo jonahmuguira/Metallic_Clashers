@@ -82,7 +82,7 @@ namespace StageSelection
                         nodes = new List<Node>
                         {
                             new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0),
-                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 1, enemyInts = new List<int> {1,1,1}},
                             new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1),
                                 worldIndex = 1, enemyInts = new List<int> {1,1,1}},
                             new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2),

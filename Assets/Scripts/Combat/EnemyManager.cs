@@ -62,7 +62,7 @@
 
             var totalSpace =
                 enemyPrefabList.Sum(
-                    enemy => enemy.transform.root.GetComponentInChildren<MeshRenderer>().bounds.size.x);
+                    enemy => enemy.transform.root.GetComponentInChildren<Collider>().bounds.size.x);
 
             totalSpace += enemyPadding * (managerEnemies.Count - 1);
 
@@ -72,7 +72,7 @@
             {
                 var enemyPrefab = enemyPrefabList[managerEnemies[i]];
                 var enemyMeshBounds =
-                    enemyPrefab.transform.root.GetComponentInChildren<MeshRenderer>().bounds;
+                    enemyPrefab.transform.root.GetComponentInChildren<Collider>().bounds;
 
                 pos += enemyMeshBounds.extents.x;
 

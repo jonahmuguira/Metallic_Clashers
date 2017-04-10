@@ -50,7 +50,7 @@ namespace Combat
 
         private void SetMarkerToCurrent(EnemyMono enemyMono)
         {
-            var currentEnemyBounds = enemyMono.GetComponent<MeshRenderer>().bounds;
+            var currentEnemyBounds = enemyMono.GetComponent<Collider>().bounds;
 
             m_Marker.SetParent(enemyMono.transform.root, false);
             m_CurrentPosition = currentEnemyBounds.center +
