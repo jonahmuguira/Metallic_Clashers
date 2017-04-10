@@ -46,6 +46,9 @@ namespace Combat
 
         public List<IComponent> components { get { return m_Components; } }
 
+        public float timeUntilNextAttack { get { return attackCountdown; } }
+        public int movesUntilNextAttack { get { return movesUntilAttack - movesCounter % movesUntilAttack; } }
+
         public Enemy()
         {
             health.value = 10;
