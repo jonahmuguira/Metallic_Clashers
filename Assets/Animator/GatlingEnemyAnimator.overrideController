@@ -6,5 +6,13 @@ AnimatorOverrideController:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: GatlingEnemyAnimator
-  m_Controller: {fileID: 0}
-  m_Clips: []
+  m_Controller: {fileID: 9100000, guid: b9c30b90f71b4e54aa95056472c380ff, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 7400000, guid: e482af2cf08753640be85dcefd4cc3d7, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 0f40bc93ae681194a9b4bdd173f499bd, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: eb24624b3ec997b4eb4826fffc7aadcd, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 8cc16a4d59ef5774aa40775be77a8afa, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 3d7341eb9ab0ce045920d62eef8989ad, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 74456bbe0fbd209468189e5fc153d1ed, type: 3}
+  - m_OriginalClip: {fileID: 7400000, guid: 6014ad1eb32774f4e9246c73b4299f13, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 4ba1106b01861964b96169d1157bcb33, type: 3}
