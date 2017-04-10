@@ -79,7 +79,7 @@ MonoBehaviour:
       PublicKeyToken=null
   m_EnemyPrefabList:
   - {fileID: 1379557706857936, guid: 4de41c078512776439730da4c13313f4, type: 2}
-  - {fileID: 1956265506730912, guid: e4e6db6db2938154692b0ece784cb965, type: 2}
+  - {fileID: 1307913250236440, guid: 853fe0dfb9de6164b9aa10fca6d328a3, type: 2}
   gameState: 0
   playerData:
     health:
@@ -105,92 +105,110 @@ MonoBehaviour:
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
     - nodes:
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 1
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 1
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
       - normalizedPosition: {x: 0, y: 0}
         isComplete: 0
         stageNumber: 
         worldIndex: 0
         enemyInts: 
+        staminaCost: 2
     staminaInformation:
       value: 10
       timeLastPlayed: 3/6/2017 4:33:21 PM
@@ -212,6 +230,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33e8c37c7afbc404b837dee61e18ad1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  value: 5
+  m_Value: 0
   maxValue: 10
-  staminaRate: 120
+  m_StaminaRate: 2.5

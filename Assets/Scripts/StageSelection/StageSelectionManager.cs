@@ -24,6 +24,9 @@ namespace StageSelection
 
         private int m_Currentworld;
         private Node m_CurrentNode;
+
+        [SerializeField]
+        private Canvas m_Canvas;
         [SerializeField]
         private Text m_StageNameText;
         [SerializeField]
@@ -31,7 +34,7 @@ namespace StageSelection
         [SerializeField]
         private Button m_StartComabtButton;
         [SerializeField]
-        private GameObject m_NodeAnchor;
+        private RectTransform m_NodeAnchor;
 
         [Space, SerializeField]
         private Color m_NodeCompleted;
@@ -44,6 +47,19 @@ namespace StageSelection
         private Color m_LineUnlocked;
         [SerializeField]
         private Color m_LineLocked;
+
+        [Space, SerializeField]
+        private float m_WorldSpacing;
+        [SerializeField]
+        private Vector2 m_MaxAnchorPosition;
+        [SerializeField]
+        private Vector2 m_MaxAnchorRubberbandPosition;
+        [SerializeField]
+        private float m_LerpTime;
+        [SerializeField]
+        private AnimationCurve m_RubberbandAnimationCurve;
+
+        private Vector2 m_OffsetPosition;
 
         public UnityEvent onStageSelectionEnd = new UnityEvent();
 
@@ -66,7 +82,7 @@ namespace StageSelection
                         nodes = new List<Node>
                         {
                             new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0),
-                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 1, enemyInts = new List<int> {1,1,1}},
                             new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1),
                                 worldIndex = 1, enemyInts = new List<int> {1,1,1}},
                             new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2),
@@ -146,7 +162,7 @@ namespace StageSelection
                     var monoNode = nodeObject.AddComponent<MonoNode>();
                     monoNode.node = n;
 
-                    nodeObject.transform.SetParent(m_NodeAnchor.transform);
+                    nodeObject.transform.SetParent(m_NodeAnchor);
 
                     var nodeTransform = nodeObject.GetComponent<RectTransform>();
                     nodeTransform.anchoredPosition =
@@ -175,7 +191,7 @@ namespace StageSelection
                     node.GetComponent<RectTransform>().anchoredPosition += treePos - offset;
                 }
 
-                treePos.x += 1000;
+                treePos.x += m_WorldSpacing;
             }
 
             // Get Player Data
@@ -211,7 +227,7 @@ namespace StageSelection
                     lineObject.name = "Line " + counter;
                     counter++;
 
-                    lineObject.transform.SetParent(m_NodeAnchor.transform);
+                    lineObject.transform.SetParent(m_NodeAnchor);
                     lineObject.transform.SetAsFirstSibling();
 
                     GameObject nextNodeGameObject = null;
@@ -262,57 +278,91 @@ namespace StageSelection
 
         protected override void OnDrag(DragInformation dragInfo)
         {
-            // Which way was it dragged
-            var direction = dragInfo.end - dragInfo.origin;
+            var dragDirection = dragInfo.delta.normalized;
+            var scaledDelta = Vector2.right * dragInfo.delta.x / m_Canvas.scaleFactor;
 
-            // Set which way to move
-            var slideMag = (direction.x > 0) ? new Vector2(1000, 0) : new Vector2(-1000, 0);
+            var currentPosition = m_NodeAnchor.anchoredPosition;
 
-            // Change world Index
-            if (slideMag.x < 0)
+            m_OffsetPosition += scaledDelta;
+            m_OffsetPosition =
+                new Vector2(
+                    Mathf.Clamp(
+                        m_OffsetPosition.x,
+                        GetWorldPosition(m_Worlds.Count - 1)
+                            - m_MaxAnchorPosition.x - m_MaxAnchorRubberbandPosition.x,
+                        m_MaxAnchorPosition.x + m_MaxAnchorRubberbandPosition.x),
+                    Mathf.Clamp(
+                        m_OffsetPosition.y,
+                        m_OffsetPosition.y,
+                        m_MaxAnchorPosition.y + m_MaxAnchorRubberbandPosition.y));
+
+            var rubberbandPosition =
+                new Vector2(
+                    Mathf.Abs(m_OffsetPosition.x) - m_MaxAnchorPosition.x,
+                    Mathf.Abs(m_OffsetPosition.y) - m_MaxAnchorPosition.y);
+
+            if (m_OffsetPosition.x > m_MaxAnchorPosition.x)
             {
-                m_Currentworld++;
-            }
-            else if (slideMag.x > 0)
-            {
-                m_Currentworld--;
+                var rubberbandDelta =
+                    m_MaxAnchorRubberbandPosition.x *
+                    m_RubberbandAnimationCurve.Evaluate(
+                        rubberbandPosition.x / m_MaxAnchorRubberbandPosition.x);
+
+                currentPosition.x = m_MaxAnchorPosition.x + rubberbandDelta;
             }
 
-            // If we can move, we will as log as the index is 0 to last element in worlds
-            if (m_Currentworld >= 0 && m_Currentworld <= m_Worlds.Count - 1)
-            {
-                foreach (var child in FindObjectsOfType<RectTransform>())
-                {
-                    if (child.GetComponent<MonoNode>() || child.name.Contains("Line"))
-                    {
-                        StartCoroutine(
-                            MoveObject(child, child.anchoredPosition,
-                            child.anchoredPosition + slideMag, .2f));
-                    }
-                }
-            }
-            // If we can't move, Reset index
             else
+            if (m_OffsetPosition.x < GetWorldPosition(m_Worlds.Count - 1) - m_MaxAnchorPosition.x)
             {
-                if (m_Currentworld >= m_Worlds.Count)
-                {
-                    m_Currentworld = m_Worlds.Count - 1;
-                }
-                else if (m_Currentworld < 0)
-                {
-                    m_Currentworld = 0;
-                }
+                var rubberbandDelta =
+                    m_MaxAnchorRubberbandPosition.x *
+                    m_RubberbandAnimationCurve.Evaluate(
+                        -(m_OffsetPosition.x - GetWorldPosition(m_Worlds.Count - 1)
+                        + m_MaxAnchorPosition.x) / m_MaxAnchorRubberbandPosition.x);
+
+                currentPosition.x =
+                    GetWorldPosition(m_Worlds.Count - 1) - m_MaxAnchorPosition.x - rubberbandDelta;
             }
+
+            else
+                currentPosition = m_OffsetPosition;
+
+            m_NodeAnchor.anchoredPosition = currentPosition;
+            StopAllCoroutines();
         }
 
-        private IEnumerator MoveObject(RectTransform rt, Vector2 start, Vector2 end, float time)
+        protected override void OnEndDrag(DragInformation dragInfo)
         {
-            var i = 0f;
-            var rate = 1f / time;
-            while (i < 1f)
+            //TODO: Lerp Down
+            StartCoroutine(MoveObject());
+        }
+
+        private int GetWorldIndex(float xPosition)
+        {
+            return (int)((xPosition - m_WorldSpacing / 2f) / -m_WorldSpacing);
+        }
+        private float GetWorldPosition(int worldIndex)
+        {
+            return worldIndex * -m_WorldSpacing;
+        }
+
+        private IEnumerator MoveObject()
+        {
+            var newPosition =
+                new Vector2(
+                    GetWorldPosition(GetWorldIndex(m_NodeAnchor.anchoredPosition.x)),
+                    m_NodeAnchor.anchoredPosition.y);
+
+            var deltaTime = 0f;
+            while (deltaTime < m_LerpTime)
             {
-                i += Time.deltaTime * rate;
-                rt.anchoredPosition = Vector3.Lerp(start, end, i);
+                m_OffsetPosition =
+                    Vector2.Lerp(
+                        m_NodeAnchor.anchoredPosition, newPosition, deltaTime / m_LerpTime);
+                m_NodeAnchor.anchoredPosition = m_OffsetPosition;
+
+                deltaTime += Time.deltaTime;
+
                 yield return null;
             }
         }
