@@ -7,6 +7,8 @@ namespace Combat
 {
     using UnityEngine.Events;
 
+    using Random = UnityEngine.Random;
+
     [Serializable]
     public class UnityEnemyEvent : UnityEvent<Enemy> { }
 
@@ -35,8 +37,8 @@ namespace Combat
         public List<GemType> resistances;
         public List<GemType> weaknesses;
 
-        private int movesCounter = 0;
-        private float attackCountdown;
+        public int movesCounter = 0;
+        public float attackCountdown;
 
         private readonly List<IComponent> m_Components = new List<IComponent>();
 
@@ -73,7 +75,6 @@ namespace Combat
             defense.value = newDefense;
 
             attackSpeed = newAttackSpeed;
-            attackCountdown = attackSpeed;
 
             movesUntilAttack = newMovesUntilAttack;
         }

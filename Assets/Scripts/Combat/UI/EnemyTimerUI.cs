@@ -14,7 +14,7 @@
         private EnemyHealthBar m_EnemyHealthBar;
 
         // Use this for initialization
-        private void Awake()
+        private void Start()
         {
             m_EnemyHealthBar = GetComponent<EnemyHealthBar>();
 
