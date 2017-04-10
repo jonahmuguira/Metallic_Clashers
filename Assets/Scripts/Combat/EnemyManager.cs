@@ -27,6 +27,8 @@
         private float m_CurrentPauseCameraTime;
         private IEnumerator m_PauseCameraEnumerator;
 
+        private List<IEnumerator> m_AnimateEnemies = new List<IEnumerator>();
+
         public float enemyPadding = 1f;
         public bool doCombat;
 
@@ -82,11 +84,21 @@
                         new Vector3(pos, .5f, 0),
                         enemyPrefab.transform.rotation);
 
+                var animator = enemyObject.transform.root.GetComponentInChildren<Animator>();
+                animator.speed = 0f;
+
+                var randomTime = Random.Range(0f, 1f);
+                m_AnimateEnemies.Add(AnimateEnemy(randomTime, animator));
+
                 pos += enemyMeshBounds.extents.x;
                 pos += enemyPadding;
 
                 enemyObject.name += i;
                 var enemyMono = enemyObject.transform.root.GetComponentInChildren<EnemyMono>();
+                var enemy = enemyMono.enemy;
+                enemy.attackCountdown = enemy.attackSpeed - Random.Range(0f, enemy.attackSpeed);
+                enemy.movesCounter = Random.Range(0, enemy.movesUntilAttack);
+
                 m_Enemies.Add(enemyMono);
                 CombatManager.self.onCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
             }
@@ -149,6 +161,12 @@
 
             if (m_PauseCameraEnumerator != null)
                 m_PauseCameraEnumerator.MoveNext();
+
+            foreach (var animateEnemy in m_AnimateEnemies.ToList())
+            {
+                if (!animateEnemy.MoveNext())
+                    m_AnimateEnemies.Remove(animateEnemy);
+            }
         }
 
 
@@ -171,6 +189,19 @@
             m_CurrentPauseCameraTime = 0f;
             if (m_PauseCameraEnumerator == null)
                 m_PauseCameraEnumerator = PauseCameraEnumerator();
+        }
+
+        private IEnumerator AnimateEnemy(float waitTime, Animator enemyAnimator)
+        {
+            var deltaTime = 0f;
+            while (deltaTime < waitTime)
+            {
+                deltaTime += Time.deltaTime;
+
+                yield return null;
+            }
+
+            enemyAnimator.speed = 1f;
         }
 
         private IEnumerator PauseCameraEnumerator()
