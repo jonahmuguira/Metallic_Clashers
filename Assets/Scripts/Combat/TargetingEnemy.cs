@@ -67,29 +67,29 @@ namespace Combat
                 if (EnemyManager.self.enemies.Count == 0)
                 {
                     Destroy(m_Marker.gameObject);
-                    Destroy(gameObject);
+                    Destroy(this);
                     yield break;
                 }
 
-                if (EnemyManager.self.currentEnemy == null)
-                    yield return null;
-
-                if (m_Rising)
-                    m_Marker.position =
-                        m_CurrentPosition + m_MaxPositionOffset *
-                        m_AnimationCurve.Evaluate(deltaTime / m_AnimationTime);
-                else
-                    m_Marker.position =
-                        m_CurrentPosition + m_MaxPositionOffset *
-                        m_AnimationCurve.Evaluate(1f - deltaTime / m_AnimationTime);
-
-                if (deltaTime > m_AnimationTime)
+                if (EnemyManager.self.currentEnemy != null && m_AnimationTime != 0f)
                 {
-                    m_Rising = !m_Rising;
-                    deltaTime = 0f;
-                }
+                    if (m_Rising)
+                        m_Marker.position =
+                            m_CurrentPosition + m_MaxPositionOffset *
+                            m_AnimationCurve.Evaluate(deltaTime / m_AnimationTime);
+                    else
+                        m_Marker.position =
+                            m_CurrentPosition + m_MaxPositionOffset *
+                            m_AnimationCurve.Evaluate(1f - deltaTime / m_AnimationTime);
 
-                deltaTime += Time.deltaTime;
+                    if (deltaTime > m_AnimationTime)
+                    {
+                        m_Rising = !m_Rising;
+                        deltaTime = 0f;
+                    }
+
+                    deltaTime += Time.deltaTime;
+                }
 
                 yield return null;
             }

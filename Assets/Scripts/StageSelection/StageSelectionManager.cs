@@ -24,12 +24,42 @@ namespace StageSelection
 
         private int m_Currentworld;
         private Node m_CurrentNode;
+
+        [SerializeField]
+        private Canvas m_Canvas;
         [SerializeField]
         private Text m_StageNameText;
         [SerializeField]
         private Text m_EnemyText;
         [SerializeField]
         private Button m_StartComabtButton;
+        [SerializeField]
+        private RectTransform m_NodeAnchor;
+
+        [Space, SerializeField]
+        private Color m_NodeCompleted;
+        [SerializeField]
+        private Color m_NodeUnlocked;
+        [SerializeField]
+        private Color m_NodeLocked;
+
+        [Space, SerializeField]
+        private Color m_LineUnlocked;
+        [SerializeField]
+        private Color m_LineLocked;
+
+        [Space, SerializeField]
+        private float m_WorldSpacing;
+        [SerializeField]
+        private Vector2 m_MaxAnchorPosition;
+        [SerializeField]
+        private Vector2 m_MaxAnchorRubberbandPosition;
+        [SerializeField]
+        private float m_LerpTime;
+        [SerializeField]
+        private AnimationCurve m_RubberbandAnimationCurve;
+
+        private Vector2 m_OffsetPosition;
 
         public UnityEvent onStageSelectionEnd = new UnityEvent();
 
@@ -37,6 +67,10 @@ namespace StageSelection
         public GameObject linePrefab;
 
         public float spacingMagnitude = 1;
+
+        public Color nodeCompleted { get { return m_NodeCompleted; } }
+        public Color nodeUnlocked { get { return m_NodeUnlocked; } }
+        public Color nodeLocked { get { return m_NodeLocked; } }
 
         protected override void Init()
         {
@@ -123,18 +157,17 @@ namespace StageSelection
                 var nodeGameObjects = new List<GameObject>();
                 foreach (var n in tree.nodes)
                 {
-
                     var nodeObject = Instantiate(nodePrefab);
 
                     var monoNode = nodeObject.AddComponent<MonoNode>();
                     monoNode.node = n;
 
-                    nodeObject.transform.SetParent(canvas.transform);
+                    nodeObject.transform.SetParent(m_NodeAnchor);
 
                     var nodeTransform = nodeObject.GetComponent<RectTransform>();
                     nodeTransform.anchoredPosition =
-                        new Vector2(n.normalizedPosition.x*spacingMagnitude, 
-                        n.normalizedPosition.y*spacingMagnitude) +
+                        new Vector2(n.normalizedPosition.x * spacingMagnitude,
+                        n.normalizedPosition.y * spacingMagnitude) +
                         treePos;
 
                     var button = nodeObject.GetComponent<Button>();
@@ -151,14 +184,14 @@ namespace StageSelection
                     numOfObjects++;
                 }
 
-                var offset = sum/numOfObjects;
+                var offset = sum / numOfObjects;
 
                 foreach (var node in nodeGameObjects)
                 {
                     node.GetComponent<RectTransform>().anchoredPosition += treePos - offset;
                 }
 
-                treePos.x += 1000;
+                treePos.x += m_WorldSpacing;
             }
 
             // Get Player Data
@@ -186,14 +219,17 @@ namespace StageSelection
             {
                 foreach (var n in monoNode.node.nextNodes)
                 {
-                    if(n.worldIndex != monoNode.node.worldIndex)
+                    if (n.worldIndex != monoNode.node.worldIndex)
                         continue;
 
                     var lineObject = Instantiate(linePrefab); //Create GameObject for LineRenderer
                     var lineTransform = lineObject.GetComponent<RectTransform>();
                     lineObject.name = "Line " + counter;
                     counter++;
-                    lineObject.transform.SetParent(canvas.transform);
+
+                    lineObject.transform.SetParent(m_NodeAnchor);
+                    lineObject.transform.SetAsFirstSibling();
+
                     GameObject nextNodeGameObject = null;
                     foreach (var g in FindObjectsOfType<MonoNode>())
                     {
@@ -206,32 +242,18 @@ namespace StageSelection
 
                     var differance = nextNodeGameObject.transform.position - monoNode.transform.position;
 
-                    var linePosition = monoNode.transform.position + (differance/2f);
+                    var linePosition = monoNode.transform.position + (differance / 2f);
 
                     lineTransform.sizeDelta = Math.Abs(differance.x) > Math.Abs(differance.y)
                         ? new Vector2(differance.magnitude, 10)
                         : new Vector2(10, differance.magnitude);
 
-                    lineObject.GetComponent<Image>().color = (monoNode.node.isComplete) 
-                        ? Color.blue : new Color(1, 1, 1, 0.5f);
-                        // Set Material Color
+                    lineObject.GetComponent<Image>().color = (monoNode.node.isComplete)
+                        ? m_LineUnlocked : m_LineLocked;
+                    // Set Material Color
 
                     lineTransform.position = linePosition;
                 }
-            }
-
-            var startingIndex = GameObject.Find("Line " + (counter - 1)).transform.GetSiblingIndex();
-
-            counter = startingIndex + 1;
-
-            //Move Lines Behind Nodes
-            foreach (var m in FindObjectsOfType<RectTransform>())
-            {
-                if (!m.gameObject.GetComponent<MonoNode>())
-                    continue;
-
-                m.transform.SetSiblingIndex(counter);
-                counter++;
             }
 
             //Set Up UI
@@ -254,59 +276,93 @@ namespace StageSelection
             n2.prevNodes.Add(n1);
         }
 
-        protected override void OnEndDrag(DragInformation dragInfo)
+        protected override void OnDrag(DragInformation dragInfo)
         {
-            // Which way was it dragged
-            var direction = dragInfo.end - dragInfo.origin;
+            var dragDirection = dragInfo.delta.normalized;
+            var scaledDelta = Vector2.right * dragInfo.delta.x / m_Canvas.scaleFactor;
 
-            // Set which way to move
-            var slideMag = (direction.x > 0) ? new Vector2(1000, 0) : new Vector2(-1000, 0);
+            var currentPosition = m_NodeAnchor.anchoredPosition;
 
-            // Change world Index
-            if (slideMag.x < 0)
+            m_OffsetPosition += scaledDelta;
+            m_OffsetPosition =
+                new Vector2(
+                    Mathf.Clamp(
+                        m_OffsetPosition.x,
+                        GetWorldPosition(m_Worlds.Count - 1)
+                            - m_MaxAnchorPosition.x - m_MaxAnchorRubberbandPosition.x,
+                        m_MaxAnchorPosition.x + m_MaxAnchorRubberbandPosition.x),
+                    Mathf.Clamp(
+                        m_OffsetPosition.y,
+                        m_OffsetPosition.y,
+                        m_MaxAnchorPosition.y + m_MaxAnchorRubberbandPosition.y));
+
+            var rubberbandPosition =
+                new Vector2(
+                    Mathf.Abs(m_OffsetPosition.x) - m_MaxAnchorPosition.x,
+                    Mathf.Abs(m_OffsetPosition.y) - m_MaxAnchorPosition.y);
+
+            if (m_OffsetPosition.x > m_MaxAnchorPosition.x)
             {
-                m_Currentworld++;
-            }
-            else if (slideMag.x > 0)
-            {
-                m_Currentworld--;
+                var rubberbandDelta =
+                    m_MaxAnchorRubberbandPosition.x *
+                    m_RubberbandAnimationCurve.Evaluate(
+                        rubberbandPosition.x / m_MaxAnchorRubberbandPosition.x);
+
+                currentPosition.x = m_MaxAnchorPosition.x + rubberbandDelta;
             }
 
-            // If we can move, we will as log as the index is 0 to last element in worlds
-            if (m_Currentworld >= 0 && m_Currentworld <= m_Worlds.Count - 1)
-            {
-                foreach (var child in FindObjectsOfType<RectTransform>())
-                {
-                    if (child.GetComponent<MonoNode>() || child.name.Contains("Line"))
-                    {
-                        StartCoroutine(
-                            MoveObject(child, child.anchoredPosition, 
-                            child.anchoredPosition + slideMag, .2f));
-                    }
-                }
-            }
-            // If we can't move, Reset index
             else
+            if (m_OffsetPosition.x < GetWorldPosition(m_Worlds.Count - 1) - m_MaxAnchorPosition.x)
             {
-                if (m_Currentworld >= m_Worlds.Count)
-                {
-                    m_Currentworld = m_Worlds.Count - 1;
-                }
-                else if (m_Currentworld < 0)
-                {
-                    m_Currentworld = 0;
-                }
+                var rubberbandDelta =
+                    m_MaxAnchorRubberbandPosition.x *
+                    m_RubberbandAnimationCurve.Evaluate(
+                        -(m_OffsetPosition.x - GetWorldPosition(m_Worlds.Count - 1)
+                        + m_MaxAnchorPosition.x) / m_MaxAnchorRubberbandPosition.x);
+
+                currentPosition.x =
+                    GetWorldPosition(m_Worlds.Count - 1) - m_MaxAnchorPosition.x - rubberbandDelta;
             }
+
+            else
+                currentPosition = m_OffsetPosition;
+
+            m_NodeAnchor.anchoredPosition = currentPosition;
+            StopAllCoroutines();
         }
 
-        private IEnumerator MoveObject(RectTransform rt, Vector2 start, Vector2 end, float time)
+        protected override void OnEndDrag(DragInformation dragInfo)
         {
-            var i = 0.0;
-            var rate = 1.0/time;
-            while (i < 1.0)
+            //TODO: Lerp Down
+            StartCoroutine(MoveObject());
+        }
+
+        private int GetWorldIndex(float xPosition)
+        {
+            return (int)((xPosition - m_WorldSpacing / 2f) / -m_WorldSpacing);
+        }
+        private float GetWorldPosition(int worldIndex)
+        {
+            return worldIndex * -m_WorldSpacing;
+        }
+
+        private IEnumerator MoveObject()
+        {
+            var newPosition =
+                new Vector2(
+                    GetWorldPosition(GetWorldIndex(m_NodeAnchor.anchoredPosition.x)),
+                    m_NodeAnchor.anchoredPosition.y);
+
+            var deltaTime = 0f;
+            while (deltaTime < m_LerpTime)
             {
-                i += Time.deltaTime*rate;
-                rt.anchoredPosition = Vector3.Lerp(start, end, (float)i);
+                m_OffsetPosition =
+                    Vector2.Lerp(
+                        m_NodeAnchor.anchoredPosition, newPosition, deltaTime / m_LerpTime);
+                m_NodeAnchor.anchoredPosition = m_OffsetPosition;
+
+                deltaTime += Time.deltaTime;
+
                 yield return null;
             }
         }
@@ -328,7 +384,7 @@ namespace StageSelection
             foreach (var index in m_CurrentNode.enemyInts)
             {
                 var name = GameManager.self.enemyPrefabList[index].name;
-                if(!enemyInstances.ContainsKey(name))
+                if (!enemyInstances.ContainsKey(name))
                     enemyInstances.Add(name, 0);
                 enemyInstances[name] += 1;
             }
@@ -345,7 +401,7 @@ namespace StageSelection
                 m_StartComabtButton.gameObject.GetComponentInChildren<Text>().text = "Low\nPower";
             }
 
-            else if (m_CurrentNode.isComplete || m_CurrentNode.prevNodes.Any(n => n.isComplete) 
+            else if (m_CurrentNode.isComplete || m_CurrentNode.prevNodes.Any(n => n.isComplete)
                 || m_CurrentNode.prevNodes.Count == 0)
             {
                 m_StartComabtButton.interactable = true;

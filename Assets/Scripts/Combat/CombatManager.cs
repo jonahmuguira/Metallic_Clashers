@@ -89,7 +89,15 @@
         public bool isPaused
         {
             get { return m_IsPaused; }
-            set { m_IsPaused = value; m_OnCombatPauseChange.Invoke(value); }
+            set
+            {
+                m_IsPaused = value;
+
+                foreach (var animator in FindObjectsOfType<Animator>())
+                    animator.enabled = !m_IsPaused;
+
+                m_OnCombatPauseChange.Invoke(value);
+            }
         }
         public UnityBoolEvent onCombatPauseChange { get { return m_OnCombatPauseChange; } }
 
