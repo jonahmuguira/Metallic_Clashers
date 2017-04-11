@@ -15,6 +15,8 @@ using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+using Random = UnityEngine.Random;
+
 public class GameManager : MonoSingleton<GameManager>
 {
     public enum GameState
@@ -34,6 +36,8 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField]
     private List<GameObject> m_EnemyPrefabList = new List<GameObject>();
 
+    private int m_RandomSeed;
+
     public GameState gameState;
 
     public PlayerData playerData = new PlayerData();
@@ -43,8 +47,13 @@ public class GameManager : MonoSingleton<GameManager>
     public List<GameObject> enemyPrefabList { get { return m_EnemyPrefabList; } }
     public UnityEvent onSceneLoaded { get { return m_OnSceneLoaded; } }
 
+    public int randomSeed { get { return m_RandomSeed; } }
+
     protected override void OnAwake()
     {
+        m_RandomSeed = (int)DateTime.Now.Ticks;
+        Random.InitState(m_RandomSeed);
+
         DontDestroyOnLoad(gameObject);
         m_InventorySavePath = Application.persistentDataPath + "/Inventory.xml";
         m_PlayerSavePath = Application.persistentDataPath + "/PlayerData.xml";
