@@ -32,6 +32,8 @@ public class InputData
 {
     public List<TouchAction> touchActions = new List<TouchAction>();
     public List<DragAction> dragActions = new List<DragAction>();
+
+    public int randomSeed;
 }
 
 public class InputRecorder : MonoSingleton<InputRecorder>
@@ -43,6 +45,8 @@ public class InputRecorder : MonoSingleton<InputRecorder>
 
     protected override void OnAwake()
     {
+        m_InputData.randomSeed = GameManager.self.randomSeed;
+
         InputManager.self.onPress.AddListener(OnPress);
         InputManager.self.onHold.AddListener(OnHold);
         InputManager.self.onRelease.AddListener(OnRelease);

@@ -12,6 +12,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+using Random = UnityEngine.Random;
+
 public class InputReplay : MonoSingleton<InputReplay>
 {
     [SerializeField]
@@ -21,8 +23,13 @@ public class InputReplay : MonoSingleton<InputReplay>
 
     protected override void OnAwake()
     {
+        if (!m_Replay)
+            return;
+
         var jsonData = File.ReadAllText(Application.persistentDataPath + "/InputData.json");
         m_InputData = JsonUtility.FromJson<InputData>(jsonData);
+
+        Random.InitState(m_InputData.randomSeed);
     }
 
     private void Update()

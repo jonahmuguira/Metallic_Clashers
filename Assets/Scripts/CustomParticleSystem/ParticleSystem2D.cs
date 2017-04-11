@@ -25,8 +25,6 @@
 
         private void Awake()
         {
-            Random.InitState(DateTime.Now.Millisecond);
-
             InputManager.self.onHold.AddListener(OnHold);
             InputManager.self.onDrag.AddListener(OnDrag);
         }
