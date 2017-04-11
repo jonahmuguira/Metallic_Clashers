@@ -88,8 +88,6 @@
         private Grid() { }
         public Grid(Vector2 newSize) : this()
         {
-            Random.InitState((int)DateTime.Now.Ticks);
-
             m_Size = newSize;
 
             onCreate.Invoke(this);
