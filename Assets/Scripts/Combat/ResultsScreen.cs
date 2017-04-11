@@ -24,13 +24,6 @@ namespace Combat
 
         private void Awake()
         {
-
-            //Test Area
-
-            GameManager.self.playerData.playerLevelSystem.IsLeveledUp(5000);
-
-            ////////////
-
             m_RectTransform = GetComponent<RectTransform>();
             m_RectTransform.anchoredPosition -= new Vector2(0, 1000);
             m_ExpForgroundImage.fillAmount = 0f;
@@ -84,8 +77,11 @@ namespace Combat
                 yield return null;
             }
 
+            if (!result)
+                yield break;
+
             // Get some experience
-            GameManager.self.playerData.playerLevelSystem.IsLeveledUp(200);
+            GameManager.self.playerData.playerLevelSystem.IsLeveledUp(EnemyManager.self.experianceTotal);
 
             // Check to see how much the total bar needs 
             var midgroundFillAmount = (float)
@@ -96,24 +92,23 @@ namespace Combat
             // Take off how much is already filled in
             midgroundFillAmount -= forgroundFillAmount;
 
-            fillFraction = midgroundFillAmount/barFillTime;
+            fillFraction = midgroundFillAmount / barFillTime;
 
             // As long as the bar is in range and not greater than one, fill.
             float setamount = 0;
             while (m_ExpMidgroundImage.fillAmount < midgroundFillAmount &&
-                m_ExpForgroundImage.fillAmount + m_ExpMidgroundImage.fillAmount < 1)
+                   m_ExpForgroundImage.fillAmount + m_ExpMidgroundImage.fillAmount < 1)
             {
-                setamount += Time.deltaTime*fillFraction;
+                setamount += Time.deltaTime * fillFraction;
                 SetMidground(setamount);
                 yield return null;
             }
 
             while (m_ExpForgroundImage.fillAmount < finalFill)
             {
-                m_ExpForgroundImage.fillAmount += Time.deltaTime*fillFraction;
+                m_ExpForgroundImage.fillAmount += Time.deltaTime * fillFraction;
                 yield return null;
             }
-    
         }
 
     }
