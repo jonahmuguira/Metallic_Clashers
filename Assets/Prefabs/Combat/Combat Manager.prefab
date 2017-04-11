@@ -113,5 +113,5 @@ MonoBehaviour:
     m_TypeName: Combat.UnityEnemyEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   m_PauseCameraTime: 2
-  enemyPadding: 1
+  enemyPadding: 1.5
   doCombat: 1

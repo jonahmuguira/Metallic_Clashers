@@ -1058,11 +1058,14 @@ MonoBehaviour:
       m_Modifier: 0
       m_Coefficient: 1
       value: 2
+    m_ExperianceValue: 20
     attackSpeed: 5
     movesUntilAttack: 3
     damageType: 0
     resistances: 
     weaknesses: 
+    movesCounter: 0
+    attackCountdown: 5
   m_Animator: {fileID: 95846672162609160}
 --- !u!137 &137030312460342804
 SkinnedMeshRenderer:

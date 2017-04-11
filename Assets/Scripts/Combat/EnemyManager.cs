@@ -29,10 +29,13 @@
 
         private List<IEnumerator> m_AnimateEnemies = new List<IEnumerator>();
 
+        private uint m_ExperianceTotal = 0;
+
         public float enemyPadding = 1f;
         public bool doCombat;
 
         public GameObject enemyHealthBarPrefab { get { return m_EnemyHealthBarPrefab; } }
+        public uint experianceTotal { get { return m_ExperianceTotal;} }
 
         public EnemyMono currentEnemy
         {
@@ -101,6 +104,8 @@
 
                 m_Enemies.Add(enemyMono);
                 CombatManager.self.onCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
+
+                m_ExperianceTotal += enemy.experianceValue;
             }
             GameManager.self.enemyIndexes = new List<int>();
             currentEnemy = m_Enemies[0];
