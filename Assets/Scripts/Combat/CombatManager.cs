@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    
+
     using UnityEngine;
     using UnityEngine.Events;
     using UnityEngine.EventSystems;
@@ -48,6 +48,8 @@
         [SerializeField]
         private UnityEvent m_OnCombatLateUpdate = new UnityEvent();
         [SerializeField]
+        private UnityEvent m_OnCombatEnding = new UnityEvent();
+        [SerializeField]
         private UnityEvent m_OnCombatEnd = new UnityEvent();
 
         [Space, SerializeField]
@@ -64,7 +66,9 @@
         private GridCollectionMono m_LockedGridCollectionMono;
 
         private bool m_CombatHasBegun;
+
         private bool m_IsPaused;
+        private bool m_IsEnding;
 
         private bool m_HasSlid;
 
@@ -80,6 +84,7 @@
         public UnityEvent onCombatBegin { get { return m_OnCombatBegin; } }
         public UnityEvent onCombatUpdate { get { return m_OnCombatUpdate; } }
         public UnityEvent onCombatLateUpdate { get { return m_OnCombatLateUpdate; } }
+        public UnityEvent onCombatEnding { get { return m_OnCombatEnding; } }
         public UnityEvent onCombatEnd { get { return m_OnCombatEnd; } }
 
         public UnityEvent onCombatModeChange { get { return m_OnCombatModeChange; } }
@@ -132,8 +137,26 @@
                 m_CombatHasBegun = true;
             }
 
-            if (!m_IsPaused)
-                m_OnCombatUpdate.Invoke();
+            if (m_IsPaused)
+                return;
+
+            if (m_IsEnding)
+            {
+                m_OnCombatEnding.Invoke();
+                return;
+            }
+
+            // Win or Lose
+            if (EnemyManager.self.enemies.Count == 0 ||
+                GameManager.self.playerData.health.totalValue <= 0)
+            {
+                FindObjectOfType<ResultsScreen>().ResultsScreenBegin(
+                    EnemyManager.self.enemies.Count == 0);
+
+                m_IsEnding = true;
+            }
+
+            m_OnCombatUpdate.Invoke();
         }
 
         private void LateUpdate()
@@ -146,15 +169,15 @@
         {
             switch (m_CombatMode)
             {
-            case CombatMode.Attack:
-                m_CombatMode = CombatMode.Defense;
-                break;
-            case CombatMode.Defense:
-                m_CombatMode = CombatMode.Attack;
-                break;
+                case CombatMode.Attack:
+                    m_CombatMode = CombatMode.Defense;
+                    break;
+                case CombatMode.Defense:
+                    m_CombatMode = CombatMode.Attack;
+                    break;
 
-            default:
-                throw new ArgumentOutOfRangeException();
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             m_OnCombatModeChange.Invoke();
