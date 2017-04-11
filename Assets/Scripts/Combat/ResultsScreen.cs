@@ -35,7 +35,7 @@ namespace Combat
 
             CombatManager.self.onCombatEnding.AddListener(OnCombatEnding);
         }
-
+        
         private void OnCombatEnding()
         {
             if (m_ResultScreeEnumerator != null)
@@ -60,7 +60,7 @@ namespace Combat
 
         private IEnumerator ResultsScreenEnumerator(bool result)
         {   // Set Win Text
-            m_ResultText.text = result ? "You Win!" : "You Lose...";
+            m_ResultText.text = result ? "You Win!" : "You  Lose...";
 
             var animationFraction = 1000 / animationTime;
 

@@ -154,6 +154,7 @@
 
             CombatManager.self.onCombatUpdate.AddListener(newGridMono.OnCombatUpdate);
             CombatManager.self.onPlayerTurn.AddListener(newGridMono.OnPlayerTurn);
+            CombatManager.self.onCombatEnding.AddListener(newGridMono.OnCombatUpdate);
         }
     }
 }
