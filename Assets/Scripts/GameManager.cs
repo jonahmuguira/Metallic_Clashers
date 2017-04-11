@@ -2,18 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 using System.Xml.Serialization;
 
 using Combat;
-
+using Items;
 using Library;
-
 using StageSelection;
 
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine;
 
 using Random = UnityEngine.Random;
 
@@ -77,11 +76,14 @@ public class GameManager : MonoSingleton<GameManager>
                 ? 1
                 : playerData.playerLevelSystem.playerLevelInfo.level;
 
-
         playerData.playerLevelSystem.playerLevelInfo.experienceRequired =
         (playerData.playerLevelSystem.playerLevelInfo.experienceRequired < 200)
             ? 200
             : playerData.playerLevelSystem.playerLevelInfo.experienceRequired;
+
+        //
+        //playerData.itemManager.AddInventoryItem();
+        //
 
         gameState = (GameState)SceneManager.GetActiveScene().buildIndex;
         AddSceneListeners();
@@ -99,11 +101,13 @@ public class GameManager : MonoSingleton<GameManager>
     private void OnCombatEnd()
     {
         LoadScene((int)GameState.StateSelection);
+        //playerData.itemManager.RemoveCombatItem();
     }
 
     private void OnStageSelectionEnd()
     {
         LoadScene((int)GameState.Combat);
+        //playerData.itemManager.AddCombatItem();
     }
 
     private void AddSceneListeners()
@@ -194,7 +198,6 @@ public class GameManager : MonoSingleton<GameManager>
         {
             StartCoroutine(LoadSceneCoroutine(sceneIndex));
         }
-
     }
 
     private IEnumerator LoadSceneCoroutine(int sceneIndex)
@@ -208,5 +211,4 @@ public class GameManager : MonoSingleton<GameManager>
         AddSceneListeners();
         onSceneLoaded.Invoke();
     }
-
 }
