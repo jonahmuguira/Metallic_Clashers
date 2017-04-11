@@ -4,6 +4,9 @@
 
     public class GemMonoDuplicate : GemMono
     {
+        // If I don't do this Unity will call GemMono.Awake()
+        private void Awake() { }
+
         protected override void UpdateTransformPosition()
         {
             var spacing = gridMono.CalculateSpacing();
@@ -16,7 +19,7 @@
             offsetPosition =
                 new Vector2(offsetPosition.x * spacing.x, offsetPosition.y * spacing.y);
 
-            m_RectTransform.anchoredPosition = 
+            m_RectTransform.anchoredPosition =
                 offsetPosition + rowMono.positionOffset + columnMono.positionOffset;
 
             m_PositionIsDirty = false;
