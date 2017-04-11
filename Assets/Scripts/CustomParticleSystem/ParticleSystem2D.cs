@@ -3,6 +3,9 @@
     using System;
     using System.Linq;
 
+    using CustomInput;
+    using CustomInput.Information;
+
     using CustomParticleSystem;
 
     using UnityEngine;
@@ -22,7 +25,8 @@
 
         private void Awake()
         {
-            Random.InitState(DateTime.Now.Millisecond);
+            InputManager.self.onHold.AddListener(OnHold);
+            InputManager.self.onDrag.AddListener(OnDrag);
         }
 
         private void Start()
@@ -31,12 +35,17 @@
             m_ParticleAnchor.transform.SetParent(transform.parent, false);
         }
 
-        // Update is called once per frame
-        void LateUpdate()
+        private void OnHold(TouchInformation dragInformation)
         {
-            if (!Input.GetMouseButton(0))
-                return;
+            CreateParticles();
+        }
+        private void OnDrag(DragInformation dragInformation)
+        {
+            CreateParticles();
+        }
 
+        private void CreateParticles()
+        {
             var newParticle2D = Instantiate(m_Particle2DPrefab);
             newParticle2D.transform.SetParent(m_ParticleAnchor.transform, false);
             newParticle2D.transform.position = transform.position;

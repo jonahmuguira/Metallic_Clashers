@@ -62,8 +62,6 @@
 
         private IEnumerator Animate()
         {
-            Random.InitState(DateTime.Now.Millisecond);
-
             var originalPosition = transform.localPosition;
             var originalEulerAngles = transform.localEulerAngles;
             var originalZoom = transform.GetChild(0).localPosition;
