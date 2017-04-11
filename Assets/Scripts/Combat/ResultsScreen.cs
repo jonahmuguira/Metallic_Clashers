@@ -17,6 +17,8 @@ namespace Combat
         private RectTransform m_RectTransform;
         private Button m_EndSceneButton;
 
+        private IEnumerator m_ResultScreeEnumerator;
+
         [Space]
 
         public float animationTime;
@@ -29,13 +31,21 @@ namespace Combat
             m_ExpForgroundImage.fillAmount = 0f;
             SetMidground(0);
             m_EndSceneButton = GetComponentInChildren<Button>();
-            m_EndSceneButton.onClick.AddListener(() => { CombatManager.self.onCombatEnd.Invoke();});
+            m_EndSceneButton.onClick.AddListener(() => { CombatManager.self.onCombatEnd.Invoke(); });
+
+            CombatManager.self.onCombatEnding.AddListener(OnCombatEnding);
+        }
+
+        private void OnCombatEnding()
+        {
+            if (m_ResultScreeEnumerator != null)
+                m_ResultScreeEnumerator.MoveNext();
         }
 
         [ContextMenu("Start animation")]
-        private void ResultsScreenBegin()
+        public void ResultsScreenBegin(bool result)
         {
-            StartCoroutine(ResultsScreenEnumerator(true));
+            m_ResultScreeEnumerator = ResultsScreenEnumerator(result);
         }
 
         private void SetMidground(float fillAmount)
@@ -43,7 +53,7 @@ namespace Combat
             m_ExpMidgroundImage.rectTransform.anchorMin = new Vector2(
                 m_ExpForgroundImage.fillAmount, m_ExpMidgroundImage.rectTransform.anchorMin.y);
             m_ExpMidgroundImage.rectTransform.anchorMax = new Vector2(
-                m_ExpMidgroundImage.rectTransform.anchorMin.x + 1, 
+                m_ExpMidgroundImage.rectTransform.anchorMin.x + 1,
                 m_ExpMidgroundImage.rectTransform.anchorMax.y);
             m_ExpMidgroundImage.fillAmount = fillAmount;
         }
@@ -52,7 +62,7 @@ namespace Combat
         {   // Set Win Text
             m_ResultText.text = result ? "You Win!" : "You Lose...";
 
-            var animationFraction = 1000/animationTime;
+            var animationFraction = 1000 / animationTime;
 
             // Animate the pannel in
             while (m_RectTransform.anchoredPosition.y < 0)
@@ -68,12 +78,12 @@ namespace Combat
                 GameManager.self.playerData.playerLevelSystem.playerLevelInfo.experienceRequired;
 
             // Find out how much needs to be filled per second
-            var fillFraction = 1/animationTime;
+            var fillFraction = 1 / animationTime;
 
             // Animate Bar filling
             while (m_ExpForgroundImage.fillAmount < forgroundFillAmount)
             {
-                m_ExpForgroundImage.fillAmount += Time.deltaTime*fillFraction;
+                m_ExpForgroundImage.fillAmount += Time.deltaTime * fillFraction;
                 yield return null;
             }
 
@@ -109,6 +119,8 @@ namespace Combat
                 m_ExpForgroundImage.fillAmount += Time.deltaTime * fillFraction;
                 yield return null;
             }
+
+            m_ResultScreeEnumerator = null;
         }
 
     }
