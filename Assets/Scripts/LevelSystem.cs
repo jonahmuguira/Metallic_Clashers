@@ -25,6 +25,7 @@ public class LevelSystem
         //factor = constant, how much of an increase of xp needed for levelup.
 
         var tempExperience = exp;
+        uint tempExpeienceRequired = 0;
 
         const uint c_baseExperience = 200; //base_xp //testing value from research results
         uint tempLevel = 1; //level_to_get //player needs to start at level one
@@ -35,14 +36,17 @@ public class LevelSystem
         for (tempLevel = 1; tempExperience > experienceRequiredFormula; tempLevel++)
         {
             tempExperience -= experienceRequiredFormula;
+            tempExpeienceRequired += experienceRequiredFormula;
             experienceRequiredFormula = c_baseExperience * ((tempLevel + 2) ^ c_factor); //recalculate formula value
         }
+
+        tempExpeienceRequired += experienceRequiredFormula;
 
         var levelInfo = new LevelInfo
         {
             level = tempLevel, //player's level
             currentExperience = exp, //player's current exp amout
-            experienceRequired = experienceRequiredFormula, //the exp amount the player needs to level up
+            experienceRequired = tempExpeienceRequired, //the exp amount the player needs to level up
         };
 
         return levelInfo;

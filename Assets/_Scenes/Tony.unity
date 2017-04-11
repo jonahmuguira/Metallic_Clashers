@@ -369,7 +369,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &277597349
 RectTransform:
   m_ObjectHideFlags: 0
@@ -440,7 +440,7 @@ MonoBehaviour:
   m_ExpForgroundImage: {fileID: 1392842952}
   m_ExpMidgroundImage: {fileID: 197678417}
   animationTime: 2
-  barFillTime: 4
+  barFillTime: 2.5
 --- !u!224 &348985727 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224707338622916080, guid: 4bfb5f5e7b0ed1746abd07a2b7e8a96d,
