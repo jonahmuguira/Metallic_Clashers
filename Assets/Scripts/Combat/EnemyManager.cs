@@ -32,7 +32,6 @@
         private uint m_ExperianceTotal = 0;
 
         public float enemyPadding = 1f;
-        public bool doCombat;
 
         public GameObject enemyHealthBarPrefab { get { return m_EnemyHealthBarPrefab; } }
         public uint experianceTotal { get { return m_ExperianceTotal;} }
@@ -59,9 +58,6 @@
         // Use this for initialization
         protected override void Init()
         {
-            if (!doCombat)
-                return;
-
             var managerEnemies = GameManager.self.enemyIndexes;
             var enemyPrefabList = GameManager.self.enemyPrefabList;
 
@@ -116,9 +112,6 @@
 
         private void OnMatch(MatchInformation matchInfo)
         {
-            if (!doCombat)
-                return;
-
             var playerData = GameManager.self.playerData;
 
             switch (CombatManager.self.combatMode)
@@ -145,23 +138,6 @@
 
         private void OnCombatUpdate()
         {
-            if (!doCombat)
-                return;
-
-            // Win
-            if (m_Enemies.Count == 0)
-            {
-                CombatManager.self.onCombatEnd.Invoke();
-                return;
-            }
-
-            // Lose
-            if (GameManager.self.playerData.health.totalValue <= 0)
-            {
-                CombatManager.self.onCombatEnd.Invoke();
-                return;
-            }
-
             GameManager.self.playerData.DecayShield();
 
             if (m_PauseCameraEnumerator != null)
@@ -173,8 +149,7 @@
                     m_AnimateEnemies.Remove(animateEnemy);
             }
         }
-
-
+        
         protected override void OnPress(TouchInformation touchInfo)
         {
             // Else shoot ray from touch
