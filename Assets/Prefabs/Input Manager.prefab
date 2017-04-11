@@ -21,6 +21,8 @@ GameObject:
   - component: {fileID: 4202055453174718}
   - component: {fileID: 114245420580760474}
   - component: {fileID: 114930959667286146}
+  - component: {fileID: 114422585160391026}
+  - component: {fileID: 114759783377280130}
   m_Layer: 0
   m_Name: Input Manager
   m_TagString: Untagged
@@ -83,6 +85,30 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: CustomInput.DragEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
+--- !u!114 &114422585160391026
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521421769480502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1008d11dc575970449fa7c9bf354042a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Record: 0
+--- !u!114 &114759783377280130
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1521421769480502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b44063856498e1449b0f3ae405a330cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Replay: 1
 --- !u!114 &114930959667286146
 MonoBehaviour:
   m_ObjectHideFlags: 1
