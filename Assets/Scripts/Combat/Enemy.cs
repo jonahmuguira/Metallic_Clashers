@@ -21,6 +21,8 @@ namespace Combat
         private Attribute m_Attack = new Attribute { value = 10f };
         [SerializeField]
         private Attribute m_Defense = new Attribute { value = 10f };
+        [SerializeField]
+        private uint m_ExperianceValue = 10;
 
         private UnityEnemyEvent m_OnTakeDamage = new UnityEnemyEvent();
         private UnityEvent m_OnAttack = new UnityEvent();
@@ -29,6 +31,7 @@ namespace Combat
         public Attribute health { get { return m_Health; } }
         public Attribute attack { get { return m_Attack; } }
         public Attribute defense { get { return m_Defense; } }
+        public uint experianceValue { get { return m_ExperianceValue;} }
 
         public float attackSpeed;
         public int movesUntilAttack;

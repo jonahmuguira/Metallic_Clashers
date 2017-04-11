@@ -25,6 +25,7 @@ public class LevelSystem
         //factor = constant, how much of an increase of xp needed for levelup.
 
         var tempExperience = exp;
+        uint tempExpeienceRequired = 0;
 
         const uint c_baseExperience = 200; //base_xp //testing value from research results
         uint tempLevel = 1; //level_to_get //player needs to start at level one
@@ -35,14 +36,17 @@ public class LevelSystem
         for (tempLevel = 1; tempExperience > experienceRequiredFormula; tempLevel++)
         {
             tempExperience -= experienceRequiredFormula;
+            tempExpeienceRequired += experienceRequiredFormula;
             experienceRequiredFormula = c_baseExperience * ((tempLevel + 2) ^ c_factor); //recalculate formula value
         }
+
+        tempExpeienceRequired += experienceRequiredFormula;
 
         var levelInfo = new LevelInfo
         {
             level = tempLevel, //player's level
-            currentExperience = tempExperience, //player's current exp amout
-            experienceRequired = experienceRequiredFormula, //the exp amount the player needs to level up
+            currentExperience = exp, //player's current exp amout
+            experienceRequired = tempExpeienceRequired, //the exp amount the player needs to level up
         };
 
         return levelInfo;
@@ -50,23 +54,24 @@ public class LevelSystem
                              //fight exp
     public void IsLeveledUp(uint modifier)
     {
-        var tempCurrentExperience = CalculateLevel(playerLevelInfo.currentExperience);
+        var tempCurrentExperience = playerLevelInfo;
         var finalTotal = CalculateLevel(playerLevelInfo.currentExperience + modifier);
 
-        if (finalTotal.level != tempCurrentExperience.level)
-        {
-            uint differenceInLevel;
+        // TODO: This was messing with the values when Combat started.
+        //if (finalTotal.level != tempCurrentExperience.level)
+        //{
+        //    uint differenceInLevel;
 
-            for (differenceInLevel = finalTotal.level - tempCurrentExperience.level; differenceInLevel > 0; differenceInLevel--)
-            {
-                const int c_percentageValue = 10 / 100; //10%
+        //    for (differenceInLevel = finalTotal.level - tempCurrentExperience.level; differenceInLevel > 0; differenceInLevel--)
+        //    {
+        //        const int c_percentageValue = 10 / 100; //10%
 
-                GameManager.self.playerData.health.value *= c_percentageValue; //health stat change
-                GameManager.self.playerData.attack.value *= c_percentageValue; //attack stat change
-                GameManager.self.playerData.defense.value *= c_percentageValue; //defense stat change
-                StaminaManager.self.maxValue *= c_percentageValue; //stamina stat change
-            }
-        }
+        //        GameManager.self.playerData.health.value *= c_percentageValue; //health stat change
+        //        GameManager.self.playerData.attack.value *= c_percentageValue; //attack stat change
+        //        GameManager.self.playerData.defense.value *= c_percentageValue; //defense stat change
+        //        StaminaManager.self.maxValue *= c_percentageValue; //stamina stat change
+        //    }
+        //}
 
         playerLevelInfo = finalTotal;
     }

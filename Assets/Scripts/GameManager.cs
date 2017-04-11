@@ -72,6 +72,17 @@ public class GameManager : MonoSingleton<GameManager>
             SavePlayer();
         }
 
+        playerData.playerLevelSystem.playerLevelInfo.level =
+            (playerData.playerLevelSystem.playerLevelInfo.level <= 0)
+                ? 1
+                : playerData.playerLevelSystem.playerLevelInfo.level;
+
+
+        playerData.playerLevelSystem.playerLevelInfo.experienceRequired =
+        (playerData.playerLevelSystem.playerLevelInfo.experienceRequired < 200)
+            ? 200
+            : playerData.playerLevelSystem.playerLevelInfo.experienceRequired;
+
         gameState = (GameState)SceneManager.GetActiveScene().buildIndex;
         AddSceneListeners();
         //onSceneLoaded.AddListener(AddSceneListeners);
