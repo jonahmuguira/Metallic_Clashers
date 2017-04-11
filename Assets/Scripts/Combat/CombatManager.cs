@@ -34,6 +34,8 @@
         private VerticalLayoutGroup m_RowParent;
         [SerializeField]
         private HorizontalLayoutGroup m_ColumnParent;
+        [SerializeField]
+        private GameObject m_ResultsPanel;
 
         [Space, SerializeField]
         private CombatUiInformation m_CombatUiInformation;
@@ -150,8 +152,9 @@
             if (EnemyManager.self.enemies.Count == 0 ||
                 GameManager.self.playerData.health.totalValue <= 0)
             {
-                FindObjectOfType<ResultsScreen>().ResultsScreenBegin(
-                    EnemyManager.self.enemies.Count == 0);
+                m_ResultsPanel.SetActive(true);
+                m_ResultsPanel.GetComponentInChildren<ResultsScreen>().
+                    ResultsScreenBegin(EnemyManager.self.enemies.Count == 0);
 
                 m_IsEnding = true;
             }
@@ -190,6 +193,9 @@
 
         protected override void OnBeginDrag(DragInformation dragInfo)
         {
+            if (m_IsEnding)
+                return;
+
             var hitMonos = RayCastToGridCollectionMono(dragInfo.origin).ToList();
 
             // If we didn't hit a GemMono first
@@ -208,6 +214,9 @@
 
         protected override void OnDrag(DragInformation dragInfo)
         {
+            if (m_IsEnding)
+                return;
+
             if (m_GridMono.gemsAreAnimating)
                 return;
 
@@ -228,6 +237,9 @@
 
         protected override void OnEndDrag(DragInformation dragInfo)
         {
+            if (m_IsEnding)
+                return;
+
             if (!m_HasSlid)
                 return;
 

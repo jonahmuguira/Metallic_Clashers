@@ -47,8 +47,8 @@
 
         private void OnCombatUpdate()
         {
-            if (m_ReducePositionOffsetCoroutine != null && m_ReducePositionOffsetCoroutine.MoveNext()) ;
-            else { m_ReducePositionOffsetCoroutine = null; }
+            if (m_ReducePositionOffsetCoroutine != null)
+                m_ReducePositionOffsetCoroutine.MoveNext();
         }
 
         private void CheckForSlide()
@@ -140,6 +140,8 @@
 
             foreach (var gem in gemMonos)
                 gem.positionIsDirty = true;
+
+            m_ReducePositionOffsetCoroutine = null;
         }
 
         public static void Init()
@@ -177,6 +179,7 @@
             newGridCollectionMono.m_Image.color = new Color(0f, 0f, 0f, 0f);
 
             CombatManager.self.onCombatUpdate.AddListener(newGridCollectionMono.OnCombatUpdate);
+            CombatManager.self.onCombatEnding.AddListener(newGridCollectionMono.OnCombatUpdate);
         }
     }
 }
