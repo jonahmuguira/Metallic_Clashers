@@ -4,6 +4,8 @@
 
     using CustomParticleSystem;
 
+    using Information;
+
     using Library;
 
     using UnityEngine;
@@ -19,21 +21,36 @@
 
         protected override void OnAwake()
         {
-            DontDestroyOnLoad(this);
             GameManager.self.onSceneLoaded.AddListener(Init);
 
+            InputManager.self.onHold.AddListener(OnHold);
+            InputManager.self.onDrag.AddListener(OnDrag);
+
             Init();
+
+            DontDestroyOnLoad(this);
         }
 
-        private void LateUpdate()
+        private void OnHold(TouchInformation touchInformation)
+        {
+            UpdatePosition(touchInformation.position);
+        }
+
+        private void OnDrag(DragInformation dragInformation)
+        {
+            UpdatePosition(dragInformation.end);
+        }
+
+        private void UpdatePosition(Vector2 newPosition)
         {
             //var touches = UnityEngine.Input.touches;
             //if (!touches.Any())
             //    return;
 
             //var newPosition = Camera.main.ScreenToWorldPoint(touches.First().position);
+
             if (m_ParticleSystem2D != null)
-                m_ParticleSystem2D.transform.position = Input.mousePosition;
+                m_ParticleSystem2D.transform.position = newPosition;
         }
 
         private void Init()

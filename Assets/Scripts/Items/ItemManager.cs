@@ -8,8 +8,6 @@ namespace Items
     using System.Xml.Serialization;
     using Combat;
 
-    using UnityEngine;
-
     public class ItemManager
     {
         [Serializable]
@@ -61,7 +59,6 @@ namespace Items
 
         public void SetItemNonActive(BaseItem item)
         {
-            if (activeList.Contains(item)) { combatInventory.Add(item); activeList.Remove(item); }
             if (combatInventory.Contains(item)) { inventory.Add(item); combatInventory.Remove(item); }
         }
 
