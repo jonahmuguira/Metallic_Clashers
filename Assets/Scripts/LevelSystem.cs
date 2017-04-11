@@ -41,7 +41,7 @@ public class LevelSystem
         var levelInfo = new LevelInfo
         {
             level = tempLevel, //player's level
-            currentExperience = tempExperience, //player's current exp amout
+            currentExperience = exp, //player's current exp amout
             experienceRequired = experienceRequiredFormula, //the exp amount the player needs to level up
         };
 
@@ -50,7 +50,7 @@ public class LevelSystem
                              //fight exp
     public void IsLeveledUp(uint modifier)
     {
-        var tempCurrentExperience = CalculateLevel(playerLevelInfo.currentExperience);
+        var tempCurrentExperience = playerLevelInfo;
         var finalTotal = CalculateLevel(playerLevelInfo.currentExperience + modifier);
 
         if (finalTotal.level != tempCurrentExperience.level)

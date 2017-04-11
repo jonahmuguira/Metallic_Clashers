@@ -685,7 +685,7 @@ Transform:
   m_GameObject: {fileID: 1197087961781162}
   m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7.5220666, y: 7.5220647, z: 7.5220647}
+  m_LocalScale: {x: 7.5, y: 7.5, z: 7.5}
   m_Children:
   - {fileID: 4879181069591266}
   - {fileID: 4064057646383612}
@@ -1057,8 +1057,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1.3245928, y: 1.7436795, z: 2.602365}
-  m_Center: {x: 0, y: 1.8845999, z: -0.864414}
+  m_Size: {x: 0.20434159, y: 0.259597, z: 0.37927204}
+  m_Center: {x: 0.0042537306, y: 0.26966944, z: 0.119080506}
 --- !u!95 &95458535989209864
 Animator:
   serializedVersion: 3
@@ -1105,6 +1105,8 @@ MonoBehaviour:
     damageType: 0
     resistances: 
     weaknesses: 
+    movesCounter: 0
+    attackCountdown: 5
   m_Animator: {fileID: 95458535989209864}
 --- !u!137 &137053697184131194
 SkinnedMeshRenderer:
