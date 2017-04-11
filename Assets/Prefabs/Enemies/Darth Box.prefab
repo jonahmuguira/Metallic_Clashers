@@ -360,9 +360,12 @@ MonoBehaviour:
       m_Modifier: 0
       m_Coefficient: 1
       value: 5
+    m_ExperianceValue: 10
     attackSpeed: 7
     movesUntilAttack: 3
     damageType: 0
     resistances: 
     weaknesses: 
-  m_Animator: {fileID: 0}
+    movesCounter: 0
+    attackCountdown: 5
+  m_Animator: {fileID: 95559957457775812}
