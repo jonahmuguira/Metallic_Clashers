@@ -278,6 +278,7 @@ namespace StageSelection
 
         private void OnStageSelectionEnd()
         {
+            m_StartComabtButton.interactable = false;
             GameManager.self.currentNode = m_CurrentNode;
             GameManager.self.enemyIndexes = m_CurrentNode.enemyInts;
             StaminaManager.self.DamageStamina(m_CurrentNode.staminaCost);
