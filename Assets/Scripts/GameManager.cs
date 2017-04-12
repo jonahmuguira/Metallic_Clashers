@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 using Combat;
@@ -74,9 +75,11 @@ public class GameManager : MonoSingleton<GameManager>
             ? 200
             : playerData.playerLevelSystem.playerLevelInfo.experienceRequired;
 
-        //
-        //playerData.itemManager.AddInventoryItem();
-        //
+        for (int i = 0; i < 5; i++)
+        {
+            playerData.itemManager.combatInventory.Add(new InstantItem(20));            
+        }
+        playerData.itemManager.combatInventory.Add(new TurnBuff(10, 2000, true));
 
         gameState = (GameState)SceneManager.GetActiveScene().buildIndex;
         AddSceneListeners();
@@ -128,6 +131,27 @@ public class GameManager : MonoSingleton<GameManager>
                 GameObject.Find("Menu Button").transform.FindChild("Icon Layout Group")
                     .FindChild("Sound Effects Button").gameObject.GetComponent<Button>
                     ().onClick.AddListener(AudioManager.self.MuteSoundsToggle);
+
+            System.Type item1Type;
+                var item1 = playerData.itemManager.combatInventory.First();
+                item1Type = item1.GetType();
+                GameObject.Find("Item 1").GetComponent<Button>().onClick.AddListener(
+                    () =>
+                    {
+                        item1.UseItem();
+                        if(playerData.itemManager.combatInventory.Single(i => i.GetType() == item1Type) == null)
+                            return;
+                        item1 = playerData.itemManager.combatInventory.Single(i => i.GetType() == item1Type);
+
+                    });
+
+
+            var item2 = playerData.itemManager.combatInventory.Single(i => i.GetType() != item1Type);
+                GameObject.Find("Item 2").GetComponent<Button>().onClick.AddListener(
+                    () =>
+                    {
+                        item2.UseItem();
+                    });
                 break;
 
             case GameState.Preparation: //this is where you select items/gem types before combat
