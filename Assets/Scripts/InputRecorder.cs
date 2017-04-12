@@ -9,16 +9,12 @@ using Library;
 
 using UnityEngine;
 
-using Random = UnityEngine.Random;
-
 public enum InputType { Start, While, End, }
 [Serializable]
 public class InputAction
 {
     public float time;
     public InputType inputType;
-
-    public Random.State randomState;
 }
 [Serializable]
 public class TouchAction : InputAction
@@ -36,9 +32,6 @@ public class InputData
 {
     public List<TouchAction> touchActions = new List<TouchAction>();
     public List<DragAction> dragActions = new List<DragAction>();
-
-    public int randomSeed;
-    public Random.State randomState;
 }
 
 public class InputRecorder : MonoSingleton<InputRecorder>
@@ -50,9 +43,6 @@ public class InputRecorder : MonoSingleton<InputRecorder>
 
     protected override void OnAwake()
     {
-        m_InputData.randomSeed = GameManager.self.randomSeed;
-        m_InputData.randomState = Random.state;
-
         InputManager.self.onPress.AddListener(OnPress);
         InputManager.self.onHold.AddListener(OnHold);
         InputManager.self.onRelease.AddListener(OnRelease);
@@ -85,9 +75,7 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             {
                 time = Time.unscaledTime,
                 inputType = InputType.Start,
-
-                randomState = Random.state,
-
+                
                 touchInformation =
                     new TouchInformation
                     {
@@ -107,9 +95,7 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             {
                 time = Time.unscaledTime,
                 inputType = InputType.While,
-
-                randomState = Random.state,
-
+                
                 touchInformation =
                     new TouchInformation
                     {
@@ -129,9 +115,7 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             {
                 time = Time.unscaledTime,
                 inputType = InputType.End,
-
-                randomState = Random.state,
-
+                
                 touchInformation =
                     new TouchInformation
                     {
@@ -152,9 +136,7 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             {
                 time = Time.unscaledTime,
                 inputType = InputType.Start,
-
-                randomState = Random.state,
-
+                
                 dragInformation =
                     new DragInformation
                     {
@@ -178,9 +160,7 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             {
                 time = Time.unscaledTime,
                 inputType = InputType.While,
-
-                randomState = Random.state,
-
+                
                 dragInformation =
                     new DragInformation
                     {
@@ -204,9 +184,7 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             {
                 time = Time.unscaledTime,
                 inputType = InputType.End,
-
-                randomState = Random.state,
-
+                
                 dragInformation =
                     new DragInformation
                     {

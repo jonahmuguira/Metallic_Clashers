@@ -11,8 +11,6 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-using Random = UnityEngine.Random;
-
 public class InputReplay : MonoSingleton<InputReplay>
 {
     [SerializeField]
@@ -26,12 +24,6 @@ public class InputReplay : MonoSingleton<InputReplay>
     {
         var jsonData = File.ReadAllText(Application.persistentDataPath + "/InputData.json");
         m_InputData = JsonUtility.FromJson<InputData>(jsonData);
-
-        if (!m_Replay)
-            return;
-
-        Random.InitState(m_InputData.randomSeed);
-        Random.state = m_InputData.randomState;
     }
 
     private void Update()
@@ -103,8 +95,6 @@ public class InputReplay : MonoSingleton<InputReplay>
 
     private static void ProcessTouch(TouchAction touchAction)
     {
-        Random.state = touchAction.randomState;
-
         touchAction.touchInformation.position = ScalePosition(touchAction.touchInformation.position);
 
         switch (touchAction.inputType)
@@ -127,8 +117,6 @@ public class InputReplay : MonoSingleton<InputReplay>
     }
     private static void ProcessDrag(DragAction dragAction)
     {
-        Random.state = dragAction.randomState;
-
         dragAction.dragInformation.origin = ScalePosition(dragAction.dragInformation.origin);
         dragAction.dragInformation.end = ScalePosition(dragAction.dragInformation.end);
 
