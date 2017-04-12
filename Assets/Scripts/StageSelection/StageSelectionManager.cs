@@ -220,8 +220,12 @@ namespace StageSelection
                 {
                     foreach (var n in tree.nodes)
                     {
-                        if (n.stageName == GameManager.self.currentNode.stageName)
-                            n.isComplete = GameManager.self.currentNode.isComplete;
+                        if (n.stageName != GameManager.self.currentNode.stageName ||
+                            !GameManager.self.currentNode.isComplete)
+                            continue;
+
+                        n.isComplete = true;
+                        GameManager.self.playerData.worldData = m_Worlds;
                     }
                 }
             }
