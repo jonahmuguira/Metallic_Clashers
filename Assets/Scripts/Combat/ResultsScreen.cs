@@ -61,6 +61,7 @@ namespace Combat
         private IEnumerator ResultsScreenEnumerator(bool result)
         {   // Set Win Text
             m_ResultText.text = result ? "You Win!" : "You  Lose...";
+            m_EndSceneButton.interactable = false;
 
             var animationFraction = 1000 / animationTime;
 
@@ -87,39 +88,42 @@ namespace Combat
                 yield return null;
             }
 
-            if (!result)
-                yield break;
-
-            // Get some experience
-            GameManager.self.playerData.playerLevelSystem.IsLeveledUp(EnemyManager.self.experianceTotal);
-
-            // Check to see how much the total bar needs 
-            var midgroundFillAmount = (float)
-                GameManager.self.playerData.playerLevelSystem.playerLevelInfo.currentExperience /
-                GameManager.self.playerData.playerLevelSystem.playerLevelInfo.experienceRequired;
-
-            var finalFill = midgroundFillAmount;
-            // Take off how much is already filled in
-            midgroundFillAmount -= forgroundFillAmount;
-
-            fillFraction = midgroundFillAmount / barFillTime;
-
-            // As long as the bar is in range and not greater than one, fill.
-            float setamount = 0;
-            while (m_ExpMidgroundImage.fillAmount < midgroundFillAmount &&
-                   m_ExpForgroundImage.fillAmount + m_ExpMidgroundImage.fillAmount < 1)
+            if (result)
             {
-                setamount += Time.deltaTime * fillFraction;
-                SetMidground(setamount);
-                yield return null;
-            }
+                GameManager.self.currentNode.isComplete = true;
 
-            while (m_ExpForgroundImage.fillAmount < finalFill)
-            {
-                m_ExpForgroundImage.fillAmount += Time.deltaTime * fillFraction;
-                yield return null;
-            }
+                // Get some experience
+                GameManager.self.playerData.playerLevelSystem.IsLeveledUp(EnemyManager.self.experianceTotal);
 
+                // Check to see how much the total bar needs 
+                var midgroundFillAmount = (float)
+                    GameManager.self.playerData.playerLevelSystem.playerLevelInfo.currentExperience /
+                    GameManager.self.playerData.playerLevelSystem.playerLevelInfo.experienceRequired;
+
+                var finalFill = midgroundFillAmount;
+                // Take off how much is already filled in
+                midgroundFillAmount -= forgroundFillAmount;
+
+                fillFraction = midgroundFillAmount / barFillTime;
+
+                // As long as the bar is in range and not greater than one, fill.
+                float setamount = 0;
+                while (m_ExpMidgroundImage.fillAmount < midgroundFillAmount &&
+                       m_ExpForgroundImage.fillAmount + m_ExpMidgroundImage.fillAmount < 1)
+                {
+                    setamount += Time.deltaTime * fillFraction;
+                    SetMidground(setamount);
+                    yield return null;
+                }
+
+                while (m_ExpForgroundImage.fillAmount < finalFill)
+                {
+                    m_ExpForgroundImage.fillAmount += Time.deltaTime * fillFraction;
+                    yield return null;
+                }
+            }
+           
+            m_EndSceneButton.interactable = true;
             m_ResultScreeEnumerator = null;
         }
 
