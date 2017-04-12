@@ -90,7 +90,6 @@
                             delta = (Vector2)Input.mousePosition - m_PressPosition,
 
                             totalDelta = (Vector2)Input.mousePosition - m_PressPosition,
-                            totalDistance = Vector2.Distance(m_PressPosition, Input.mousePosition),
                         });
 
                     m_Dragging = true;
@@ -112,7 +111,6 @@
                             delta = (Vector2)Input.mousePosition - m_PreviousPosition,
 
                             totalDelta = (Vector2)Input.mousePosition - m_PressPosition,
-                            totalDistance = m_CurrentTotalDragDistance
                         });
                 }
                 else
@@ -157,7 +155,6 @@
                             delta = (Vector2)Input.mousePosition - m_PreviousPosition,
 
                             totalDelta = (Vector2)Input.mousePosition - m_PressPosition,
-                            totalDistance = m_CurrentTotalDragDistance
                         });
                 }
 

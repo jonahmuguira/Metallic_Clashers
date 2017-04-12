@@ -21,7 +21,7 @@
     {
         public Vector2 origin;
         public Vector2 end;
-        
+
         /// <summary>
         /// The delta in mouse position this frame
         /// </summary>
@@ -31,7 +31,5 @@
         /// The total delta in mouse position from the start of the drag
         /// </summary>
         public Vector2 totalDelta;
-
-        public float totalDistance;
     }
 }

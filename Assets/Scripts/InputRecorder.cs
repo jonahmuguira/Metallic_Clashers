@@ -9,12 +9,16 @@ using Library;
 
 using UnityEngine;
 
+using Random = UnityEngine.Random;
+
 public enum InputType { Start, While, End, }
 [Serializable]
 public class InputAction
 {
     public float time;
     public InputType inputType;
+
+    public Random.State randomState;
 }
 [Serializable]
 public class TouchAction : InputAction
@@ -34,6 +38,7 @@ public class InputData
     public List<DragAction> dragActions = new List<DragAction>();
 
     public int randomSeed;
+    public Random.State randomState;
 }
 
 public class InputRecorder : MonoSingleton<InputRecorder>
@@ -46,6 +51,7 @@ public class InputRecorder : MonoSingleton<InputRecorder>
     protected override void OnAwake()
     {
         m_InputData.randomSeed = GameManager.self.randomSeed;
+        m_InputData.randomState = Random.state;
 
         InputManager.self.onPress.AddListener(OnPress);
         InputManager.self.onHold.AddListener(OnHold);
@@ -78,8 +84,17 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new TouchAction
             {
                 time = Time.unscaledTime,
-                touchInformation = touchInformation,
                 inputType = InputType.Start,
+
+                randomState = Random.state,
+
+                touchInformation =
+                    new TouchInformation
+                    {
+                        duration = touchInformation.duration,
+
+                        position = ScalePosition(touchInformation.position),
+                    },
             });
     }
     private void OnHold(TouchInformation touchInformation)
@@ -91,8 +106,17 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new TouchAction
             {
                 time = Time.unscaledTime,
-                touchInformation = touchInformation,
                 inputType = InputType.While,
+
+                randomState = Random.state,
+
+                touchInformation =
+                    new TouchInformation
+                    {
+                        duration = touchInformation.duration,
+
+                        position = ScalePosition(touchInformation.position),
+                    },
             });
     }
     private void OnRelease(TouchInformation touchInformation)
@@ -104,8 +128,17 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new TouchAction
             {
                 time = Time.unscaledTime,
-                touchInformation = touchInformation,
                 inputType = InputType.End,
+
+                randomState = Random.state,
+
+                touchInformation =
+                    new TouchInformation
+                    {
+                        duration = touchInformation.duration,
+
+                        position = ScalePosition(touchInformation.position),
+                    },
             });
     }
 
@@ -118,8 +151,21 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new DragAction
             {
                 time = Time.unscaledTime,
-                dragInformation = dragInformation,
                 inputType = InputType.Start,
+
+                randomState = Random.state,
+
+                dragInformation =
+                    new DragInformation
+                    {
+                        duration = dragInformation.duration,
+
+                        origin = ScalePosition(dragInformation.origin),
+                        end = ScalePosition(dragInformation.end),
+
+                        delta = ScalePosition(dragInformation.delta),
+                        totalDelta = ScalePosition(dragInformation.totalDelta),
+                    },
             });
     }
     private void OnDrag(DragInformation dragInformation)
@@ -131,8 +177,21 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new DragAction
             {
                 time = Time.unscaledTime,
-                dragInformation = dragInformation,
                 inputType = InputType.While,
+
+                randomState = Random.state,
+
+                dragInformation =
+                    new DragInformation
+                    {
+                        duration = dragInformation.duration,
+
+                        origin = ScalePosition(dragInformation.origin),
+                        end = ScalePosition(dragInformation.end),
+
+                        delta = ScalePosition(dragInformation.delta),
+                        totalDelta = ScalePosition(dragInformation.totalDelta),
+                    },
             });
     }
     private void OnEndDrag(DragInformation dragInformation)
@@ -144,9 +203,32 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new DragAction
             {
                 time = Time.unscaledTime,
-                dragInformation = dragInformation,
                 inputType = InputType.End,
+
+                randomState = Random.state,
+
+                dragInformation =
+                    new DragInformation
+                    {
+                        duration = dragInformation.duration,
+
+                        origin = ScalePosition(dragInformation.origin),
+                        end = ScalePosition(dragInformation.end),
+
+                        delta = ScalePosition(dragInformation.delta),
+                        totalDelta = ScalePosition(dragInformation.totalDelta),
+                    },
             });
+    }
+
+    private Vector2 ScalePosition(Vector2 position)
+    {
+        position =
+            new Vector2(
+                position.x / Screen.width,
+                position.y / Screen.height);
+
+        return position;
     }
 
     [ContextMenu("Delete Data")]
