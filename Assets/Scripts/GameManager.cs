@@ -139,9 +139,6 @@ public class GameManager : MonoSingleton<GameManager>
                     () =>
                     {
                         item1.UseItem();
-                        if(playerData.itemManager.combatInventory.Single(i => i.GetType() == item1Type) == null)
-                            return;
-                        item1 = playerData.itemManager.combatInventory.Single(i => i.GetType() == item1Type);
 
                     });
 
