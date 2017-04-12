@@ -213,6 +213,19 @@ namespace StageSelection
                 }
             }
 
+            // Was the last node completed
+            if (GameManager.self.currentNode != null)
+            {
+                foreach (var tree in m_Worlds)
+                {
+                    foreach (var n in tree.nodes)
+                    {
+                        if (n.stageName == GameManager.self.currentNode.stageName)
+                            n.isComplete = GameManager.self.currentNode.isComplete;
+                    }
+                }
+            }
+
             // Line Renderers
             var counter = 0;
             foreach (var monoNode in FindObjectsOfType<MonoNode>())
@@ -265,6 +278,8 @@ namespace StageSelection
 
         private void OnStageSelectionEnd()
         {
+            m_StartComabtButton.interactable = false;
+            GameManager.self.currentNode = m_CurrentNode;
             GameManager.self.enemyIndexes = m_CurrentNode.enemyInts;
             StaminaManager.self.DamageStamina(m_CurrentNode.staminaCost);
             onStageSelectionEnd.Invoke();
