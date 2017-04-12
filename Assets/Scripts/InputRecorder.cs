@@ -32,8 +32,6 @@ public class InputData
 {
     public List<TouchAction> touchActions = new List<TouchAction>();
     public List<DragAction> dragActions = new List<DragAction>();
-
-    public int randomSeed;
 }
 
 public class InputRecorder : MonoSingleton<InputRecorder>
@@ -45,8 +43,6 @@ public class InputRecorder : MonoSingleton<InputRecorder>
 
     protected override void OnAwake()
     {
-        m_InputData.randomSeed = GameManager.self.randomSeed;
-
         InputManager.self.onPress.AddListener(OnPress);
         InputManager.self.onHold.AddListener(OnHold);
         InputManager.self.onRelease.AddListener(OnRelease);
@@ -78,8 +74,15 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new TouchAction
             {
                 time = Time.unscaledTime,
-                touchInformation = touchInformation,
                 inputType = InputType.Start,
+                
+                touchInformation =
+                    new TouchInformation
+                    {
+                        duration = touchInformation.duration,
+
+                        position = ScalePosition(touchInformation.position),
+                    },
             });
     }
     private void OnHold(TouchInformation touchInformation)
@@ -91,8 +94,15 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new TouchAction
             {
                 time = Time.unscaledTime,
-                touchInformation = touchInformation,
                 inputType = InputType.While,
+                
+                touchInformation =
+                    new TouchInformation
+                    {
+                        duration = touchInformation.duration,
+
+                        position = ScalePosition(touchInformation.position),
+                    },
             });
     }
     private void OnRelease(TouchInformation touchInformation)
@@ -104,8 +114,15 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new TouchAction
             {
                 time = Time.unscaledTime,
-                touchInformation = touchInformation,
                 inputType = InputType.End,
+                
+                touchInformation =
+                    new TouchInformation
+                    {
+                        duration = touchInformation.duration,
+
+                        position = ScalePosition(touchInformation.position),
+                    },
             });
     }
 
@@ -118,8 +135,19 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new DragAction
             {
                 time = Time.unscaledTime,
-                dragInformation = dragInformation,
                 inputType = InputType.Start,
+                
+                dragInformation =
+                    new DragInformation
+                    {
+                        duration = dragInformation.duration,
+
+                        origin = ScalePosition(dragInformation.origin),
+                        end = ScalePosition(dragInformation.end),
+
+                        delta = ScalePosition(dragInformation.delta),
+                        totalDelta = ScalePosition(dragInformation.totalDelta),
+                    },
             });
     }
     private void OnDrag(DragInformation dragInformation)
@@ -131,8 +159,19 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new DragAction
             {
                 time = Time.unscaledTime,
-                dragInformation = dragInformation,
                 inputType = InputType.While,
+                
+                dragInformation =
+                    new DragInformation
+                    {
+                        duration = dragInformation.duration,
+
+                        origin = ScalePosition(dragInformation.origin),
+                        end = ScalePosition(dragInformation.end),
+
+                        delta = ScalePosition(dragInformation.delta),
+                        totalDelta = ScalePosition(dragInformation.totalDelta),
+                    },
             });
     }
     private void OnEndDrag(DragInformation dragInformation)
@@ -144,9 +183,30 @@ public class InputRecorder : MonoSingleton<InputRecorder>
             new DragAction
             {
                 time = Time.unscaledTime,
-                dragInformation = dragInformation,
                 inputType = InputType.End,
+                
+                dragInformation =
+                    new DragInformation
+                    {
+                        duration = dragInformation.duration,
+
+                        origin = ScalePosition(dragInformation.origin),
+                        end = ScalePosition(dragInformation.end),
+
+                        delta = ScalePosition(dragInformation.delta),
+                        totalDelta = ScalePosition(dragInformation.totalDelta),
+                    },
             });
+    }
+
+    private Vector2 ScalePosition(Vector2 position)
+    {
+        position =
+            new Vector2(
+                position.x / Screen.width,
+                position.y / Screen.height);
+
+        return position;
     }
 
     [ContextMenu("Delete Data")]
