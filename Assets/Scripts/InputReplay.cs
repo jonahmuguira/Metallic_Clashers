@@ -4,15 +4,12 @@ using System.IO;
 using System.Linq;
 
 using CustomInput;
-using CustomInput.Information;
 
 using Library;
 
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-
-using Random = UnityEngine.Random;
 
 public class InputReplay : MonoSingleton<InputReplay>
 {
@@ -27,11 +24,6 @@ public class InputReplay : MonoSingleton<InputReplay>
     {
         var jsonData = File.ReadAllText(Application.persistentDataPath + "/InputData.json");
         m_InputData = JsonUtility.FromJson<InputData>(jsonData);
-
-        if (!m_Replay)
-            return;
-
-        Random.InitState(m_InputData.randomSeed);
     }
 
     private void Update()
@@ -93,7 +85,7 @@ public class InputReplay : MonoSingleton<InputReplay>
                     GL.Color(Color.red);
                     GL.Vertex3(end.x + 15f * direction.y, end.y + 15f * -direction.x, 0f);
                     GL.Vertex3(end.x, end.y, 0f);
-                    
+
                 }
             }
             GL.End();
@@ -103,6 +95,8 @@ public class InputReplay : MonoSingleton<InputReplay>
 
     private static void ProcessTouch(TouchAction touchAction)
     {
+        touchAction.touchInformation.position = ScalePosition(touchAction.touchInformation.position);
+
         switch (touchAction.inputType)
         {
             case InputType.Start:
@@ -123,6 +117,12 @@ public class InputReplay : MonoSingleton<InputReplay>
     }
     private static void ProcessDrag(DragAction dragAction)
     {
+        dragAction.dragInformation.origin = ScalePosition(dragAction.dragInformation.origin);
+        dragAction.dragInformation.end = ScalePosition(dragAction.dragInformation.end);
+
+        dragAction.dragInformation.delta = ScalePosition(dragAction.dragInformation.delta);
+        dragAction.dragInformation.totalDelta = ScalePosition(dragAction.dragInformation.totalDelta);
+
         switch (dragAction.inputType)
         {
             case InputType.Start:
@@ -140,6 +140,13 @@ public class InputReplay : MonoSingleton<InputReplay>
             default:
                 throw new ArgumentOutOfRangeException();
         }
+    }
+
+    private static Vector2 ScalePosition(Vector2 position)
+    {
+        position = Vector2.Scale(position, new Vector2(Screen.width, Screen.height));
+
+        return position;
     }
 
     private static void PushButtons(Vector2 position)

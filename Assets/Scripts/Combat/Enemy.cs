@@ -6,9 +6,7 @@ using UnityEngine;
 namespace Combat
 {
     using UnityEngine.Events;
-
-    using Random = UnityEngine.Random;
-
+    
     [Serializable]
     public class UnityEnemyEvent : UnityEvent<Enemy> { }
 

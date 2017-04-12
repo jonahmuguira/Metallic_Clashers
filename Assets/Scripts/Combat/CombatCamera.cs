@@ -6,9 +6,7 @@
     using System.Linq;
 
     using UnityEngine;
-
-    using Random = UnityEngine.Random;
-
+    
     [Serializable]
     public class CombatCamera : MonoBehaviour
     {
@@ -25,6 +23,8 @@
 
         private Vector3 m_OriginalPosition;
         private Quaternion m_OriginalQuaternion;
+
+        private const string RANDOM_KEY = "CombatCamera";
 
         public bool isAnimating = true;
 
@@ -77,7 +77,7 @@
                 if (currentAnimation != null)
                     tempList.Remove(currentAnimation);
 
-                var randomIndex = Random.Range(0, tempList.Count);
+                var randomIndex = RandomManager.self.Range(RANDOM_KEY, 0, tempList.Count);
                 currentAnimation = tempList[randomIndex];
 
                 //TODO: Do something based on TargetType
@@ -94,8 +94,8 @@
             var deltaTime = 0f;
             while (deltaTime < m_ScreenShakeTime)
             {
-                var xOffset = transform.right * Random.Range(-0.2f, 0.2f);
-                var yOffset = transform.up * Random.Range(-0.2f, 0.2f);
+                var xOffset = transform.right * RandomManager.self.Range(RANDOM_KEY, -0.2f, 0.2f);
+                var yOffset = transform.up * RandomManager.self.Range(RANDOM_KEY, -0.2f, 0.2f);
 
                 transform.position =
                     (transform.position + xOffset + yOffset) *
