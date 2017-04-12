@@ -14,13 +14,14 @@ public class StaminaInformation
 public class StaminaManager : MonoSingleton<StaminaManager>
 {
     [SerializeField]
-    private uint m_Value = 0;
-    public uint maxValue = 100;
-    [SerializeField]
     private float m_StaminaRate = 2.5f;
+
+    [SerializeField]
+    private uint m_Value = 0;
 
     private float m_Timer;
 
+    public uint maxValue = 100;
     public uint value { get { return m_Value; } }
 
 	public void Start()
@@ -54,7 +55,8 @@ public class StaminaManager : MonoSingleton<StaminaManager>
 	{
         // If m_Value is at maxValue, don't allow to add time
         if (m_Value >= maxValue)
-	    {
+        {
+            m_Value = maxValue;     // Fixing Display Problems.
             m_Timer = m_StaminaRate;
             return;
         }
