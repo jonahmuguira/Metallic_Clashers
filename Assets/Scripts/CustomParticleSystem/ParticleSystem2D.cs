@@ -1,16 +1,11 @@
 ﻿namespace CustomParticleSystem
 {
     using System;
-    using System.Linq;
 
     using CustomInput;
     using CustomInput.Information;
 
-    using CustomParticleSystem;
-
     using UnityEngine;
-
-    using Random = UnityEngine.Random;
 
     [RequireComponent(typeof(RectTransform))]
     public class ParticleSystem2D : MonoBehaviour
@@ -22,6 +17,8 @@
         private float m_ParticleDuration;
 
         private GameObject m_ParticleAnchor;
+
+        private const string RANDOM_KEY = "ParticleSystem2D";
 
         private void Awake()
         {
@@ -50,7 +47,7 @@
             newParticle2D.transform.SetParent(m_ParticleAnchor.transform, false);
             newParticle2D.transform.position = transform.position;
 
-            var angle = Random.Range(0f, 360f) * Mathf.Deg2Rad;
+            var angle = RandomManager.self.Range(RANDOM_KEY, 0f, 360f) * Mathf.Deg2Rad;
 
             newParticle2D.velocity =
                 new Vector2(Mathf.Cos(angle) * 7f, Mathf.Sin(angle) * 7f);

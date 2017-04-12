@@ -29,10 +29,14 @@
 
         private List<IEnumerator> m_AnimateEnemies = new List<IEnumerator>();
 
+        private uint m_ExperianceTotal = 0;
+
+        private const string RANDOM_KEY = "EnemyManager";
+
         public float enemyPadding = 1f;
-        public bool doCombat;
 
         public GameObject enemyHealthBarPrefab { get { return m_EnemyHealthBarPrefab; } }
+        public uint experianceTotal { get { return m_ExperianceTotal; } }
 
         public EnemyMono currentEnemy
         {
@@ -56,9 +60,6 @@
         // Use this for initialization
         protected override void Init()
         {
-            if (!doCombat)
-                return;
-
             var managerEnemies = GameManager.self.enemyIndexes;
             var enemyPrefabList = GameManager.self.enemyPrefabList;
 
@@ -87,7 +88,7 @@
                 var animator = enemyObject.transform.root.GetComponentInChildren<Animator>();
                 animator.speed = 0f;
 
-                var randomTime = Random.Range(0f, 1f);
+                var randomTime = RandomManager.self.Range(RANDOM_KEY, 0f, 1f);
                 m_AnimateEnemies.Add(AnimateEnemy(randomTime, animator));
 
                 pos += enemyMeshBounds.extents.x;
@@ -96,11 +97,14 @@
                 enemyObject.name += i;
                 var enemyMono = enemyObject.transform.root.GetComponentInChildren<EnemyMono>();
                 var enemy = enemyMono.enemy;
-                enemy.attackCountdown = enemy.attackSpeed - Random.Range(0f, enemy.attackSpeed);
-                enemy.movesCounter = Random.Range(0, enemy.movesUntilAttack);
+                enemy.attackCountdown =
+                    enemy.attackSpeed - RandomManager.self.Range(RANDOM_KEY, 0f, enemy.attackSpeed);
+                enemy.movesCounter = RandomManager.self.Range(RANDOM_KEY, 0, enemy.movesUntilAttack);
 
                 m_Enemies.Add(enemyMono);
                 CombatManager.self.onCombatBegin.AddListener(enemyMono.enemy.OnCombatBegin);
+
+                m_ExperianceTotal += enemy.experianceValue;
             }
             GameManager.self.enemyIndexes = new List<int>();
             currentEnemy = m_Enemies[0];
@@ -111,52 +115,35 @@
 
         private void OnMatch(MatchInformation matchInfo)
         {
-            if (!doCombat)
+            if (currentEnemy == null || currentEnemy.enemy == null)
                 return;
 
             var playerData = GameManager.self.playerData;
 
             switch (CombatManager.self.combatMode)
             {
-            case CombatManager.CombatMode.Attack:
-                var dam = playerData.attack.totalValue *
-                          (1 + (matchInfo.gems.Count - 3) * .25f);
+                case CombatManager.CombatMode.Attack:
+                    var dam = playerData.attack.totalValue *
+                              (1 + (matchInfo.gems.Count - 3) * .25f);
 
-                currentEnemy.enemy.TakeDamage(dam, matchInfo.type);
+                    currentEnemy.enemy.TakeDamage(dam, matchInfo.type);
 
-                if (currentEnemy.enemy.health.totalValue <= 0f)
-                {
-                    m_Enemies.Remove(currentEnemy);
-                    currentEnemy = m_Enemies.FirstOrDefault();
-                }
-                break;
+                    if (currentEnemy.enemy.health.totalValue <= 0f)
+                    {
+                        m_Enemies.Remove(currentEnemy);
+                        currentEnemy = m_Enemies.FirstOrDefault();
+                    }
+                    break;
 
-            case CombatManager.CombatMode.Defense:
-                GameManager.self.playerData.defense.modifier += matchInfo.gems.Count
-                * (playerData.defense.value * .5F);
-                break;
+                case CombatManager.CombatMode.Defense:
+                    GameManager.self.playerData.defense.modifier += matchInfo.gems.Count
+                    * (playerData.defense.value * .5F);
+                    break;
             }
         }
 
         private void OnCombatUpdate()
         {
-            if (!doCombat)
-                return;
-
-            // Win
-            if (m_Enemies.Count == 0)
-            {
-                CombatManager.self.onCombatEnd.Invoke();
-                return;
-            }
-
-            // Lose
-            if (GameManager.self.playerData.health.totalValue <= 0)
-            {
-                CombatManager.self.onCombatEnd.Invoke();
-                return;
-            }
-
             GameManager.self.playerData.DecayShield();
 
             if (m_PauseCameraEnumerator != null)
@@ -168,7 +155,6 @@
                     m_AnimateEnemies.Remove(animateEnemy);
             }
         }
-
 
         protected override void OnPress(TouchInformation touchInfo)
         {

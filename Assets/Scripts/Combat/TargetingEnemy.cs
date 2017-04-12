@@ -45,7 +45,8 @@ namespace Combat
 
         private void OnCurrentEnemyChange(Enemy enemy)
         {
-            SetMarkerToCurrent(enemy.GetComponent<EnemyMono>());
+            if (enemy != null)
+                SetMarkerToCurrent(enemy.GetComponent<EnemyMono>());
         }
 
         private void SetMarkerToCurrent(EnemyMono enemyMono)

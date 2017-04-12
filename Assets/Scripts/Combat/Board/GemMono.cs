@@ -91,12 +91,20 @@
             s_GemsCreatedThisFrame.Remove(this);
 
             if (m_MoveToPositionCoroutine != null)
-                if (!m_MoveToPositionCoroutine.MoveNext())
-                    m_MoveToPositionCoroutine = null;
+                m_MoveToPositionCoroutine.MoveNext();
         }
 
         protected void OnCombatLateUpdate()
         {
+            if (m_PositionIsDirty)
+                UpdateTransformPosition();
+        }
+
+        protected void OnCombatEnding()
+        {
+             if (m_MoveToPositionCoroutine != null)
+                m_MoveToPositionCoroutine.MoveNext();
+
             if (m_PositionIsDirty)
                 UpdateTransformPosition();
         }
@@ -313,6 +321,7 @@
 
             CombatManager.self.onCombatUpdate.AddListener(gemMono.OnCombatUpdate);
             CombatManager.self.onCombatLateUpdate.AddListener(gemMono.OnCombatLateUpdate);
+            CombatManager.self.onCombatEnding.AddListener(gemMono.OnCombatEnding);
 
             gemMono.gem.onPositionChange.AddListener(gemMono.OnPositionChange);
         }

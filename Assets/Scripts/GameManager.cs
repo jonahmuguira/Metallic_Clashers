@@ -2,20 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 using System.Xml.Serialization;
 
 using Combat;
-
+using Items;
 using Library;
-
 using StageSelection;
 
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
-using Random = UnityEngine.Random;
+using UnityEngine;
 
 public class GameManager : MonoSingleton<GameManager>
 {
@@ -35,9 +32,7 @@ public class GameManager : MonoSingleton<GameManager>
     private string m_InventorySavePath;
     [SerializeField]
     private List<GameObject> m_EnemyPrefabList = new List<GameObject>();
-
-    private int m_RandomSeed;
-
+    
     public GameState gameState;
 
     public PlayerData playerData = new PlayerData();
@@ -46,14 +41,9 @@ public class GameManager : MonoSingleton<GameManager>
 
     public List<GameObject> enemyPrefabList { get { return m_EnemyPrefabList; } }
     public UnityEvent onSceneLoaded { get { return m_OnSceneLoaded; } }
-
-    public int randomSeed { get { return m_RandomSeed; } }
-
+    
     protected override void OnAwake()
     {
-        m_RandomSeed = (int)DateTime.Now.Ticks;
-        Random.InitState(m_RandomSeed);
-
         DontDestroyOnLoad(gameObject);
         m_InventorySavePath = Application.persistentDataPath + "/Inventory.xml";
         m_PlayerSavePath = Application.persistentDataPath + "/PlayerData.xml";
@@ -72,6 +62,20 @@ public class GameManager : MonoSingleton<GameManager>
             SavePlayer();
         }
 
+        playerData.playerLevelSystem.playerLevelInfo.level =
+            (playerData.playerLevelSystem.playerLevelInfo.level <= 0)
+                ? 1
+                : playerData.playerLevelSystem.playerLevelInfo.level;
+
+        playerData.playerLevelSystem.playerLevelInfo.experienceRequired =
+        (playerData.playerLevelSystem.playerLevelInfo.experienceRequired < 200)
+            ? 200
+            : playerData.playerLevelSystem.playerLevelInfo.experienceRequired;
+
+        //
+        //playerData.itemManager.AddInventoryItem();
+        //
+
         gameState = (GameState)SceneManager.GetActiveScene().buildIndex;
         AddSceneListeners();
         //onSceneLoaded.AddListener(AddSceneListeners);
@@ -88,11 +92,13 @@ public class GameManager : MonoSingleton<GameManager>
     private void OnCombatEnd()
     {
         LoadScene((int)GameState.StateSelection);
+        //playerData.itemManager.RemoveCombatItem();
     }
 
     private void OnStageSelectionEnd()
     {
         LoadScene((int)GameState.Combat);
+        //playerData.itemManager.AddCombatItem();
     }
 
     private void AddSceneListeners()
@@ -183,7 +189,6 @@ public class GameManager : MonoSingleton<GameManager>
         {
             StartCoroutine(LoadSceneCoroutine(sceneIndex));
         }
-
     }
 
     private IEnumerator LoadSceneCoroutine(int sceneIndex)
@@ -197,5 +202,4 @@ public class GameManager : MonoSingleton<GameManager>
         AddSceneListeners();
         onSceneLoaded.Invoke();
     }
-
 }

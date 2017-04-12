@@ -9,8 +9,6 @@
     using UnityEngine;
     using UnityEngine.Events;
 
-    using Random = UnityEngine.Random;
-
     [Serializable]
     public class GridChange : UnityEvent<GridChangeInformation> { }
     [Serializable]
@@ -69,6 +67,8 @@
 
         public static readonly CreateGridEvent onCreate = new CreateGridEvent();
 
+        private const string RANDOM_KEY = "Grid";
+
         public List<GemList> gemLists { get { return m_GemLists; } }
 
         public Vector2 size { get { return m_Size; } }
@@ -92,8 +92,6 @@
 
             onCreate.Invoke(this);
 
-            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
-
             for (var y = 0; y < m_Size.y; ++y)
             {
                 m_Rows.Add(new Row(this, y));
@@ -104,7 +102,7 @@
                     if (x == 0)
                         m_Columns.Add(new Column(this, y));
 
-                    var gemType = (GemType)Random.Range(0, numGemTypes);
+                    var gemType = (GemType)RandomManager.self.Range<GemType>(RANDOM_KEY);
 
                     newList.Add(
                         new Gem(
@@ -273,8 +271,6 @@
 
         public void Fill()
         {
-            var numGemTypes = Enum.GetValues(typeof(GemType)).Length;
-
             for (var y = 0; y < m_GemLists.Count; ++y)
             {
                 for (var x = 0; x < m_GemLists[y].gems.Count; ++x)
@@ -282,7 +278,7 @@
                     if (m_GemLists[y][x] != null)
                         continue;
 
-                    var gemType = (GemType)Random.Range(0, numGemTypes);
+                    var gemType = (GemType)RandomManager.self.Range<GemType>(RANDOM_KEY);
                     m_GemLists[y][x] = new Gem(this, new Vector2(x, y), gemType);
                 }
             }

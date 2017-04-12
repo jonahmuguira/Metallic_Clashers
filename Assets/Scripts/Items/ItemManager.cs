@@ -57,7 +57,7 @@ namespace Items
             else if (itemType == typeof(TimeBased)) { CombatManager.self.onCombatUpdate.AddListener(item.UpdateSelf); }
         }
 
-        public void SetItemNonActive(BaseItem item)
+        public void RemoveCombatItem(BaseItem item)
         {
             if (combatInventory.Contains(item)) { inventory.Add(item); combatInventory.Remove(item); }
         }
