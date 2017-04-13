@@ -262,8 +262,8 @@ namespace StageSelection
                     var linePosition = monoNode.transform.position + (differance / 2f);
 
                     lineTransform.sizeDelta = Math.Abs(differance.x) > Math.Abs(differance.y)
-                        ? new Vector2(differance.magnitude, 15)
-                        : new Vector2(15, differance.magnitude);
+                        ? new Vector2(differance.magnitude, 20)
+                        : new Vector2(20, differance.magnitude);
 
                     var lineBorderColor = (monoNode.node.isComplete)
                         ? m_LineBorderColor
