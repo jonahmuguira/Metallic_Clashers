@@ -44,9 +44,9 @@ namespace StageSelection
         private Color m_NodeLocked;
 
         [Space, SerializeField]
-        private Color m_LineUnlocked;
+        private Color m_LineFillColor;
         [SerializeField]
-        private Color m_LineLocked;
+        private Color m_LineBorderColor;
 
         [Space, SerializeField]
         private float m_WorldSpacing;
@@ -262,11 +262,19 @@ namespace StageSelection
                     var linePosition = monoNode.transform.position + (differance / 2f);
 
                     lineTransform.sizeDelta = Math.Abs(differance.x) > Math.Abs(differance.y)
-                        ? new Vector2(differance.magnitude, 10)
-                        : new Vector2(10, differance.magnitude);
+                        ? new Vector2(differance.magnitude, 15)
+                        : new Vector2(15, differance.magnitude);
 
-                    lineObject.GetComponent<Image>().color = (monoNode.node.isComplete)
-                        ? m_LineUnlocked : m_LineLocked;
+                    var lineBorderColor = (monoNode.node.isComplete)
+                        ? m_LineBorderColor
+                        : m_LineBorderColor - new Color(0f, 0f, 0f, 0.75f);
+
+                    var lineFillColor = (monoNode.node.isComplete)
+                        ? m_LineFillColor
+                        : m_LineFillColor - new Color(0f, 0f, 0f, 0.75f);
+
+                    lineObject.GetComponent<Image>().color = lineBorderColor;
+                    lineObject.transform.GetChild(0).GetComponent<Image>().color = lineFillColor;
                     // Set Material Color
 
                     lineTransform.position = linePosition;
