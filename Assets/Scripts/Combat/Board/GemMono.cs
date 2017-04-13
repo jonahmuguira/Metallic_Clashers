@@ -102,7 +102,9 @@
 
         protected void OnCombatEnding()
         {
-             if (m_MoveToPositionCoroutine != null)
+            s_GemsCreatedThisFrame.Remove(this);
+
+            if (m_MoveToPositionCoroutine != null)
                 m_MoveToPositionCoroutine.MoveNext();
 
             if (m_PositionIsDirty)
