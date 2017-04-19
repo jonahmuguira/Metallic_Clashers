@@ -32,6 +32,8 @@ namespace StageSelection
         [SerializeField]
         private Text m_EnemyText;
         [SerializeField]
+        private Text m_StaminaCostText;
+        [SerializeField]
         private Button m_StartComabtButton;
         [SerializeField]
         private RectTransform m_NodeAnchor;
@@ -284,6 +286,7 @@ namespace StageSelection
             //Set Up UI
             m_StageNameText.text = "";
             m_EnemyText.text = "";
+            m_StaminaCostText.text = "";
             m_StartComabtButton.onClick.AddListener(OnStageSelectionEnd);
             m_StartComabtButton.interactable = false;
         }
@@ -403,6 +406,7 @@ namespace StageSelection
         private void DisplayInformation()
         {
             m_StageNameText.text = "Stage: " + m_CurrentNode.stageName;
+            m_StaminaCostText.text = "Stamina Cost: " + m_CurrentNode.staminaCost;
 
             // Enemy Display - Text
             m_EnemyText.text = "";
@@ -418,7 +422,7 @@ namespace StageSelection
 
             foreach (var key in enemyInstances)
             {
-                m_EnemyText.text += key.Key + " x" + key.Value;
+                m_EnemyText.text += key.Key + " - x" + key.Value;
             }
 
             // Not Enough Stamina clause
@@ -432,7 +436,7 @@ namespace StageSelection
                 || m_CurrentNode.prevNodes.Count == 0)
             {
                 m_StartComabtButton.interactable = true;
-                m_StartComabtButton.gameObject.GetComponentInChildren<Text>().text = "Engage";
+                m_StartComabtButton.gameObject.GetComponentInChildren<Text>().text = " Engage!";
             }
             else
             {
