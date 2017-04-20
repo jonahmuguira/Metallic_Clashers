@@ -182,8 +182,6 @@ public class GameManager : MonoSingleton<GameManager>
                     (OnStageSelectionEnd);
 
                 GameObject.Find("Title Button").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(0); });
-
-                GameObject.Find("Setup Button").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(2); });
                 break;
 
             case GameState.Title:
