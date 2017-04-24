@@ -84,21 +84,21 @@ namespace StageSelection
                         nodes = new List<Node>
                         {
                             new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0),
-                                worldIndex = 1, enemyInts = new List<int> {1,1,1}},
+                                worldIndex = 1, enemyInts = new List<int> {0,1,2}},
                             new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1),
-                                worldIndex = 1, enemyInts = new List<int> {1,1,1}},
+                                worldIndex = 1, enemyInts = new List<int> {0,1,0}},
                             new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2),
-                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 1, enemyInts = new List<int> {0,2,0}},
                             new Node {stageNumber = "Boss", normalizedPosition = new Vector2(0, 3),
-                                worldIndex = 1, enemyInts = new List<int> {0}},
+                                worldIndex = 1, enemyInts = new List<int> {1}},
                             new Node {stageNumber = "1A", normalizedPosition = new Vector2(1, 0),
                                 worldIndex = 1, enemyInts = new List<int> {0}},
                             new Node {stageNumber = "2A", normalizedPosition = new Vector2(-1, 1),
-                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 1, enemyInts = new List<int> {1,0,1}},
                             new Node {stageNumber = "2B", normalizedPosition = new Vector2(-2, 1),
                                 worldIndex = 1, enemyInts = new List<int> {0,0,0}},
                             new Node {stageNumber = "3A", normalizedPosition = new Vector2(1, 2),
-                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 1, enemyInts = new List<int> {0,1,0}},
                         }
                     }
                     ,
@@ -108,21 +108,21 @@ namespace StageSelection
                         nodes = new List<Node>
                         {
                             new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {2}},
                             new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {0,2}},
                             new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {0,2,0}},
                             new Node {stageNumber = "Boss", normalizedPosition = new Vector2(0, 3),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {1,1,1}},
                             new Node {stageNumber = "2A", normalizedPosition = new Vector2(-1, 1),
                                 worldIndex = 2, enemyInts = new List<int> {0,0,0}},
                             new Node {stageNumber = "3A", normalizedPosition = new Vector2(-1, 2),
                                 worldIndex = 2, enemyInts = new List<int> {0,0,0}},
                             new Node {stageNumber = "2B", normalizedPosition = new Vector2(1, 1),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {1,0,1}},
                             new Node {stageNumber = "3B", normalizedPosition = new Vector2(1, 2),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {2,1,2}},
                         }
                     }
                 };
@@ -422,7 +422,7 @@ namespace StageSelection
 
             foreach (var key in enemyInstances)
             {
-                m_EnemyText.text += key.Key + " - x" + key.Value;
+                m_EnemyText.text += key.Key + " - x" + key.Value + "\n";
             }
 
             // Not Enough Stamina clause
