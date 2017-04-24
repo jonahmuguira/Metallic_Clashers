@@ -1,0 +1,156 @@
+fileFormatVersion: 2
+guid: d93248dde08bfd14c8c33514ea9ca876
+timeCreated: 1493071745
+licenseType: Pro
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: CTRL_nepharious_cube_BBL_corner
+    100002: CTRL_nepharious_cube_BBR_corner
+    100004: CTRL_nepharious_cube_BFL_corner
+    100006: CTRL_nepharious_cube_BFR_corner
+    100008: CTRL_nepharious_cube_CenterMass
+    100010: CTRL_nepharious_cube_TBL_corner
+    100012: CTRL_nepharious_cube_TBR_corner
+    100014: CTRL_nepharious_cube_TFL_corner
+    100016: CTRL_nepharious_cube_TFR_corner
+    100018: CTRL_nepharious_cube_TopCluster
+    100020: CTRL_nepharious_cube_world
+    100022: JNT_nepharious_cube_BBL_corner
+    100024: JNT_nepharious_cube_BBR_corner
+    100026: JNT_nepharious_cube_BFL_corner
+    100028: JNT_nepharious_cube_BFR_corner
+    100030: JNT_nepharious_cube_CenterMass
+    100032: JNT_nepharious_cube_TBL_corner
+    100034: JNT_nepharious_cube_TBR_corner
+    100036: JNT_nepharious_cube_TFL_corner
+    100038: JNT_nepharious_cube_TFR_corner
+    100040: //RootNode
+    100042: nepharious_cube_BBL_corner
+    100044: nepharious_cube_BBR_corner
+    100046: nepharious_cube_BFL_corner
+    100048: nepharious_cube_BFR_corner
+    100050: nepharious_cube_CenterCube
+    100052: nepharious_cube_TBL_corner
+    100054: nepharious_cube_TBR_corner
+    100056: nepharious_cube_TFL_corner
+    100058: nepharious_cube_TFR_corner
+    400000: CTRL_nepharious_cube_BBL_corner
+    400002: CTRL_nepharious_cube_BBR_corner
+    400004: CTRL_nepharious_cube_BFL_corner
+    400006: CTRL_nepharious_cube_BFR_corner
+    400008: CTRL_nepharious_cube_CenterMass
+    400010: CTRL_nepharious_cube_TBL_corner
+    400012: CTRL_nepharious_cube_TBR_corner
+    400014: CTRL_nepharious_cube_TFL_corner
+    400016: CTRL_nepharious_cube_TFR_corner
+    400018: CTRL_nepharious_cube_TopCluster
+    400020: CTRL_nepharious_cube_world
+    400022: JNT_nepharious_cube_BBL_corner
+    400024: JNT_nepharious_cube_BBR_corner
+    400026: JNT_nepharious_cube_BFL_corner
+    400028: JNT_nepharious_cube_BFR_corner
+    400030: JNT_nepharious_cube_CenterMass
+    400032: JNT_nepharious_cube_TBL_corner
+    400034: JNT_nepharious_cube_TBR_corner
+    400036: JNT_nepharious_cube_TFL_corner
+    400038: JNT_nepharious_cube_TFR_corner
+    400040: //RootNode
+    400042: nepharious_cube_BBL_corner
+    400044: nepharious_cube_BBR_corner
+    400046: nepharious_cube_BFL_corner
+    400048: nepharious_cube_BFR_corner
+    400050: nepharious_cube_CenterCube
+    400052: nepharious_cube_TBL_corner
+    400054: nepharious_cube_TBR_corner
+    400056: nepharious_cube_TFL_corner
+    400058: nepharious_cube_TFR_corner
+    4300000: nepharious_cube_CenterCube
+    4300002: nepharious_cube_TBL_corner
+    4300004: nepharious_cube_TBR_corner
+    4300006: nepharious_cube_TFR_corner
+    4300008: nepharious_cube_TFL_corner
+    4300010: nepharious_cube_BFL_corner
+    4300012: nepharious_cube_BFR_corner
+    4300014: nepharious_cube_BBR_corner
+    4300016: nepharious_cube_BBL_corner
+    9500000: //RootNode
+    13700000: nepharious_cube_BBL_corner
+    13700002: nepharious_cube_BBR_corner
+    13700004: nepharious_cube_BFL_corner
+    13700006: nepharious_cube_BFR_corner
+    13700008: nepharious_cube_CenterCube
+    13700010: nepharious_cube_TBL_corner
+    13700012: nepharious_cube_TBR_corner
+    13700014: nepharious_cube_TFL_corner
+    13700016: nepharious_cube_TFR_corner
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    serializedVersion: 2
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    rootMotionBoneRotation: {x: 0, y: 0, z: 0, w: 1}
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
