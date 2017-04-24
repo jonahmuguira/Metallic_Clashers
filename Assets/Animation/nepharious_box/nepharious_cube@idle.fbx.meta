@@ -25,7 +25,7 @@ ModelImporter:
     400014: JNT_nepharious_cube_TFL_corner
     400016: JNT_nepharious_cube_TFR_corner
     400018: //RootNode
-    7400000: Take 001
+    7400000: idle
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -49,7 +49,55 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: idle
+      takeName: Take 001
+      firstFrame: 1
+      lastFrame: 74
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: JNT_nepharious_cube_CenterMass
+        weight: 1
+      - path: JNT_nepharious_cube_CenterMass/JNT_nepharious_cube_BBL_corner
+        weight: 1
+      - path: JNT_nepharious_cube_CenterMass/JNT_nepharious_cube_BBR_corner
+        weight: 1
+      - path: JNT_nepharious_cube_CenterMass/JNT_nepharious_cube_BFL_corner
+        weight: 1
+      - path: JNT_nepharious_cube_CenterMass/JNT_nepharious_cube_BFR_corner
+        weight: 1
+      - path: JNT_nepharious_cube_CenterMass/JNT_nepharious_cube_TBL_corner
+        weight: 1
+      - path: JNT_nepharious_cube_CenterMass/JNT_nepharious_cube_TBR_corner
+        weight: 1
+      - path: JNT_nepharious_cube_CenterMass/JNT_nepharious_cube_TFL_corner
+        weight: 1
+      - path: JNT_nepharious_cube_CenterMass/JNT_nepharious_cube_TFR_corner
+        weight: 1
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
