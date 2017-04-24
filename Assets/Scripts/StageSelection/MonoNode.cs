@@ -39,19 +39,19 @@
         //Testing If the Node is active or not.
         private void Start()
         {
-            var mat = GetComponent<Image>();
+            var image = GetComponent<Image>();
 
             // If the node is done and playable
             if (node.isComplete)
-                mat.color = StageSelectionManager.self.nodeCompleted;
+                image.color = StageSelectionManager.self.nodeCompleted;
 
             // If the node is playable
             else if (node.prevNodes.Any(n => n.isComplete) || node.prevNodes.Count == 0)
-                mat.color = StageSelectionManager.self.nodeUnlocked;
+                image.color = StageSelectionManager.self.nodeUnlocked;
 
             // Node is not playable
             else
-                mat.color = StageSelectionManager.self.nodeLocked;
+                image.color = StageSelectionManager.self.nodeLocked;
         }
     }
 }
