@@ -32,6 +32,8 @@ namespace StageSelection
         [SerializeField]
         private Text m_EnemyText;
         [SerializeField]
+        private Text m_StaminaCostText;
+        [SerializeField]
         private Button m_StartComabtButton;
         [SerializeField]
         private RectTransform m_NodeAnchor;
@@ -82,21 +84,21 @@ namespace StageSelection
                         nodes = new List<Node>
                         {
                             new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0),
-                                worldIndex = 1, enemyInts = new List<int> {1,1,1}},
+                                worldIndex = 1, enemyInts = new List<int> {0,1,2}},
                             new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1),
-                                worldIndex = 1, enemyInts = new List<int> {1,1,1}},
+                                worldIndex = 1, enemyInts = new List<int> {0,1,0}},
                             new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2),
-                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 1, enemyInts = new List<int> {0,2,0}},
                             new Node {stageNumber = "Boss", normalizedPosition = new Vector2(0, 3),
-                                worldIndex = 1, enemyInts = new List<int> {0}},
+                                worldIndex = 1, enemyInts = new List<int> {1}},
                             new Node {stageNumber = "1A", normalizedPosition = new Vector2(1, 0),
                                 worldIndex = 1, enemyInts = new List<int> {0}},
                             new Node {stageNumber = "2A", normalizedPosition = new Vector2(-1, 1),
-                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 1, enemyInts = new List<int> {1,0,1}},
                             new Node {stageNumber = "2B", normalizedPosition = new Vector2(-2, 1),
                                 worldIndex = 1, enemyInts = new List<int> {0,0,0}},
                             new Node {stageNumber = "3A", normalizedPosition = new Vector2(1, 2),
-                                worldIndex = 1, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 1, enemyInts = new List<int> {0,1,0}},
                         }
                     }
                     ,
@@ -106,21 +108,21 @@ namespace StageSelection
                         nodes = new List<Node>
                         {
                             new Node {stageNumber = "1", normalizedPosition = new Vector2(0, 0),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {2}},
                             new Node {stageNumber = "2", normalizedPosition = new Vector2(0, 1),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {0,2}},
                             new Node {stageNumber = "3", normalizedPosition = new Vector2(0, 2),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {0,2,0}},
                             new Node {stageNumber = "Boss", normalizedPosition = new Vector2(0, 3),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {1,1,1}},
                             new Node {stageNumber = "2A", normalizedPosition = new Vector2(-1, 1),
                                 worldIndex = 2, enemyInts = new List<int> {0,0,0}},
                             new Node {stageNumber = "3A", normalizedPosition = new Vector2(-1, 2),
                                 worldIndex = 2, enemyInts = new List<int> {0,0,0}},
                             new Node {stageNumber = "2B", normalizedPosition = new Vector2(1, 1),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {1,0,1}},
                             new Node {stageNumber = "3B", normalizedPosition = new Vector2(1, 2),
-                                worldIndex = 2, enemyInts = new List<int> {0,0,0}},
+                                worldIndex = 2, enemyInts = new List<int> {2,1,2}},
                         }
                     }
                 };
@@ -284,6 +286,7 @@ namespace StageSelection
             //Set Up UI
             m_StageNameText.text = "";
             m_EnemyText.text = "";
+            m_StaminaCostText.text = "";
             m_StartComabtButton.onClick.AddListener(OnStageSelectionEnd);
             m_StartComabtButton.interactable = false;
         }
@@ -403,6 +406,7 @@ namespace StageSelection
         private void DisplayInformation()
         {
             m_StageNameText.text = "Stage: " + m_CurrentNode.stageName;
+            m_StaminaCostText.text = "Stamina Cost: " + m_CurrentNode.staminaCost;
 
             // Enemy Display - Text
             m_EnemyText.text = "";
@@ -418,7 +422,7 @@ namespace StageSelection
 
             foreach (var key in enemyInstances)
             {
-                m_EnemyText.text += key.Key + " x" + key.Value;
+                m_EnemyText.text += key.Key + " - x" + key.Value + "\n";
             }
 
             // Not Enough Stamina clause
@@ -432,7 +436,7 @@ namespace StageSelection
                 || m_CurrentNode.prevNodes.Count == 0)
             {
                 m_StartComabtButton.interactable = true;
-                m_StartComabtButton.gameObject.GetComponentInChildren<Text>().text = "Engage";
+                m_StartComabtButton.gameObject.GetComponentInChildren<Text>().text = " Engage!";
             }
             else
             {
