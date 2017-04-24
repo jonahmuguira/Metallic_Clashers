@@ -122,7 +122,11 @@ namespace Combat
                     yield return null;
                 }
             }
-           
+            GameManager.self.playerData.health.modifier = 0;
+            GameManager.self.playerData.defense.modifier = 0;
+
+            GameManager.self.SavePlayer();
+
             m_EndSceneButton.interactable = true;
             m_ResultScreeEnumerator = null;
         }
