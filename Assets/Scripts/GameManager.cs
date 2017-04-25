@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml.Serialization;
 
 using Combat;
@@ -21,7 +20,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         Title,
         StateSelection,
-        Preparation,
         Combat,
         Credits,
     }
@@ -58,10 +56,11 @@ public class GameManager : MonoSingleton<GameManager>
             playerData = new PlayerData(200, 10, 10);
             playerData.staminaInformation = new StaminaInformation
             {
-                value = 0,
+                value = 10,
                 maxValue = 100,
                 timeLastPlayed = DateTime.Now.ToString()
             };
+            StaminaManager.self.SetStam();
             SavePlayer();
         }
 
@@ -75,53 +74,32 @@ public class GameManager : MonoSingleton<GameManager>
             ? 200
             : playerData.playerLevelSystem.playerLevelInfo.experienceRequired;
 
-        //just for item testing...
-        //for (int i = 0; i < 5; i++)
-        //{
-        //    playerData.itemManager.combatInventory.Add(new InstantItem(20));            
-        //}
-        //playerData.itemManager.combatInventory.Add(new TurnBuff(10, 2000, false));
-
         //instant = 25 health 
         //turn attack up = 7 turns 100 buff, turn defense up = 7 turns 100 buff
         //time attack up = 15 secs 100 buff, time defense up = 15 secs 100 buff
         for (int i = 0; i < 2; i++)
         {
-            playerData.itemManager.AddInventoryItem(new InstantItem(25));
-            playerData.itemManager.AddInventoryItem(new TurnBuff(7, 100, true));
-            playerData.itemManager.AddInventoryItem(new TurnBuff(7, 100, false));
-            playerData.itemManager.AddInventoryItem(new TimeBuff(15, 100, true));
-            playerData.itemManager.AddInventoryItem(new TimeBuff(15, 100, false));
+            playerData.itemManager.AddInventoryItem(new InstantItem(0.1f));
         }
-        //for (int i = 0; i < 2; i++) { playerData.itemManager.AddInventoryItem(new InstantItem(25)); }
-        //for (int i = 0; i < 2; i++) { playerData.itemManager.AddInventoryItem(new TurnBuff(7, 100, true)); }
-        //for (int i = 0; i < 2; i++) { playerData.itemManager.AddInventoryItem(new TurnBuff(7, 100, false)); }
-        //for (int i = 0; i < 2; i++) { playerData.itemManager.AddInventoryItem(new TimeBuff(15, 100, true)); }
-        //for (int i = 0; i < 2; i++) { playerData.itemManager.AddInventoryItem(new TimeBuff(15, 100, false)); }
 
         gameState = (GameState)SceneManager.GetActiveScene().buildIndex;
         AddSceneListeners();
         //onSceneLoaded.AddListener(AddSceneListeners);
     }
 
-    //private void OnApplicationQuit()
-    //{
-    //    playerData.staminaInformation.maxValue = StaminaManager.self.maxValue;
-    //    playerData.staminaInformation.value = StaminaManager.self.value;
-    //    playerData.staminaInformation.timeLastPlayed = DateTime.Now.ToString();
-    //    SavePlayer();
-    //}
+    private void OnApplicationQuit()
+    {
+        SavePlayer();
+    }
 
     private void OnCombatEnd()
     {
         LoadScene((int)GameState.StateSelection);
-        //playerData.itemManager.RemoveCombatItem();
     }
 
     private void OnStageSelectionEnd()
     {
         LoadScene((int)GameState.Combat);
-        //playerData.itemManager.AddCombatItem();
     }
 
     private void AddSceneListeners()
@@ -149,32 +127,6 @@ public class GameManager : MonoSingleton<GameManager>
                 GameObject.Find("Menu Button").transform.FindChild("Icon Layout Group")
                     .FindChild("Sound Effects Button").gameObject.GetComponent<Button>
                     ().onClick.AddListener(AudioManager.self.MuteSoundsToggle);
-
-            //System.Type item1Type;
-            //    var item1 = playerData.itemManager.combatInventory.First();
-            //    item1Type = item1.GetType();
-            //    GameObject.Find("Item 1").GetComponent<Button>().onClick.AddListener(
-            //        () =>
-            //        {
-            //            item1.UseItem();
-            //        });
-
-            //var item2 = playerData.itemManager.combatInventory.Single(i => i.GetType() != item1Type);
-            //    GameObject.Find("Item 2").GetComponent<Button>().onClick.AddListener(
-            //        () =>
-            //        {
-            //            item2.UseItem();
-            //        });
-                break;
-
-            case GameState.Preparation: //this is where you select items/gem types before combat
-                GameObject.Find("Add Heal Item").gameObject.GetComponent<Button>().onClick.AddListener(
-                    () =>
-                        {
-                            playerData.itemManager.AddCombatItem(new InstantItem(25));
-                        });
-
-                GameObject.Find("Accept").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(1); });
                 break;
 
             case GameState.StateSelection:     // Stage Selection
@@ -187,7 +139,7 @@ public class GameManager : MonoSingleton<GameManager>
             case GameState.Title:
                 GameObject.Find("Play").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(1); });
 
-                GameObject.Find("Credits").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(4); });
+                GameObject.Find("Credits").gameObject.GetComponent<Button>().onClick.AddListener(() => { LoadScene(3); });
                 break;
         }
         AudioManager.self.ChangeMusic((int)gameState);
