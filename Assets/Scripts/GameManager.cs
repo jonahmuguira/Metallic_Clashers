@@ -56,7 +56,7 @@ public class GameManager : MonoSingleton<GameManager>
             playerData = new PlayerData(200, 10, 10);
             playerData.staminaInformation = new StaminaInformation
             {
-                value = 0,
+                value = 10,
                 maxValue = 100,
                 timeLastPlayed = DateTime.Now.ToString()
             };
@@ -88,9 +88,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnApplicationQuit()
     {
-        playerData.staminaInformation.maxValue = StaminaManager.self.maxValue;
-        playerData.staminaInformation.value = StaminaManager.self.value;
-        playerData.staminaInformation.timeLastPlayed = DateTime.Now.ToString();
         SavePlayer();
     }
 
