@@ -40,10 +40,24 @@
 
         private void SetColor(Color newColor)
         {
-            if (m_ImageType == ImageType.Background)
-                return;
+            switch (m_ImageType)
+            {
+                case ImageType.Background:
+                    color = CombatManager.self.combatMode == CombatManager.CombatMode.Attack ? newColor : Color.white;
+                    break;
+                case ImageType.Midground:
+                    color =
+                        CombatManager.self.combatMode == CombatManager.CombatMode.Attack
+                        ? new Color(62f / 255f, 62f / 255f, 62f / 255f)
+                        : newColor;
+                    break;
+                case ImageType.Foreground:
+                    color = newColor;
+                    break;
 
-            color = newColor;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private void UpdateSprite()
@@ -64,6 +78,8 @@
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            SetColor(CombatManager.self.combatUiInformation.gemColors[(int)gem.gemType]);
         }
 
         private void OnTypeChange(TypeChangeInformation typeChangeInformation)
