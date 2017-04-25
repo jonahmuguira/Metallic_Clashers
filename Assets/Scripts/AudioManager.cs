@@ -11,6 +11,9 @@ public class AudioManager : SubManager<AudioManager>
     public List<AudioClip> musicList;
     public AudioClip clickSound;
     public AudioClip dragSound;
+    public AudioClip engageSound;
+    public AudioClip victorySound;
+    public AudioClip defeatSound;
 
     private AudioSource m_MusicSource;
     private AudioSource m_MenuSource;
@@ -28,6 +31,12 @@ public class AudioManager : SubManager<AudioManager>
         m_MusicSource.Play();
     }
 
+    public void PlayEndBattleSound(bool victory)
+    {
+        m_MusicSource.clip = (victory) ? victorySound : defeatSound;
+        m_MusicSource.Play();
+    }
+
     protected override void OnPress(TouchInformation touchInfo)
     {
         if (m_MuteSoundEffects)
@@ -36,8 +45,16 @@ public class AudioManager : SubManager<AudioManager>
         m_MenuSource.clip = clickSound;
         if (EventSystem.current != null)
         {
+            if (EventSystem.current.currentSelectedGameObject.name == "Combat Button")
+            {
+                m_MenuSource.clip = engageSound;
+                m_MenuSource.Play();
+                return;
+            }
+
             if (EventSystem.current.currentSelectedGameObject != null)
                 m_MenuSource.Play();
+            return;
         }
 
         // See if Hit certain GameObject

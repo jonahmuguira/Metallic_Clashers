@@ -60,6 +60,8 @@ namespace Combat
 
         private IEnumerator ResultsScreenEnumerator(bool result)
         {   // Set Win Text
+            AudioManager.self.PlayEndBattleSound(result);
+
             m_ResultText.text = result ? "You Win!" : "You  Lose...";
             m_EndSceneButton.interactable = false;
 
