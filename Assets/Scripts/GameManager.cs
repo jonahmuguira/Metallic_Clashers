@@ -60,6 +60,7 @@ public class GameManager : MonoSingleton<GameManager>
                 maxValue = 100,
                 timeLastPlayed = DateTime.Now.ToString()
             };
+            StaminaManager.self.SetStam();
             SavePlayer();
         }
 
