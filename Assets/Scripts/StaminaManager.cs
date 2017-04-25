@@ -73,4 +73,9 @@ public class StaminaManager : MonoSingleton<StaminaManager>
     {
         m_Value -= dam;
     }
+
+    public void SetStam()
+    {
+        m_Value = maxValue;
+    }
 }
