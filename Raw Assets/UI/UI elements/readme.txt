@@ -6,8 +6,9 @@ Font used on the UI mock-up is called Arcade Classic.
 ---------
 COLORS
 ---------
+
 Box borders (menu, item box, etc.) = #6dd047
-Box inside = (gradient) #2c7f87
+Box inside = (gradient) #428082
 Box tranparency (item box, ATK/DEF mode, etc.) = 90%
 
 Combat Colors
