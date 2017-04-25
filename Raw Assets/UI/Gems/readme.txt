@@ -1,9 +1,29 @@
-GUARD TOKENS COLORS
+TOKENS COLOR
 ------------------------
 
-BLUE-
+BACKGROUND - #3b393a
 
-Background = #484754
-Edge ring and inside ring = #0b89b9
-Inside = ##77d2ec
-Inside transparency = 90%
+BLUE -
+	Edge ring - #0286ac
+	(DEF) Inside - #6ac3db
+
+ORANGE -
+	Edge ring - #de7b26
+	(DEF) Inside - e3b964
+
+PINK - 
+	Edge ring - #de7a92
+	(DEF) Inside - fc9494
+
+PURPLE -
+	Edge ring - #9186be
+	(DEF) Inside - c990fe
+
+GREEN-ISH BLUE -
+	Edge ring - #0a979e
+	(DEF) Inside - a6eddb
+
+
+
+
+
