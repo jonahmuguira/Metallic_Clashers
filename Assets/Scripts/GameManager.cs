@@ -19,7 +19,7 @@ public class GameManager : MonoSingleton<GameManager>
     public enum GameState
     {
         Title,
-        StateSelection,
+        StageSelection,
         Combat,
         Credits,
     }
@@ -94,7 +94,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnCombatEnd()
     {
-        LoadScene((int)GameState.StateSelection);
+        LoadScene((int)GameState.StageSelection);
     }
 
     private void OnStageSelectionEnd()
@@ -129,7 +129,7 @@ public class GameManager : MonoSingleton<GameManager>
                     ().onClick.AddListener(AudioManager.self.MuteSoundsToggle);
                 break;
 
-            case GameState.StateSelection:     // Stage Selection
+            case GameState.StageSelection:     // Stage Selection
                 StageSelectionManager.self.onStageSelectionEnd.AddListener
                     (OnStageSelectionEnd);
 
