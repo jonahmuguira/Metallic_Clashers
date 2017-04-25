@@ -57,21 +57,19 @@ public class LevelSystem
         var tempCurrentExperience = playerLevelInfo;
         var finalTotal = CalculateLevel(playerLevelInfo.currentExperience + modifier);
 
-        // TODO: This was messing with the values when Combat started.
-        //if (finalTotal.level != tempCurrentExperience.level)
-        //{
-        //    uint differenceInLevel;
+        if (finalTotal.level != tempCurrentExperience.level)
+        {
+            uint differenceInLevel;
 
-        //    for (differenceInLevel = finalTotal.level - tempCurrentExperience.level; differenceInLevel > 0; differenceInLevel--)
-        //    {
-        //        const int c_percentageValue = 10 / 100; //10%
+            for (differenceInLevel = finalTotal.level - tempCurrentExperience.level; differenceInLevel > 0; differenceInLevel--)
+            {
 
-        //        GameManager.self.playerData.health.value *= c_percentageValue; //health stat change
-        //        GameManager.self.playerData.attack.value *= c_percentageValue; //attack stat change
-        //        GameManager.self.playerData.defense.value *= c_percentageValue; //defense stat change
-        //        StaminaManager.self.maxValue *= c_percentageValue; //stamina stat change
-        //    }
-        //}
+                GameManager.self.playerData.health.value += 10; //health stat change
+                GameManager.self.playerData.attack.value += 2; //attack stat change
+                GameManager.self.playerData.defense.value += 2; //defense stat change
+                StaminaManager.self.maxValue += 2; //stamina stat change
+            }
+        }
 
         playerLevelInfo = finalTotal;
     }
