@@ -137,7 +137,7 @@
 
                 case CombatManager.CombatMode.Defense:
                     GameManager.self.playerData.defense.modifier += matchInfo.gems.Count
-                    * (playerData.defense.value * .5F);
+                    * (playerData.defense.totalValue * .8f);
                     break;
             }
         }
