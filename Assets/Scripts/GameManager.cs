@@ -163,7 +163,7 @@ public class GameManager : MonoSingleton<GameManager>
         serializer.Serialize(playerStream, playerData);
         playerStream.Close();
 
-        playerData.itemManager.SaveItems(m_InventorySavePath);
+        //playerData.itemManager.SaveItems(m_InventorySavePath);
     }
 
     [ContextMenu("Load Player")]
@@ -175,7 +175,7 @@ public class GameManager : MonoSingleton<GameManager>
         playerData = (PlayerData)reader.Deserialize(file);
         file.Close();
 
-        playerData.itemManager.LoadItems(m_InventorySavePath);
+        //playerData.itemManager.LoadItems(m_InventorySavePath);
     }
 
     public void LoadScene(int sceneIndex)
