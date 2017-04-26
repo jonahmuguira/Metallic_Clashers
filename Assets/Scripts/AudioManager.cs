@@ -45,6 +45,9 @@ public class AudioManager : SubManager<AudioManager>
         m_MenuSource.clip = clickSound;
         if (EventSystem.current != null)
         {
+            if (EventSystem.current.currentSelectedGameObject == null)
+                return;
+
             if (EventSystem.current.currentSelectedGameObject.name == "Combat Button")
             {
                 m_MenuSource.clip = engageSound;
@@ -52,7 +55,6 @@ public class AudioManager : SubManager<AudioManager>
                 return;
             }
 
-            if (EventSystem.current.currentSelectedGameObject != null)
                 m_MenuSource.Play();
             return;
         }
